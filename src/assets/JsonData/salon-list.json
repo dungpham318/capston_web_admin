@@ -1,0 +1,36 @@
+[{
+    "id": 1,
+    "name": "Salon 1",
+    "description": "Salon 1",
+    "avatarUrl": null,
+    "status": "active",
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdate": "19/10/2021 14:11:27"
+},
+{
+    "id": 2,
+    "name": "Salon 2",
+    "description": "Salon 2",
+    "avatarUrl": null,
+    "status": "active",
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdate": "19/10/2021 14:11:27"
+  },
+  {
+    "id": 3,
+    "name": "Salon 3",
+    "description": "Salon 3",
+    "avatarUrl": null,
+    "status": "active",
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdate": "19/10/2021 14:11:27"
+  },
+  {
+    "id": 4,
+    "name": "Salon 4",
+    "description": "Salon 4",
+    "avatarUrl": null,
+    "status": "active",
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdate": "19/10/2021 14:11:27"
+  }]

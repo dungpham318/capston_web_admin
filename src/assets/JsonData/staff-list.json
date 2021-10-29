@@ -1,0 +1,60 @@
+[{
+    "userId": 2,
+    "staffId": 2,
+    "fullName": "Manager 1",
+    "staffType": "manager",
+    "description": "Manager 1",
+    "salonId": 1,
+    "salonName": "Salon 1",
+    "email": "manager123@gmail.com",
+    "phoneNumber": "0869190061",
+    "avatarUrl": null
+  },
+  {
+    "userId": 3,
+    "staffId": 3,
+    "fullName": "Stylist 1",
+    "staffType": "stylist",
+    "description": "Stylist 1",
+    "salonId": 1,
+    "salonName": "Salon 1",
+    "email": "stylist123@gmail.com",
+    "phoneNumber": "0869190061",
+    "avatarUrl": null
+  },
+  {
+    "userId": 4,
+    "staffId": 4,
+    "fullName": "Beautician 1",
+    "staffType": "beautician",
+    "description": "Beautician 1",
+    "salonId": 1,
+    "salonName": "Salon 1",
+    "email": "beautician123@gmail.com",
+    "phoneNumber": "0869190061",
+    "avatarUrl": null
+  },
+  {
+    "userId": 5,
+    "staffId": 5,
+    "fullName": "Stylist 2",
+    "staffType": "stylist",
+    "description": "Stylist 2",
+    "salonId": 1,
+    "salonName": "Salon 1",
+    "email": "stylist1234@gmail.com",
+    "phoneNumber": "0869190061",
+    "avatarUrl": null
+  },
+  {
+    "userId": 6,
+    "staffId": 6,
+    "fullName": "Beautician 2",
+    "staffType": "beautician",
+    "description": "Beautician 2",
+    "salonId": 1,
+    "salonName": "Salon 1",
+    "email": "beautician1234@gmail.com",
+    "phoneNumber": "0869190061",
+    "avatarUrl": null
+  }]

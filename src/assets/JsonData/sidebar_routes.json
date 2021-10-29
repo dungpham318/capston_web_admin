@@ -1,0 +1,52 @@
+[
+    {
+        "display_name": "Dashboard",
+        "route": "/",
+        "icon": "bx bx-category-alt"
+    },
+    {
+        "display_name": "Customers",
+        "route": "/customers",
+        "icon": "bx bx-user-pin"
+    },
+    {
+        "display_name": "Services",
+        "route": "/services",
+        "icon": "bx bx-package"
+    },
+    {
+        "display_name": "Combo",
+        "route": "/combo",
+        "icon": "bx bx-list-ol"
+    },
+    {
+        "display_name": "Transactions",
+        "route": "/transactions",
+        "icon": "bx bx-cart"
+    },
+    {
+        "display_name": "Analytics",
+        "route": "/analytics",
+        "icon": "bx bx-bar-chart-alt"
+    },
+    {
+        "display_name": "Promotions",
+        "route": "/promotions",
+        "icon": "bx bx-gift"
+    },
+    {
+        "display_name": "Salon",
+        "route": "/salon",
+        "icon": "bx bx-store-alt"
+    },
+    {
+        "display_name": "Staffs",
+        "route": "/staffs",
+        "icon": "bx bx-user-pin"
+    },
+    {
+        "display_name": "settings",
+        "route": "/settings",
+        "icon": "bx bx-cog"
+    }
+]

@@ -1,0 +1,9 @@
+[{"customerId": 1,"fullName": "Customer A","email": "customer1@gmail.com","phoneNumber": "0812478061","avatarUrl": null},
+{"customerId": 2,"fullName": "Customer 2","email": "customer2@gmail.com","phoneNumber": "0869190061","avatarUrl": null},
+{"customerId": 3,"fullName": "Customer 3","email": "customer3@gmail.com","phoneNumber": "0869190061","avatarUrl": null},
+{"customerId": 4,"fullName": "Customer 4","email": "customer4@gmail.com","phoneNumber": "0326117774","avatarUrl": null},
+{"customerId": 5,"fullName": "Customer 5","email": "customer5@gmail.com","phoneNumber": "0869190061","avatarUrl": null},
+{"customerId": 6,"fullName": "Customer 6","email": "customer6@gmail.com","phoneNumber": "0869190061","avatarUrl": null},
+{"customerId": 7,"fullName": "Customer 7","email": "customer7@gmail.com","phoneNumber": "0869190061","avatarUrl": null},
+{"customerId": 8,"fullName": "Customer 8","email": "customer8@gmail.com","phoneNumber": "0869190061","avatarUrl": null},
+{"customerId": 9,"fullName": "Customer 9","email": "customer9@gmail.com","phoneNumber": "0869190061","avatarUrl": null}]

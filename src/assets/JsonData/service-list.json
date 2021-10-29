@@ -1,0 +1,45 @@
+[{
+    "id": 1,
+    "name": "Cắt tóc",
+    "description": "Cắt tóc",
+    "status": "active",
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27",
+    "price": 50000
+  },
+  {
+    "id": 2,
+    "name": "Gội Đầu",
+    "description": "Gội Đầu",
+    "status": "active",
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27",
+    "price": 20000
+  },
+  {
+    "id": 3,
+    "name": "Ráy tai",
+    "description": "Ráy tai",
+    "status": "active",
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27",
+    "price": 10000
+  },
+  {
+    "id": 4,
+    "name": "Rửa Mặt",
+    "description": "Gội Đầu",
+    "status": "active",
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27",
+    "price": 20000
+  },
+  {
+    "id": 5,
+    "name": "Đắp Mặt",
+    "description": "Đắp Mặt",
+    "status": "active",
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27",
+    "price": 20000
+  }]

@@ -1,0 +1,50 @@
+[{
+    "id": 1,
+    "name": "Cắt Tóc",
+    "description": "Cắt Tóc",
+    "status": "active",
+    "duration": 1,
+    "price": 40000,
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27"
+  },
+  {
+    "id": 2,
+    "name": "Cắt Tóc Gội Đầu",
+    "description": "Cắt Tóc Gội Đầu",
+    "status": "active",
+    "duration": 2,
+    "price": 0,
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27"
+  },
+  {
+    "id": 3,
+    "name": "Cắt Tóc Gội Đầu Rửa Mặt",
+    "description": "Cắt Tóc Gội Đầu Rửa Mặt",
+    "status": "active",
+    "duration": 2,
+    "price": 0,
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27"
+  },
+  {
+    "id": 4,
+    "name": "Chăm sóc đầy đử",
+    "description": "Cắt Tóc, Ráy Táy, Gội Đầu, Rửa Mặt, Dắp mặt",
+    "status": "active",
+    "duration": 3,
+    "price": 0,
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27"
+  },
+  {
+    "id": 5,
+    "name": "Cắt tóc ráy tai",
+    "description": "Cắt Tóc, Ráy Táy",
+    "status": "active",
+    "duration": 1,
+    "price": 0,
+    "createdDate": "19/10/2021 14:11:27",
+    "lastUpdated": "19/10/2021 14:11:27"
+  }]
