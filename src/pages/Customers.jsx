@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 import Table from '../components/table/Table';
 import { getCustomerList } from '../apis/customerApi';
 
@@ -93,76 +93,3 @@ export default class Customers extends Component {
     );
   }
 }
-
-let rows = [
-  {
-    id: 1,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-  {
-    id: 2,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-  {
-    id: 3,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-  {
-    id: 3,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-  {
-    id: 3,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-  {
-    id: 3,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-  {
-    id: 3,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-  {
-    id: 3,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-  {
-    id: 3,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-  {
-    id: 3,
-    fullName: 'Pham Van A',
-    email: 'Email1',
-    status: 'status',
-    phoneNumber: '0999999999'
-  },
-]

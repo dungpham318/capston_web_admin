@@ -2,15 +2,15 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+//import axios from 'axios';
+//import { Link } from 'react-router-dom';
 import { Table as BootstrapTable } from 'react-bootstrap'
 import ic_view from '../../assets/images/ic_view.png'
 import ic_edit from '../../assets/images/ic_edit.png'
 import ic_delete from '../../assets/images/ic_delete.png'
 import ic_next from '../../assets/images/ic_next.png'
 import ic_back from '../../assets/images/ic_back.png'
-import Form from 'react-bootstrap/Form'
+//import Form from 'react-bootstrap/Form'
 
 class Table extends Component {
   constructor(props) {

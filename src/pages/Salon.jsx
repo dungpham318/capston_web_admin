@@ -1,52 +1,93 @@
-import React from 'react'
+import React, { Component } from 'react';
+//import axios from 'axios';
+import Table from '../components/table/Table';
+import { getSalonList } from '../apis/salonApi';
 
-import Table from '../components/table/Table'
+export default class Salon extends Component {
 
-import salonList from '../assets/JsonData/salon-list.json'
+  constructor(props) {
+    super(props);
+    this.state = {
+      salonList: [],
+      totalSalon: 100,
+      page: 1,
+      pageSize: 10
+    };
+  }
+  componentDidMount() {
+    this.getSalon()
+  }
 
-const salonTableHead = [
-    '',
-    'Name',
-    'Description',
-    'status',
-    'createdDate',
-    'lastUpdated'
-]
+  getSalon = async () => {
+    let salonList = await getSalonList({
+      "pageNumber": this.state.page,
+      "pageSize": this.state.pageSize,
+      "statuses": [
+        "active"
+      ],
+      "sortBy": ""
+    })
 
-const renderHead = (item, index) => <th key={index}>{item}</th>
+    if (salonList) {
+      this.setState({
+        salonList: salonList?.data?.items,
+        totalSalon: salonList?.data?.totalCount
+      })
+    }
 
-const renderBody = (item, index) => (
-    <tr key={index}>
-        <td>{item.id}</td>
-        <td>{item.name}</td>
-        <td>{item.description}</td>
-        <td>{item.status}</td>
-        <td>{item.createdDate}</td>
-        <td>{item.lastUpdate}</td>
-    </tr>
-)
+  }
 
-export default function Salon() {
+  tabRow() {
+    return this.state.business.map(function (object, i) {
+      return <Table obj={object} key={i} />;
+    });
+  }
+
+  render() {
     return (
-        <div>
-            <h2 className="page-header">
-                Salon
-            </h2>
-            <div className="row">
-                <div className="col-12">
-                    <div className="card">
-                        <div className="card__body">
-                            <Table
-                                limit='10'
-                                headData={salonTableHead}
-                                renderHead={(item, index) => renderHead(item, index)}
-                                bodyData={salonList}
-                                renderBody={(item, index) => renderBody(item, index)}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div>
+        <h2 className="page-header">
+          Customers
+        </h2>
+        <div className='card'>
+          <Table
+            headers={[
+              { id: 1, label: '#', value: 'id' },
+              { id: 2, label: 'Salon Name', value: 'name' },
+              { id: 3, label: 'Description', value: 'description' },
+              { id: 4, label: 'Status', value: 'status' },
+              { id: 5, label: 'Created Date', value: 'createdDate' },
+              { id: 6, label: 'Last Updated', value: 'lastUpdate' },
+            ]}
+            rows={this.state.salonList}
+            actionList={[
+              'view',
+              'edit',
+              'delete',
+            ]}
+            onClickView={(row) => {
+              console.log(row)
+            }}
+            onClickEdit={(row) => {
+            }}
+            onClickDelete={(row) => {
+            }}
+            pagination
+            totalItem={this.state.totalSalon}
+            onChangePage={(page, pageSize) => {
+              console.log(page, pageSize)
+              this.setState({
+                page: page,
+                pageSize: pageSize
+              }, () => {
+                this.getSalon()
+              })
+            }}
+          />
+
         </div>
-    )
+
+      </div>
+    );
+  }
 }

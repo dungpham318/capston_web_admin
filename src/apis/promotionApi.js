@@ -1,7 +1,7 @@
 import { END_POINT } from '../config/index'
 
-export async function getCustomerList(input) {
-  let url = `/api/Customer/advanced_get_customers`
+export async function getPromotionList(input) {
+  let url = `/api/PromotionalCode/advanced_get_code`
   return fetch(END_POINT + url, {
     method: 'POST',
     headers: {

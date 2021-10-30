@@ -1,56 +1,108 @@
-import React from 'react'
+import React, { Component } from 'react';
+import axios from 'axios';
+import Table from '../components/table/Table';
+import { getServiceList } from '../apis/serviceApi';
 
-import Table from '../components/table/Table'
+export default class Services extends Component {
 
-import serviceList from '../assets/JsonData/service-list.json'
+  constructor(props) {
+    super(props);
+    this.state = {
+      serviceList: [],
+      totalService: 100,
+      page: 1,
+      pageSize: 10,
+      minPrice: 0,
+      maxPrice: 100000000
+    };
+  }
+  componentDidMount() {
+    this.getService()
+  }
 
-const serviceTableHead = [
-    '',
-    'Service Name',
-    'Description',
-    'Status',
-    // 'createdDate',
-    // 'lastUpdated',
-    'Price'
-]
+  getService = async () => {
+    let serviceList = await getServiceList({
+      "pageNumber": this.state.page,
+      "pageSize": this.state.pageSize,
+      "statuses": [
+        "active"
+      ],
+      "minCreatedDate": "",
+      "maxCreatedDate": "",
+      "minPrice": this.state.minPrice,
+      "maxPrice": this.state.maxPrice,
+      "sortBy": ""
+    })
 
-const renderHead = (item, index) => <th key={index}>{item}</th>
+    if (serviceList) {
+      this.setState({
+        serviceList: serviceList?.data?.items,
+        totalService: serviceList?.data?.totalCount
+      })
+    }
 
-const renderBody = (item, index) => (
-    <tr key={index}>
-        <td>{item.id}</td>
-        <td>{item.name}</td>
-        <td>{item.description}</td>
-        <td>{item.status}</td>
-        {/* <td>{item.createdDate}</td>
-        <td>{item.lastUpdated}</td> */}
-        <td>{item.price}</td>
-    </tr>
-)
+  }
 
-const Services = () => {
+  tabRow() {
+    return this.state.business.map(function (object, i) {
+      return <Table obj={object} key={i} />;
+    });
+  }
+
+  render() {
     return (
-        <div>
-            <h2 className="page-header">
-                services
-            </h2>
-            <div className="row">
-                <div className="col-12">
-                    <div className="card">
-                        <div className="card__body">
-                            <Table
-                                limit='10'
-                                headData={serviceTableHead}
-                                renderHead={(item, index) => renderHead(item, index)}
-                                bodyData={serviceList}
-                                renderBody={(item, index) => renderBody(item, index)}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div>
+        <h2 className="page-header">
+          Services
+        </h2>
+        {/* <Controls.Button
+            text="Add New"
+            variant="outlined"
+            startIcon={<AddIcon />}
+            className={classes.newButton}
+            onClick={() => { setOpenPopup(true); setRecordForEdit(null); }}
+        /> */}
+        <div className='card'>
+          <Table
+            headers={[
+              { id: 1, label: '#', value: 'id' },
+              { id: 2, label: 'Name', value: 'name' },
+              { id: 3, label: 'Description', value: 'description' },
+              { id: 4, label: 'Status', value: 'status' },
+              { id: 5, label: 'Created Date', value: 'createdDate' },
+              { id: 6, label: 'Last Update', value: 'lastupdated' },
+              { id: 7, label: 'Price', value: 'price' },
+            ]}
+            rows={this.state.serviceList}
+            actionList={[
+              'view',
+              'edit',
+              'delete',
+            ]}
+            onClickView={(row) => {
+              console.log(row)
+            }}
+            onClickEdit={(row) => {
+            }}
+            onClickDelete={(row) => {
+            }}
+            pagination
+            totalItem={this.state.totalService}
+            onChangePage={(page, pageSize) => {
+              console.log(page, pageSize)
+              this.setState({
+                page: page,
+                pageSize: pageSize
+              }, () => {
+                this.getService()
+              })
+            }}
+          />
+
         </div>
-    )
+
+      </div>
+    );
+  }
 }
 
-export default Services
