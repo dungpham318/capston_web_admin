@@ -9,7 +9,7 @@ export default class Customers extends Component {
     super(props);
     this.state = {
       customerList: [],
-      totalCustomer: 100,
+      //totalCustomer: 100,
       page: 1,
       pageSize: 10
     };
@@ -23,10 +23,8 @@ export default class Customers extends Component {
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
       "roles": [
-        "customer"
       ],
       "statuses": [
-        "active"
       ],
       "sortBy": ""
     })

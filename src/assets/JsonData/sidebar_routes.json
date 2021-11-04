@@ -45,6 +45,11 @@
         "icon": "bx bx-user-pin"
     },
     {
+        "display_name": "Articles",
+        "route": "/article",
+        "icon": "bx bx-gift"
+    },
+    {
         "display_name": "settings",
         "route": "/settings",
         "icon": "bx bx-cog"

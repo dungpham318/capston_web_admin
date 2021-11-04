@@ -11,6 +11,7 @@ import Analysics from '../pages/Analysics'
 import Promotions from '../pages/Promotions'
 import Salon from '../pages/Salon'
 import Staffs from '../pages/Staffs'
+import Article from '../pages/Article'
 
 const Routes = () => {
     return (
@@ -24,6 +25,7 @@ const Routes = () => {
             <Route path='/promotions' component={Promotions}/>
             <Route path='/salon' component={Salon}/>
             <Route path='/staffs' component={Staffs}/>
+            <Route path='/article' component={Article}/>
         </Switch>
     )
 }

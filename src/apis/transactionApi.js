@@ -1,7 +1,7 @@
 import { END_POINT } from '../config/index'
 
-export async function getSalonList(input) {
-  let url = `/api/Salon/advanced_get_salons`
+export async function getTransactionList(input) {
+  let url = `/api/Appointment/advanced_get_appointments`
   return fetch(END_POINT + url, {
     method: 'POST',
     headers: {

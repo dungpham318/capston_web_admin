@@ -80,7 +80,7 @@ export default class Services extends Component {
               'delete',
             ]}
             onClickView={(row) => {
-              console.log(row)
+              // openInPopup(row)
             }}
             onClickEdit={(row) => {
             }}
