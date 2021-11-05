@@ -9,7 +9,7 @@ export default class Transaction extends Component {
     super(props);
     this.state = {
       transactionList: [],
-    //   totalTransaction: 100,
+      //   totalTransaction: 100,
       page: 1,
       pageSize: 10
     };
@@ -22,28 +22,28 @@ export default class Transaction extends Component {
     let transactionList = await getTransactionList({
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
-      "statuses": [   
-    ],
-    "customerIds": [     
-    ],
-    "customerUserIds": [     
-    ],
-    "comboIds": [      
-    ],
-    "salonIds": [      
-    ],
-    "customerName": "",
-    "comboName": "",
-    "salonName": "",
-    "minCreatedDate": "",
-    "maxCreatedDate": "",
-    "minLastUpdate": "",
-    "maxLastUpdate": "",
-    "minDate": "",
-    "maxDate": "",
-    "minTotalPrice": -1,
-    "maxTotalPrice": -1,
-    "sortBy": ""
+      "statuses": [
+      ],
+      "customerIds": [
+      ],
+      "customerUserIds": [
+      ],
+      "comboIds": [
+      ],
+      "salonIds": [
+      ],
+      "customerName": "",
+      "comboName": "",
+      "salonName": "",
+      "minCreatedDate": "",
+      "maxCreatedDate": "",
+      "minLastUpdate": "",
+      "maxLastUpdate": "",
+      "minDate": "",
+      "maxDate": "",
+      "minTotalPrice": -1,
+      "maxTotalPrice": -1,
+      "sortBy": ""
     })
 
     if (transactionList) {
@@ -62,12 +62,51 @@ export default class Transaction extends Component {
   }
 
   render() {
+    let appointmentDetails = [
+      {
+        "serviceId": 1,
+        "serviceName": "Cắt tóc",
+        "serviceDescription": "Cắt tóc",
+        "servicePrice": 50000,
+        "staffId": null,
+        "staffName": null,
+        "staffType": null
+      },
+      {
+        "serviceId": 2,
+        "serviceName": "Gội Đầu",
+        "serviceDescription": "Gội Đầu",
+        "servicePrice": 20000,
+        "staffId": null,
+        "staffName": null,
+        "staffType": null
+      },
+      {
+        "serviceId": 4,
+        "serviceName": "Rửa Mặt",
+        "serviceDescription": "Gội Đầu",
+        "servicePrice": 20000,
+        "staffId": null,
+        "staffName": null,
+        "staffType": null
+      }
+    ]
     return (
       <div>
         <h2 className="page-header">
           Customers
         </h2>
+
         <div className='card'>
+          {
+            appointmentDetails.map((ele, index) => {
+              return (
+                <div>
+                  <p>{ele?.serviceName}</p>
+                </div>
+              )
+            })
+          }
           <Table
             headers={[
               { id: 1, label: '#', value: 'id' },
