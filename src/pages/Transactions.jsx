@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 //import axios from 'axios';
 import Table from '../components/table/Table';
-import { getTransactionList } from '../apis/transactionApi';
+import Modal from '../components/modal/Modal';
+import { getTransactionDetailApi, getTransactionList } from '../apis/transactionApi';
 
 export default class Transaction extends Component {
 
@@ -11,11 +12,19 @@ export default class Transaction extends Component {
       transactionList: [],
       //   totalTransaction: 100,
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      isOpenModal: false,
+      selectedTransaction: undefined
     };
   }
   componentDidMount() {
     this.getTransaction()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
+      this.setState({ selectedTransaction: undefined })
+    }
   }
 
   getTransaction = async () => {
@@ -52,7 +61,7 @@ export default class Transaction extends Component {
         totalTransaction: transactionList?.data?.totalCount
       })
     }
-
+    console.log(transactionList)
   }
 
   tabRow() {
@@ -61,36 +70,13 @@ export default class Transaction extends Component {
     });
   }
 
+  getTransactionDetail = async () => {
+    let res = await getTransactionDetailApi({
+      id: this.state.selectedTransaction?.id
+    })
+  }
+
   render() {
-    let appointmentDetails = [
-      {
-        "serviceId": 1,
-        "serviceName": "Cắt tóc",
-        "serviceDescription": "Cắt tóc",
-        "servicePrice": 50000,
-        "staffId": null,
-        "staffName": null,
-        "staffType": null
-      },
-      {
-        "serviceId": 2,
-        "serviceName": "Gội Đầu",
-        "serviceDescription": "Gội Đầu",
-        "servicePrice": 20000,
-        "staffId": null,
-        "staffName": null,
-        "staffType": null
-      },
-      {
-        "serviceId": 4,
-        "serviceName": "Rửa Mặt",
-        "serviceDescription": "Gội Đầu",
-        "servicePrice": 20000,
-        "staffId": null,
-        "staffName": null,
-        "staffType": null
-      }
-    ]
     return (
       <div>
         <h2 className="page-header">
@@ -98,15 +84,7 @@ export default class Transaction extends Component {
         </h2>
 
         <div className='card'>
-          {
-            appointmentDetails.map((ele, index) => {
-              return (
-                <div>
-                  <p>{ele?.serviceName}</p>
-                </div>
-              )
-            })
-          }
+
           <Table
             headers={[
               { id: 1, label: '#', value: 'id' },
@@ -119,14 +97,19 @@ export default class Transaction extends Component {
               { id: 7, label: 'Total Price', value: 'totalPrice' },
             ]}
             rows={this.state.transactionList}
-            // actionList={[
-            //   'view',
-            //   'edit',
-            //   'delete',
-            // ]}
-            // onClickView={(row) => {
-            //   console.log(row)
-            // }}
+            actionList={[
+              'view',
+              // 'edit',
+              // 'delete',
+            ]}
+            onClickView={(row) => {
+              console.log(row)
+              this.setState({
+                isOpenModal: true
+              }, () => {
+                this.getTransactionDetail()
+              })
+            }}
             // onClickEdit={(row) => {
             // }}
             // onClickDelete={(row) => {
@@ -145,6 +128,15 @@ export default class Transaction extends Component {
           />
 
         </div>
+
+        <Modal isOpen={this.state.isOpenModal}>
+          <div style={{
+            width: 200,
+            height: 500,
+          }}>
+
+          </div>
+        </Modal>
 
       </div>
     );

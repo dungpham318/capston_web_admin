@@ -1,7 +1,8 @@
 import { END_POINT } from '../config/index'
 
-export async function addArticle(input) {
-  let url = `/api/Article/add_article`
+export async function addArticleApi(input) {
+  console.log(JSON.stringify(input))
+  let url = `api/Article/create_article`
   return fetch(END_POINT + url, {
     method: 'POST',
     headers: {
@@ -26,3 +27,6 @@ export async function addArticle(input) {
       return false
     });
 }
+
+
+
