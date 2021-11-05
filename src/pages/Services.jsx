@@ -1,7 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import axios from 'axios';
 import Table from '../components/table/Table';
 import { getServiceList } from '../apis/serviceApi';
+import AddIcon from '@material-ui/icons/Add';
+import Popup from '../components/popup/Popup';
+//import Button from '@mui/material/Button';
 
 export default class Services extends Component {
 
@@ -55,13 +58,9 @@ export default class Services extends Component {
         <h2 className="page-header">
           Services
         </h2>
-        {/* <Controls.Button
-            text="Add New"
-            variant="outlined"
-            startIcon={<AddIcon />}
-            className={classes.newButton}
-            onClick={() => { setOpenPopup(true); setRecordForEdit(null); }}
-        /> */}
+        {/* <Button variant="outlined" onClick={handleClickOpen}>
+        Add new
+        </Button> */}
         <div className='card'>
           <Table
             headers={[
@@ -98,9 +97,7 @@ export default class Services extends Component {
               })
             }}
           />
-
         </div>
-
       </div>
     );
   }

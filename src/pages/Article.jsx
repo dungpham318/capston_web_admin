@@ -25,7 +25,9 @@ export default function Article() {
               "fontSize",
               "formatBlock",
               "table",
-              "image"
+              "image",
+              "print",
+              "save"
             ]
           ]
         }}
