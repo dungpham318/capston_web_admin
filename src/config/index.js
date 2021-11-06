@@ -1,6 +1,7 @@
 const END_POINT = 'https://d709-27-77-22-215.ngrok.io'
-
+const token = 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNjE4ODQ5MSwiZXhwIjoxNjM2NzkzMjkxLCJpYXQiOjE2MzYxODg0OTF9.VBenGYk6Prt72HbnaMJoRBVI2-ch93cIzlKSwLilFI0ebbTpqAOPuPtym7rALM0QM5t3nnw6AYc7VM6jYpi_xw'
 
 export {
-  END_POINT
+  END_POINT,
+  token
 }

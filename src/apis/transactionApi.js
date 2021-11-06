@@ -1,4 +1,5 @@
 import { END_POINT } from '../config/index'
+import {token} from '../config/index'
 
 export async function getTransactionList(input) {
   let url = `/api/Appointment/advanced_get_appointments`
@@ -6,7 +7,7 @@ export async function getTransactionList(input) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNjAxMTkxMywiZXhwIjoxNjM2NjE2NzEzLCJpYXQiOjE2MzYwMTE5MTN9.6criXw6TCfsFB7vj3aGKfNHUT8Jb8YzfFiojI_-1cAyoJFNxZdmFm1jhXrEcL9jpE__V01F-VChJZCinOdef3w'
+      'Authorization': 'Bearer ' + token
     },
     body: JSON.stringify(input)
   })
@@ -33,7 +34,7 @@ export async function getTransactionDetailApi(input) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNjAxMTkxMywiZXhwIjoxNjM2NjE2NzEzLCJpYXQiOjE2MzYwMTE5MTN9.6criXw6TCfsFB7vj3aGKfNHUT8Jb8YzfFiojI_-1cAyoJFNxZdmFm1jhXrEcL9jpE__V01F-VChJZCinOdef3w'
+      'Authorization': 'Bearer ' + token
     },
   })
     .then((response) => {
