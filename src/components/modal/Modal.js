@@ -8,7 +8,6 @@ const CustomModal = (props) => {
     isOpen,
     onClose
   } = props
-  console.log(99999, isOpen)
 
   return (
     <Modal

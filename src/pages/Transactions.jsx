@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import Table from '../components/table/Table';
 import Modal from '../components/modal/Modal';
 import { getTransactionDetailApi, getTransactionList } from '../apis/transactionApi';
+import { TextField } from '@material-ui/core';
+import Button from '@mui/material/Button';
+import Autocomplete from '@mui/material/Autocomplete'
 
 export default class Transaction extends Component {
 
@@ -70,10 +73,16 @@ export default class Transaction extends Component {
     });
   }
 
-  getTransactionDetail = async () => {
+  getTransactionDetail = async (id) => {
+    console.log(id)
     let res = await getTransactionDetailApi({
-      id: this.state.selectedTransaction?.id
+      id: id
     })
+    this.setState({
+      isOpenModal: true,
+      selectedTransaction: res?.data
+    })
+
   }
 
   render() {
@@ -104,11 +113,8 @@ export default class Transaction extends Component {
             ]}
             onClickView={(row) => {
               console.log(row)
-              this.setState({
-                isOpenModal: true
-              }, () => {
-                this.getTransactionDetail()
-              })
+              this.getTransactionDetail(row?.id)
+
             }}
             // onClickEdit={(row) => {
             // }}
@@ -131,10 +137,166 @@ export default class Transaction extends Component {
 
         <Modal isOpen={this.state.isOpenModal}>
           <div style={{
-            width: 200,
-            height: 500,
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1
           }}>
-
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Combo"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedTransaction?.comboName}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Date"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedTransaction?.startDate ? this.state.selectedTransaction?.startDate.split(' ')[0] : ''}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Start Time"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedTransaction?.customerName}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Start Time"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedTransaction?.startDate ? this.state.selectedTransaction?.startDate.split(' ')[1] : ''}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="End Time"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedTransaction?.endDate ? this.state.selectedTransaction?.endDate.split(' ')[1] : ''}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Total Price"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedTransaction?.totalPrice}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              disabled
+              id="outlined-basic"
+              label="Paid Amount"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedTransaction?.paidAmount}
+              onChange={(event) => {
+              }}
+            />
+            <div style={{
+              width: '100%',
+              marginTop: '1em',
+              marginBottom: '1em'
+            }}>
+              <p style={{
+                fontWeight: 'bold'
+              }}>Service List</p>
+              {
+                this.state.selectedTransaction?.appointmentDetails && this.state.selectedTransaction?.appointmentDetails.map((item, index) => {
+                  console.log(123, item)
+                  return (
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      flex: 1,
+                      alignItems: 'center'
+                    }}>
+                      <p style={{
+                        lineHeight: '100%'
+                      }}>{item?.serviceName}</p>
+                      <div className='mt-6'>
+                        <Autocomplete
+                          // value={selectedSubject}
+                          // onChange={(event, newValue) => {
+                          //   setSelectedSubject(newValue);
+                          // }}
+                          // inputValue={inputValue}
+                          // onInputChange={(event, newInputValue) => {
+                          //   setInputValue(newInputValue);
+                          // }}
+                          disablePortal
+                          id="combo-box-demo"
+                          // options={subjectList}
+                          sx={{ width: '100%' }}
+                          renderInput={(params) => <TextField {...params} label="Staff" />}
+                        />
+                      </div>
+                    </div>
+                  )
+                })
+              }
+            </div>
+          </div>
+          <div>
+            <Button variant="contained" color="inherit" onClick={() => {
+              this.setState({
+                isOpenModal: false
+              })
+            }}>
+              Close
+            </Button>
           </div>
         </Modal>
 

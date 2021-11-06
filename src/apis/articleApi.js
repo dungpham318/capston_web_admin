@@ -2,12 +2,12 @@ import { END_POINT } from '../config/index'
 
 export async function addArticleApi(input) {
   console.log(JSON.stringify(input))
-  let url = `api/Article/create_article`
+  let url = `/api/Article/create_article`
   return fetch(END_POINT + url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNTU4MzIwOCwiZXhwIjoxNjM2MTg4MDA4LCJpYXQiOjE2MzU1ODMyMDh9.9H4laE64bhkJdsGFoyIZ7eFuTi6C2swWgQqYWHR9MGbgFprRly5JZ6Ey4r3kQNIiyqIc15GPZagogoBL135T4Q'
+      'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNjE4OTI4MSwiZXhwIjoxNjM2Nzk0MDgxLCJpYXQiOjE2MzYxODkyODF9.JxKU8i1IVBMk6jRU03_FlQ5sDYM5ieDBUkEsGyjS_woMZcd0-1aG-dLWEv7LxlTH2MQW-XemHKf2zEnnCdL0ug'
     },
     body: JSON.stringify(input)
   })

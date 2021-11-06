@@ -1,4 +1,4 @@
-const END_POINT = 'https://10c3-27-77-22-215.ngrok.io/'
+const END_POINT = 'https://d709-27-77-22-215.ngrok.io'
 
 
 export {
