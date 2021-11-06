@@ -6,6 +6,7 @@ import { getTransactionDetailApi, getTransactionList } from '../apis/transaction
 import { TextField } from '@material-ui/core';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete'
+import { getAvailableStaffList } from '../apis/staffApi';
 
 export default class Transaction extends Component {
 
@@ -13,16 +14,22 @@ export default class Transaction extends Component {
     super(props);
     this.state = {
       transactionList: [],
+      staffList: [],
       //   totalTransaction: 100,
       page: 1,
       pageSize: 10,
       isOpenModal: false,
       selectedTransaction: undefined
+      // selectedStaff: undefined
     };
   }
   componentDidMount() {
     this.getTransaction()
   }
+
+  // componentDidMount() {
+  //   this.getAvailableStaff()
+  // }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
@@ -73,6 +80,20 @@ export default class Transaction extends Component {
     });
   }
 
+  getAvailableStaff = async (id) =>{
+    console.log(id)
+    let staffList = await getAvailableStaffList({
+      id: id
+    })
+    if (staffList){
+      this.setState({
+        staffList: staffList?.data
+      })
+      console.log(staffList)
+    }
+    // console.log(staffList)
+  }
+
   getTransactionDetail = async (id) => {
     console.log(id)
     let res = await getTransactionDetailApi({
@@ -84,6 +105,14 @@ export default class Transaction extends Component {
     })
 
   }
+  
+  // onSubmit = async () => {
+  //   let res = await assignStaffToAppointment({
+  //     "tittle": articleTitle,
+  //     "description": articleContent
+  //   })
+  //   console.log(res)
+  // }
 
   render() {
     return (
@@ -268,19 +297,19 @@ export default class Transaction extends Component {
                       }}>{item?.serviceName}</p>
                       <div className='mt-6'>
                         <Autocomplete
-                          // value={selectedSubject}
-                          // onChange={(event, newValue) => {
-                          //   setSelectedSubject(newValue);
-                          // }}
+                          value={this.state.staffList?.name}
+                          onChange={(event, newValue) => {
+                            // setAvailableStaff(newValue);
+                          }}
                           // inputValue={inputValue}
                           // onInputChange={(event, newInputValue) => {
                           //   setInputValue(newInputValue);
                           // }}
                           disablePortal
                           id="combo-box-demo"
-                          // options={subjectList}
+                           options={this.state.staffList}
                           sx={{ width: '100%' }}
-                          renderInput={(params) => <TextField {...params} label="Staff" />}
+                          renderInput={(params) => <TextField {...params} label="Staff"  />}
                         />
                       </div>
                     </div>
@@ -297,6 +326,13 @@ export default class Transaction extends Component {
             }}>
               Close
             </Button>
+            <Button variant="contained" color="success" onClick={() => {
+              this.setState({
+                isOpenModal: false
+              })
+            }}>
+              Submit
+            </Button>
           </div>
         </Modal>
 
@@ -304,3 +340,5 @@ export default class Transaction extends Component {
     );
   }
 }
+
+
