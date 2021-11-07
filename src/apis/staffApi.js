@@ -29,14 +29,13 @@ export async function getStaffList(input) {
 }
 
 export async function getAvailableStaffList(input) {
-  let url = `/get_available_staff_for_appointment/${input.id}`
+  let url = `/api/Staff/get_available_staff_for_appointment/${input.id}`
   return fetch(END_POINT + url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
     },
-    body: JSON.stringify(input)
   })
     .then((response) => {
       return response.json();

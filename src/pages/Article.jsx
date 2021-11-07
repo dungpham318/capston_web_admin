@@ -1,97 +1,129 @@
-import React, { useState, useEffect } from 'react'
-import SunEditor from "suneditor-react";
-import "suneditor/dist/css/suneditor.min.css";
-import { addArticleApi } from '../apis/articleApi';
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-
-export default function Article() {
-
-  const [articleTitle, setArticleTitle] = useState('')
-  const [articleContent, setArticleContent] = useState('')
-
-  const handleEditorChange = content => {
-    setArticleContent(content)
-  };
-
-  const onSubmit = async () => {
-    let res = await addArticleApi({
-      "tittle": articleTitle,
-      "description": articleContent
-    })
-    console.log(res)
+import React, { Component } from 'react';
+//import axios from 'axios';
+import Table from '../components/table/Table';
+import Modal from '../components/modal/Modal';
+import { getArticleListApi } from '../apis/articleApi';
+import { TextField } from '@material-ui/core';
+import Button from '@mui/material/Button';
+import Autocomplete from '@mui/material/Autocomplete'
+export default class Article extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      articleList: [],
+      //   totalTransaction: 100,
+      page: 1,
+      pageSize: 10,
+      totalItem: 0,
+      isOpenModal: false,
+      selectedTransaction: undefined
+    };
+  }
+  componentDidMount() {
+    this.getArticleList()
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
+      this.setState({ selectedTransaction: undefined })
+    }
+  }
 
-  return (
-    <div>
-      <div className='card' style={{
-        height: '45em'
-      }}>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-          height: '38em'
-        }}>
-          <TextField
-            required
-            id="outlined-basic"
-            label="Title"
-            variant="outlined"
-            style={{
-              width: '100%',
-              marginTop: '1em',
-              marginBottom: '1em'
-            }}
-            value={articleTitle}
-            onChange={(event) => {
-              setArticleTitle(event.target.value)
-            }}
-          />
+  getArticleList = async () => {
+    let res = await getArticleListApi({
+      "pageNumber": this.state.page,
+      "pageSize": this.state.pageSize,
+      "filterIds": [
+
+      ],
+      "authorUserIds": [
+
+      ],
+      "filterTittle": "",
+      "minCreatedDate": "",
+      "maxCreatedDate": "",
+      "minLastUpdate": "",
+      "maxLastUpdate": "",
+      "sortBy": "createddate_desc"
+    })
+    if (res) {
+      this.setState({
+        articleList: res?.data?.items,
+        totalItem: res?.data?.totalCount
+      })
+    }
+
+  }
+
+  tabRow() {
+    return this.state.business.map(function (object, i) {
+      return <Table obj={object} key={i} />;
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        {/* <h2 className="page-header">
+          Article
+        </h2> */}
+
+        <div className='card'>
           <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
+            marginBottom: '1em',
           }}>
-            <SunEditor
-              // setContents="My contents"
-              showToolbar={true}
-              onChange={handleEditorChange}
-              setDefaultStyle="height: auto"
-              setOptions={{
-                buttonList: [
-                  [
-                    "bold",
-                    "underline",
-                    "italic",
-                    "strike",
-                    "list",
-                    "align",
-                    "fontSize",
-                    "formatBlock",
-                    "table",
-                    "image",
-                    "print",
-                    "save"
-                  ]
-                ]
-              }}
-            />
+            <Button variant="outlined" onClick={() => {
+              this.props.history.push({
+                pathname: `/article/create`,
+              })
+            }}>
+              Create
+            </Button>
           </div>
 
-        </div>
-        <div style={{
-          display: 'flex',
-          flex: 'row',
+          <Table
+            headers={[
+              { id: 1, label: '#', value: 'index' },
+              { id: 2, label: 'Title', value: 'tittle' },
+              { id: 3, label: 'Status', value: 'status' },
+              { id: 4, label: 'AuthorName', value: 'authorName' },
+              { id: 5, label: 'Created Date', value: 'createdDate' },
+              { id: 6, label: 'Last Update', value: 'lastUpdate' },
+            ]}
+            totalItem={this.state.totalItem}
+            rows={this.state.articleList}
+            actionList={[
+              'view',
+              'edit',
+              'delete',
+            ]}
+            onClickView={(row) => {
+              this.props.history.push({
+                pathname: `/article/create`,
+                state: {
+                  articleData: row
+                }
+              })
+            }}
+            onClickEdit={(row) => {
+            }}
+            onClickDelete={(row) => {
+            }}
+            pagination
+            onChangePage={(page, pageSize) => {
+              console.log(page, pageSize)
+              this.setState({
+                page: page,
+                pageSize: pageSize
+              }, () => {
+                this.getArticleList()
+              })
+            }}
+          />
 
-        }}>
-          <Button variant="outlined" color="success" onClick={() => onSubmit()}>
-            Submit
-          </Button>
         </div>
 
       </div>
-    </div>
-  );
+    );
+  }
 }

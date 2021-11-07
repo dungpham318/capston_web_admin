@@ -10,6 +10,7 @@ import ic_edit from '../../assets/images/ic_edit.png'
 import ic_delete from '../../assets/images/ic_delete.png'
 import ic_next from '../../assets/images/ic_next.png'
 import ic_back from '../../assets/images/ic_back.png'
+
 //import Form from 'react-bootstrap/Form'
 
 class Table extends Component {
@@ -47,95 +48,110 @@ class Table extends Component {
     //   label: 'Action'
     // })
     return (
-      <div>
-        <BootstrapTable striped bordered hover responsive style={{
-          width: '100%',
-          textAlign: 'left'
+      <div style={{
+      }}>
+        <div style={{
+          overflowY: 'scroll',
+          height: '60vh',
+          overflow: 'auto'
         }}>
-          <thead>
-            <tr>
+          <BootstrapTable striped bordered hover responsive style={{
+            width: '100%',
+            textAlign: 'left',
+            borderCollapse: 'collapse',
+          }}>
+            <thead style={{
+              position: 'sticky',
+              top: 0,
+              zIndex: 1,
+              marginBottom: '10em'
+            }}>
+              <tr>
+                {
+                  headers && headers.map((_, index) => {
+                    return <th>{_.label}</th>
+                  })
+                }
+                {
+                  actionList && actionList.length > 0 &&
+                  <th style={{
+                    textAlign: 'center'
+                  }}>Action</th>
+                }
+              </tr>
+            </thead>
+
+            <tbody style={{
+              marginTop: '10em'
+            }}>
               {
-                headers && headers.map((_, index) => {
-                  return <th>{_.label}</th>
+                rows && rows.map((_, index) => {
+                  return <tr>
+                    {
+                      keys.map((key, index1) => {
+                        if (key === 'index') {
+                          return <td style={{
+                            paddingTop: '2em'
+                          }}>{index + 1 + ((this.state.page - 1) * this.state.pageSize)} </td>
+                        } else {
+                          return <td style={{
+                            paddingTop: '2em'
+                          }}>{_[key]}</td>
+                        }
+                      })
+                    }
+                    {
+                      actionList && actionList.length > 0 &&
+                      <td style={{
+                        paddingTop: '2em',
+                        textAlign: 'center'
+                      }}>
+                        {
+                          actionList.map((actionName, index) => {
+                            let icon
+                            let action
+                            switch (actionName) {
+                              case 'view':
+                                icon = ic_view
+                                action = () => onClickView(_)
+                                break;
+                              case 'edit':
+                                icon = ic_edit
+                                action = () => onClickEdit(_)
+                                break;
+                              case 'delete':
+                                icon = ic_delete
+                                action = () => onClickDelete(_)
+                                break;
+                              default:
+                                break;
+                            }
+                            return (
+                              <button
+                                style={{
+                                  backgroundColor: '#ffffff'
+                                }}
+                                onClick={() => { action() }}>
+                                <img
+                                  src={icon}
+                                  style={{
+                                    width: '1.5em',
+                                    height: '1.5em',
+                                    marginLeft: '0.5em',
+                                    marginRight: '0.5em',
+                                  }} />
+                              </button>
+                            )
+                          })
+                        }
+                      </td>
+                    }
+                  </tr>
                 })
               }
-              {
-                actionList && actionList.length > 0 &&
-                <th style={{
-                  textAlign: 'center'
-                }}>Action</th>
-              }
-            </tr>
-          </thead>
-          <tbody>
-            {
-              rows && rows.map((_, index) => {
-                return <tr>
-                  {
-                    keys.map((key, index1) => {
-                      if (key === 'index') {
-                        return <td style={{
-                          paddingTop: '2em'
-                        }}>{index + 1 + ((this.state.page - 1) * this.state.pageSize)} </td>
-                      } else {
-                        return <td style={{
-                          paddingTop: '2em'
-                        }}>{_[key]}</td>
-                      }
-                    })
-                  }
-                  {
-                    actionList && actionList.length > 0 &&
-                    <td style={{
-                      paddingTop: '2em',
-                      textAlign: 'center'
-                    }}>
-                      {
-                        actionList.map((actionName, index) => {
-                          let icon
-                          let action
-                          switch (actionName) {
-                            case 'view':
-                              icon = ic_view
-                              action = () => onClickView(_)
-                              break;
-                            case 'edit':
-                              icon = ic_edit
-                              action = () => onClickEdit(_)
-                              break;
-                            case 'delete':
-                              icon = ic_delete
-                              action = () => onClickDelete(_)
-                              break;
-                            default:
-                              break;
-                          }
-                          return (
-                            <button
-                              style={{
-                                backgroundColor: '#ffffff'
-                              }}
-                              onClick={() => { action() }}>
-                              <img
-                                src={icon}
-                                style={{
-                                  width: '1.5em',
-                                  height: '1.5em',
-                                  marginLeft: '0.5em',
-                                  marginRight: '0.5em',
-                                }} />
-                            </button>
-                          )
-                        })
-                      }
-                    </td>
-                  }
-                </tr>
-              })
-            }
-          </tbody>
-        </BootstrapTable>
-
+            </tbody>
+          </BootstrapTable>
+        </div>
         {
           this.props.pagination &&
           <div style={{
@@ -187,7 +203,7 @@ class Table extends Component {
                   paddingRight: '2em',
                   textAlign: 'justify',
                   height: '2em',
-                  lineHeight: '2em'
+                  lineHeight: '2.5em'
                 }}>{this.state.page}</span>
 
                 <button style={{

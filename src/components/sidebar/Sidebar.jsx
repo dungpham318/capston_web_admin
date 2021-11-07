@@ -26,7 +26,7 @@ const SidebarItem = props => {
 
 const Sidebar = props => {
 
-    const activeItem = sidebar_items.findIndex(item => item.route === props.location.pathname)
+    let activeItem = sidebar_items.findIndex(item => item.route === props.location.pathname)
 
     return (
         <div className='sidebar'>
@@ -34,15 +34,22 @@ const Sidebar = props => {
                 <img src={logo} alt="company logo" />
             </div>
             {
-                sidebar_items.map((item, index) => (
-                    <Link to={item.route} key={index}>
-                        <SidebarItem
-                            title={item.display_name}
-                            icon={item.icon}
-                            active={index === activeItem}
-                        />
-                    </Link>
-                ))
+                sidebar_items.map((item, index) => {
+                    if (props.location.pathname.includes(item?.route) && item?.route.length > 2) {
+                        activeItem = true
+                    } else {
+                        activeItem = false
+                    }
+                    return (
+                        <Link to={item.route} key={index}>
+                            <SidebarItem
+                                title={item.display_name}
+                                icon={item.icon}
+                                active={activeItem}
+                            />
+                        </Link>
+                    )
+                })
             }
         </div>
     )

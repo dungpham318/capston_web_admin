@@ -80,22 +80,22 @@ export default class Transaction extends Component {
     });
   }
 
-  getAvailableStaff = async (id) =>{
-    console.log(id)
+  getAvailableStaff = async (id) => {
     let staffList = await getAvailableStaffList({
       id: id
     })
-    if (staffList){
+    if (staffList?.data) {
+      staffList?.data.map(item =>
+        item.label = item?.name
+      )
       this.setState({
         staffList: staffList?.data
       })
-      console.log(staffList)
     }
     // console.log(staffList)
   }
 
   getTransactionDetail = async (id) => {
-    console.log(id)
     let res = await getTransactionDetailApi({
       id: id
     })
@@ -105,7 +105,7 @@ export default class Transaction extends Component {
     })
 
   }
-  
+
   // onSubmit = async () => {
   //   let res = await assignStaffToAppointment({
   //     "tittle": articleTitle,
@@ -143,7 +143,7 @@ export default class Transaction extends Component {
             onClickView={(row) => {
               console.log(row)
               this.getTransactionDetail(row?.id)
-
+              this.getAvailableStaff(row?.id)
             }}
             // onClickEdit={(row) => {
             // }}
@@ -284,18 +284,22 @@ export default class Transaction extends Component {
               }}>Service List</p>
               {
                 this.state.selectedTransaction?.appointmentDetails && this.state.selectedTransaction?.appointmentDetails.map((item, index) => {
-                  console.log(123, item)
                   return (
                     <div style={{
                       display: 'flex',
                       flexDirection: 'row',
-                      flex: 1,
-                      alignItems: 'center'
+                      flex: '1 1 0%',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginTop: '1em',
+                      marginBottom: '1em',
                     }}>
                       <p style={{
-                        lineHeight: '100%'
+                        lineHeight: '100%',
                       }}>{item?.serviceName}</p>
-                      <div className='mt-6'>
+                      <div style={{
+                        width: '50%'
+                      }}>
                         <Autocomplete
                           value={this.state.staffList?.name}
                           onChange={(event, newValue) => {
@@ -307,9 +311,9 @@ export default class Transaction extends Component {
                           // }}
                           disablePortal
                           id="combo-box-demo"
-                           options={this.state.staffList}
+                          options={this.state.staffList}
                           sx={{ width: '100%' }}
-                          renderInput={(params) => <TextField {...params} label="Staff"  />}
+                          renderInput={(params) => <TextField {...params} label="Staff" />}
                         />
                       </div>
                     </div>
