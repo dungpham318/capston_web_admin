@@ -75,7 +75,7 @@ export default class Staffs extends Component {
                 pathname: `/staffs/create`,
               })
             }}>
-              New Service
+              New Staff
             </Button>
           </div>
           <Table

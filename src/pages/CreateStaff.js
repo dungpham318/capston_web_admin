@@ -96,22 +96,6 @@ export default function CreateStaff(props) {
                       }}
                     />
                     <TextField
-                      required
-                      id="outlined-basic"
-                      label="Description"
-                      variant="outlined"
-                      style={{
-                          width: '100%',
-                          marginTop: '1em',
-                          marginBottom: '1em'
-                      }}
-                      value={staffDescription}
-                      onChange={(event) => {
-                          setStaffDescription(event.target.value)
-                      }}
-                    />
-                    <TextField
-                      required
                       id="outlined-basic"
                       label="Description"
                       variant="outlined"
@@ -141,7 +125,6 @@ export default function CreateStaff(props) {
                       }}
                     />
                     <TextField
-                      required
                       id="outlined-basic"
                       label="Phone Number"
                       variant="outlined"
@@ -156,7 +139,6 @@ export default function CreateStaff(props) {
                       }}
                     />
                     <TextField
-                      required
                       id="outlined-basic"
                       label="Salon"
                       variant="outlined"
