@@ -10,6 +10,8 @@ import ic_edit from '../../assets/images/ic_edit.png'
 import ic_delete from '../../assets/images/ic_delete.png'
 import ic_next from '../../assets/images/ic_next.png'
 import ic_back from '../../assets/images/ic_back.png'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 //import Form from 'react-bootstrap/Form'
 
@@ -37,7 +39,8 @@ class Table extends Component {
       onClickView,
       onClickEdit,
       onClickDelete,
-      totalItem
+      totalItem,
+      loading
     } = this.props
     let keys = []
     headers && headers.map((_, index) => {
@@ -49,12 +52,34 @@ class Table extends Component {
     // })
     return (
       <div style={{
+        position: 'relative'
       }}>
         <div style={{
           overflowY: 'scroll',
           height: '60vh',
-          overflow: 'auto'
+          overflow: 'auto',
+          position: 'relative'
         }}>
+          {
+            loading &&
+            <div style={{
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              left: '45%',
+              top: 0,
+              position: 'absolute',
+
+            }}>
+              <Box sx={{ display: 'flex' }}>
+                <CircularProgress />
+              </Box>
+            </div>
+          }
+
+
           <BootstrapTable striped bordered hover responsive style={{
             width: '100%',
             textAlign: 'left',

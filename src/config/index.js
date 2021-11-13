@@ -1,5 +1,5 @@
-const END_POINT = 'https://d709-27-77-22-215.ngrok.io'
-const token = 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNjIwMDk2MywiZXhwIjoxNjM2ODA1NzYzLCJpYXQiOjE2MzYyMDA5NjN9.b6bne96CqUuC7A3fhF6_BQmeLy-JWTR5lqMycOxZhuu6OWXkOPKXg1IieIYdHklDVLrFUCtqVF_-yaHptKelcg'
+const END_POINT = 'https://8e74-27-77-22-215.ngrok.io'
+const token = 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJtYW5hZ2VyMTIzQGdtYWlsLmNvbSIsInJvbGUiOiJtYW5hZ2VyIiwibmJmIjoxNjM2NzMyOTA2LCJleHAiOjE2MzczMzc3MDYsImlhdCI6MTYzNjczMjkwNn0.Nw6jVUQNyJLOwCyJXZVzXC83IhnuuP-4EcI_mkZ77vz0hHEp4PLOgWohDDdvQz_EfEJ7hkLJ3eh7dS44CV31QQ'
 
 export {
   END_POINT,
