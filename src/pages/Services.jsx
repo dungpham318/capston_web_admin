@@ -65,8 +65,10 @@ export default class Services extends Component {
 
   getDetail = async (id) => {
     let res = await getServiceDetail({
-      id:id
+      id: id
     })
+    console.log(res)
+
     this.setState({
       isOpenModal: true,
       selectedService: res?.data
@@ -91,7 +93,7 @@ export default class Services extends Component {
               Create
             </Button>
           </div>
-        {/* <div className='card'> */}
+          {/* <div className='card'> */}
           <Table
             headers={[
               { id: 1, label: '#', value: 'id' },
@@ -192,7 +194,7 @@ export default class Services extends Component {
             </Button>
           </div>
         </Modal>
-        
+
       </div>
     );
   }

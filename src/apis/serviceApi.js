@@ -63,7 +63,6 @@ export async function getServiceDetail(input) {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
     },
-    body: JSON.stringify(input)
   })
     .then((response) => {
       return response.json();
