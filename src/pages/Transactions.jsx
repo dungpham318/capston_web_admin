@@ -171,10 +171,11 @@ export default class Transaction extends Component {
               { id: 2, label: 'Customer Name', value: 'customerName' },
               { id: 3, label: 'Salon', value: 'salonName' },
               { id: 4, label: 'Status', value: 'status' },
-              { id: 5, label: 'End Date', value: 'endDate' },
-              { id: 6, label: 'Created Date', value: 'createdDate' },
-              { id: 7, label: 'Combo', value: 'comboName' },
-              { id: 7, label: 'Total Price', value: 'totalPrice' },
+              { id: 5, label: 'Start Date', value: 'startDate' },
+              { id: 6, label: 'End Date', value: 'endDate' },
+              { id: 7, label: 'Created Date', value: 'createdDate' },
+              { id: 8, label: 'Combo', value: 'comboName' },
+              { id: 9, label: 'Total Price', value: 'totalPrice' },
             ]}
             rows={this.state.transactionList}
             actionList={[
