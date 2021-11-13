@@ -118,7 +118,7 @@ export default class Transaction extends Component {
     return (
       <div>
         <h2 className="page-header">
-          Customers
+          Appointments
         </h2>
 
         <div className='card'>
