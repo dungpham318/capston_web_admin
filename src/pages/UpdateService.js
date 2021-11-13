@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getServiceDetail, createServiceApi } from '../apis/serviceApi';
+import { getServiceDetail, UpdateServiceApi } from '../apis/serviceApi';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-export default function CreateService(props) {
+export default function UpdateService(props) {
 
+    const [serviceId, setServiceId] = useState('')
     const [serviceName, setServiceName] = useState('')
     const [serviceDescription, setServiceDescription] = useState('')
     const [servicePrice, setServicePrice] = useState('')
@@ -24,8 +25,9 @@ export default function CreateService(props) {
         console.log(123456789, serviceName)
     }, [serviceName])
 
-    const onSubmit = async () => {
-        let res = await createServiceApi({
+    const onUpdate = async () => {
+        let res = await UpdateServiceApi({
+            "id": serviceId,
             "name": serviceName,
             "description": serviceDescription,
             "status": serviceStatus,
@@ -51,6 +53,7 @@ export default function CreateService(props) {
         })
         console.log(res)
         if(res) {
+            setServiceId(res?.data?.id)
             setServiceName(res?.data?.name)
             setServiceDescription(res?.data?.description)
             setServiceStatus(res?.data?.status)
@@ -60,13 +63,29 @@ export default function CreateService(props) {
 
     return (
         <div>
-            <div className='card' style={{height: '25em'}}>
+            <div className='card' style={{height: '30em'}}>
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
                     flex: 1,
                     height: '38em'
-                }}>  
+                }}>
+                    <TextField
+                      required
+                      disabled
+                      id="outlined-basic"
+                      label="Service Id"
+                      variant="outlined"
+                      style={{
+                          width: '100%',
+                          marginTop: '1em',
+                          marginBottom: '1em'
+                      }}
+                      value={serviceId}
+                      onChange={(event) => {
+                          setServiceId(event.target.value)
+                      }}
+                    />  
                     <TextField
                       required
                       id="outlined-basic"
@@ -138,8 +157,8 @@ export default function CreateService(props) {
                         <div style={{ flex: 1}}/>
                         <LoadingButton  style ={{
                             marginRight: '1em'
-                        }}variant="contained" color="success" onClick={() => onSubmit()}>
-                            Submit
+                        }}variant="contained" color="blue" onClick={() => onUpdate()}>
+                            Update
                         </LoadingButton>
                         <LoadingButton variant="contained" color="error" onClick={() => onCancel()}>
                             Cancel
