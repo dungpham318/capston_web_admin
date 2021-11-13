@@ -1,4 +1,5 @@
 import { END_POINT } from '../config/index'
+import { token } from '../config/index'
 
 export async function addArticleApi(input) {
   console.log(input)
@@ -8,7 +9,7 @@ export async function addArticleApi(input) {
     method: 'POST',
     headers: {
       // 'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNjE4OTI4MSwiZXhwIjoxNjM2Nzk0MDgxLCJpYXQiOjE2MzYxODkyODF9.JxKU8i1IVBMk6jRU03_FlQ5sDYM5ieDBUkEsGyjS_woMZcd0-1aG-dLWEv7LxlTH2MQW-XemHKf2zEnnCdL0ug'
+      'Authorization': 'Bearer ' + token
     },
     body: input
   })
@@ -37,7 +38,7 @@ export async function getArticleListApi(input) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNjE4OTI4MSwiZXhwIjoxNjM2Nzk0MDgxLCJpYXQiOjE2MzYxODkyODF9.JxKU8i1IVBMk6jRU03_FlQ5sDYM5ieDBUkEsGyjS_woMZcd0-1aG-dLWEv7LxlTH2MQW-XemHKf2zEnnCdL0ug'
+      'Authorization': 'Bearer ' + token
     },
     body: JSON.stringify(input)
   })
@@ -66,7 +67,7 @@ export async function getArticleDetailApi(input) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNjE4OTI4MSwiZXhwIjoxNjM2Nzk0MDgxLCJpYXQiOjE2MzYxODkyODF9.JxKU8i1IVBMk6jRU03_FlQ5sDYM5ieDBUkEsGyjS_woMZcd0-1aG-dLWEv7LxlTH2MQW-XemHKf2zEnnCdL0ug'
+      'Authorization': 'Bearer ' + token
     },
   })
     .then((response) => {

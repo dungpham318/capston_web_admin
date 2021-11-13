@@ -13,13 +13,17 @@ import Salon from '../pages/Salon'
 import Staffs from '../pages/Staffs'
 import Article from '../pages/Article'
 import CreateArticle from '../pages/CreateArticle'
+import Login from '../pages/Login'
+import CreateService from '../pages/CreateService'
 
 const Routes = () => {
     return (
         <Switch>
             <Route path='/' exact component={Dashboard} />
+            <Route path='/dashboard' component={Dashboard} />
             <Route path='/customers' component={Customers} />
-            <Route path='/services' component={Services} />
+            <Route exact path='/services' component={Services} />
+            <Route path='services/create' component={CreateService}/>
             <Route path='/combo' component={Combo} />
             <Route path='/transactions' component={Transactions} />
             <Route path='/analysics' component={Analysics} />

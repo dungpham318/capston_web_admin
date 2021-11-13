@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 //import axios from 'axios';
 import Table from '../components/table/Table';
 import Modal from '../components/modal/Modal';
-import { assignAppointmentApi, getTransactionDetailApi, getTransactionList } from '../apis/transactionApi';
+import { assignAppointmentApi, cancelAppointmentApi, getTransactionDetailApi, getTransactionList } from '../apis/transactionApi';
 import { TextField } from '@material-ui/core';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete'
@@ -140,11 +140,27 @@ export default class Transaction extends Component {
     this.assignAppointment()
   }
 
+  onCancel = async () => {
+    let isConfirm = window.confirm("Do you want to cancel this appointment?")
+    if (isConfirm) {
+      this.setState({ loading: true })
+      let res = await cancelAppointmentApi({
+        id: this.state.selectedTransaction?.id
+      })
+      this.setState({ loading: false })
+      if (res) {
+        this.setState({ isOpenModal: false }, () => {
+          this.getTransaction()
+        })
+      }
+    }
+  }
+
   render() {
     return (
       <div>
         <h2 className="page-header">
-          Customers
+          Appointments
         </h2>
         <div className='card'>
 
@@ -352,34 +368,53 @@ export default class Transaction extends Component {
                         <div style={{
                           width: '50%'
                         }}>
-                          <Autocomplete
-                            value={this.state.staffList?.name}
-                            onChange={(event, newValue) => {
-                              let tmp = this.state.selectedStaffList
-                              let index = this.state.selectedStaffList.findIndex(ele => ele?.serviceId === item?.serviceId)
-                              if (index !== -1) {
-                                this.state.selectedStaffList.splice(index, 1)
-                              }
-                              tmp.push({
-                                "staffId": newValue?.staffId,
-                                "serviceId": item?.serviceId
-                              })
-                              this.setState({
-                                selectedStaffList: tmp
-                              }, () => {
-                                console.log(tmp)
-                              })
-                            }}
-                            // inputValue={inputValue}
-                            // onInputChange={(event, newInputValue) => {
-                            //   setInputValue(newInputValue);
-                            // }}
-                            disablePortal
-                            id="combo-box-demo"
-                            options={item?.staffList}
-                            sx={{ width: '100%' }}
-                            renderInput={(params) => <TextField {...params} label="Staff" />}
-                          />
+                          {
+                            this.state.selectedTransaction?.status === 'pending' ?
+                              <Autocomplete
+                                disabled={this.state.selectedTransaction?.status === 'pending' ? false : true}
+                                value={this.state.staffList?.name}
+                                onChange={(event, newValue) => {
+                                  let tmp = this.state.selectedStaffList
+                                  let index = this.state.selectedStaffList.findIndex(ele => ele?.serviceId === item?.serviceId)
+                                  if (index !== -1) {
+                                    this.state.selectedStaffList.splice(index, 1)
+                                  }
+                                  tmp.push({
+                                    "staffId": newValue?.staffId,
+                                    "serviceId": item?.serviceId
+                                  })
+                                  this.setState({
+                                    selectedStaffList: tmp
+                                  }, () => {
+                                    console.log(tmp)
+                                  })
+                                }}
+                                // inputValue={inputValue}
+                                // onInputChange={(event, newInputValue) => {
+                                //   setInputValue(newInputValue);
+                                // }}
+                                disablePortal
+                                id="combo-box-demo"
+                                options={item?.staffList}
+                                sx={{ width: '100%' }}
+                                renderInput={(params) => <TextField {...params} label="Staff" />}
+                              /> :
+                              <TextField
+                                disabled
+                                id="outlined-basic"
+                                label="Staff"
+                                variant="outlined"
+                                style={{
+                                  width: '100%',
+                                  marginTop: '1em',
+                                  marginBottom: '1em'
+                                }}
+                                value={item?.staffName}
+                                onChange={(event) => {
+                                }}
+                              />
+                          }
+
                         </div>
                       </div>
                     )
@@ -414,6 +449,13 @@ export default class Transaction extends Component {
                 flexDirection: 'row'
               }}>
                 <div style={{ flex: 1 }} />
+                <LoadingButton style={{
+                  marginRight: '1em'
+                }} variant="contained" color="error" loading={this.state.loading} onClick={() => {
+                  this.onCancel()
+                }}>
+                  Cancel
+                </LoadingButton>
                 <LoadingButton variant="contained" color="success" loading={this.state.loading} onClick={() => {
                   this.onSubmit()
                 }}>

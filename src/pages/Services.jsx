@@ -4,7 +4,10 @@ import Table from '../components/table/Table';
 import { getServiceList } from '../apis/serviceApi';
 import AddIcon from '@material-ui/icons/Add';
 import Popup from '../components/popup/Popup';
-//import Button from '@mui/material/Button';
+import Button from '@mui/material/Button';
+import Modal from '../components/modal/Modal';
+import { TextField } from '@material-ui/core';
+import { getServiceDetail } from '../apis/serviceApi'
 
 export default class Services extends Component {
 
@@ -16,11 +19,19 @@ export default class Services extends Component {
       page: 1,
       pageSize: 10,
       minPrice: 0,
-      maxPrice: 100000000
+      maxPrice: 100000000,
+      isOpenModal: false,
+      selectedService: undefined
     };
   }
   componentDidMount() {
     this.getService()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
+      this.setState({ selectedService: undefined })
+    }
   }
 
   getService = async () => {
@@ -52,16 +63,35 @@ export default class Services extends Component {
     });
   }
 
+  getDetail = async (id) => {
+    let res = await getServiceDetail({
+      id:id
+    })
+    this.setState({
+      isOpenModal: true,
+      selectedService: res?.data
+    })
+  }
+
   render() {
     return (
       <div>
         <h2 className="page-header">
-          Services
+          Services List
         </h2>
-        {/* <Button variant="outlined" onClick={handleClickOpen}>
-        Add new
-        </Button> */}
         <div className='card'>
+          <div style={{
+            marginBottom: '1em',
+          }}>
+            <Button variant="outlined" onClick={() => {
+              this.props.history.push({
+                pathname: `/services/create`,
+              })
+            }}>
+              Create
+            </Button>
+          </div>
+        {/* <div className='card'> */}
           <Table
             headers={[
               { id: 1, label: '#', value: 'id' },
@@ -79,7 +109,8 @@ export default class Services extends Component {
               'delete',
             ]}
             onClickView={(row) => {
-              // openInPopup(row)
+              console.log(row)
+              this.getDetail(row?.id)
             }}
             onClickEdit={(row) => {
             }}
@@ -98,6 +129,70 @@ export default class Services extends Component {
             }}
           />
         </div>
+
+        <Modal isOpen={this.state.isOpenModal}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1
+          }}>
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Service Name"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedService?.name}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Description"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedService?.description}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Price"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedService?.price}
+              onChange={(event) => {
+              }}
+            />
+          </div>
+          <div>
+            <Button variant="contained" color="inherit" onClick={() => {
+              this.setState({
+                isOpenModal: false
+              })
+            }}>
+              Close
+            </Button>
+          </div>
+        </Modal>
+        
       </div>
     );
   }

@@ -20,7 +20,7 @@
         "icon": "bx bx-list-ol"
     },
     {
-        "display_name": "Transactions",
+        "display_name": "Appointments",
         "route": "/transactions",
         "icon": "bx bx-cart"
     },

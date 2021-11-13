@@ -60,9 +60,7 @@ export default function CreateArticle(props) {
 
   return (
     <div>
-      <div className='card' style={{
-        height: '45em'
-      }}>
+      <div className='card' style={{height: '45em'}}>
         <div style={{
           display: 'flex',
           flexDirection: 'column',
@@ -151,11 +149,7 @@ export default function CreateArticle(props) {
           </div>
 
         </div>
-        <div style={{
-          display: 'flex',
-          flex: 'row',
-
-        }}>
+        <div style={{display: 'flex',flex: 'row', }}>
           <Button variant="outlined" onClick={() => onSubmit()}>
             Submit
           </Button>
