@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 //import axios from 'axios';
 import Table from '../components/table/Table';
-import { getStaffList } from '../apis/staffApi';
+import { getStaffDetailApi, getStaffList } from '../apis/staffApi';
+import Button from '@mui/material/Button';
+import Modal from '../components/modal/Modal';
+import { TextField } from '@material-ui/core';
 
 export default class Staffs extends Component {
 
@@ -11,7 +14,9 @@ export default class Staffs extends Component {
       staffList: [],
       totalStaff: 100,
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      isOpenModal: false,
+      selectedStaff: undefined
     };
   }
   componentDidMount() {
@@ -43,6 +48,18 @@ export default class Staffs extends Component {
     });
   }
 
+  getStaffDetail = async (id) => {
+    let res = await getStaffDetailApi({
+      id: id
+    })
+    console.log(res)
+
+    this.setState({
+      isOpenModal: true,
+      selectedStaff: res?.data
+    })
+  }
+
   render() {
     return (
       <div>
@@ -50,6 +67,17 @@ export default class Staffs extends Component {
           Staffs List
         </h2>
         <div className='card'>
+        <div style={{
+            marginBottom: '1em',
+          }}>
+            <Button variant="outlined" onClick={() => {
+              this.props.history.push({
+                pathname: `/staffs/create`,
+              })
+            }}>
+              New Service
+            </Button>
+          </div>
           <Table
             headers={[
               { id: 1, label: '#', value: 'index' },
@@ -65,14 +93,15 @@ export default class Staffs extends Component {
             rows={this.state.staffList}
             actionList={[
               'view',
-              'edit',
+              //'edit',
               'delete',
             ]}
             onClickView={(row) => {
               console.log(row)
+              this.getStaffDetail(row?.staffId)
             }}
-            onClickEdit={(row) => {
-            }}
+            // onClickEdit={(row) => {
+            // }}
             onClickDelete={(row) => {
             }}
             pagination
@@ -89,6 +118,114 @@ export default class Staffs extends Component {
           />
 
         </div>
+
+        <Modal isOpen={this.state.isOpenModal}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1
+          }}>
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Staff ID"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedStaff?.staffId}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Staff Name"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedStaff?.fullName}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Working Role"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedStaff?.staffType}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Description"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedStaff?.description}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Staff Email"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedStaff?.email}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Phone Number"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedStaff?.phoneNumber}
+              onChange={(event) => {
+              }}
+            />
+          </div>
+          <div>
+            <Button variant="contained" color="inherit" onClick={() => {
+              this.setState({
+                isOpenModal: false
+              })
+            }}>
+              Close
+            </Button>
+          </div>
+        </Modal>
 
       </div>
     );

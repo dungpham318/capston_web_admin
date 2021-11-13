@@ -76,6 +76,7 @@ export default class Services extends Component {
       selectedService: res?.data
     })
   }
+  
 
   render() {
     return (
@@ -110,7 +111,7 @@ export default class Services extends Component {
             actionList={[
               'view',
               'edit',
-              'delete',
+              //'delete',
             ]}
             onClickView={(row) => {
               console.log(row)
@@ -124,8 +125,10 @@ export default class Services extends Component {
                 }
               })
             }}
-            onClickDelete={(row) => {
-            }}
+            // onClickDelete={(row) => {
+            //   console.log(row)
+            //   this.deleteService(row?.id)
+            // }}
             pagination
             totalItem={this.state.totalService}
             onChangePage={(page, pageSize) => {

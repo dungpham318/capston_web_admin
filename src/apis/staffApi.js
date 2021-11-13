@@ -53,3 +53,56 @@ export async function getAvailableStaffList(input) {
       return false
     });
 }
+
+export async function getStaffDetailApi(input) {
+  let url = `/api/Staff/${input.id}`
+  return fetch(END_POINT + url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
+        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    });
+}
+
+export async function createStaffApi(input) {
+  let url = `/api/Staff/create_staff`
+  return fetch(END_POINT + url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify(input)
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
+        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    });
+}

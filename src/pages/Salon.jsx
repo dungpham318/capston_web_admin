@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 //import axios from 'axios';
 import Table from '../components/table/Table';
 import { getSalonList } from '../apis/salonApi';
+import Button from '@mui/material/Button';
+import Modal from '../components/modal/Modal';
+import { TextField } from '@material-ui/core';
 
 export default class Salon extends Component {
 
@@ -11,7 +14,8 @@ export default class Salon extends Component {
       salonList: [],
       totalSalon: 100,
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      isOpenModal: false
     };
   }
   componentDidMount() {
@@ -47,9 +51,20 @@ export default class Salon extends Component {
     return (
       <div>
         <h2 className="page-header">
-          Customers
+          Salon List
         </h2>
         <div className='card'>
+          <div style={{
+            marginBottom: '1em',
+          }}>
+            <Button variant="outlined" onClick={() => {
+              this.props.history.push({
+                pathname: `/salon/create`,
+              })
+            }}>
+              New Salon
+            </Button>
+          </div>
           <Table
             headers={[
               { id: 1, label: '#', value: 'id' },
@@ -61,14 +76,21 @@ export default class Salon extends Component {
             ]}
             rows={this.state.salonList}
             actionList={[
-              'view',
+              //'view',
               'edit',
-              'delete',
+              //'delete',
             ]}
-            onClickView={(row) => {
-              console.log(row)
-            }}
+            // onClickView={(row) => {
+            //   console.log(row)
+            //   // this.getSalonDetail(row?.id)
+            // }}
             onClickEdit={(row) => {
+              this.props.history.push({
+                pathname:`/salon/create`,
+                state:{
+                  salonData: row
+                }
+              })
             }}
             onClickDelete={(row) => {
             }}

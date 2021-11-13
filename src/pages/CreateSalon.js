@@ -1,60 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { getServiceDetail, createServiceApi } from '../apis/serviceApi';
+import React, { useState, useEffect } from 'react'
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { createSalonApi } from '../apis/salonApi'
 
-export default function CreateService(props) {
+export default function CreateSalon(props) {
 
-    const [serviceName, setServiceName] = useState('')
-    const [serviceDescription, setServiceDescription] = useState('')
-    const [servicePrice, setServicePrice] = useState('')
-    const [serviceStatus, setServiceStatus] = useState('active')
-    const [isGettingService, setIsGettingService] = useState(true)
+    const [salonName, setSalonName] = useState('')
+    const [salonDescription, setSalonDescription] = useState('')
+    const [salonAddress, setSalonAddress] = useState('')
+    const [salonStatus, setSalonStatus] = useState('active')
+    const [isGettingSalon, setIsGettingSalon] = useState(true)
+
+    // useEffect(() => {
+    //     if (props.location.state?.salonData){
+    //         getSalonDetail(props.location.state?.salonData?.id)
+    //     }else{
+    //         setIsGettingSalon(false)
+    //     }
+    // }, [])
 
     useEffect(() => {
-        if (props.location.state?.serviceData){
-            getDetail(props.location.state?.serviceData?.id)
-        }else{
-            setIsGettingService(false)
-        }
-    }, [])
-
-    useEffect(() => {
-        console.log(123456789, serviceName)
-    }, [serviceName])
+        console.log(123456789, salonName)
+    }, [salonName])
 
     const onSubmit = async () => {
-        let res = await createServiceApi({
-            "name": serviceName,
-            "description": serviceDescription,
-            "status": serviceStatus,
-            "price": servicePrice
+        let res = await createSalonApi({
+            "name": salonName,
+            "description": salonDescription,
+            "address": salonAddress
         })
 
         if(res) {
             props.history.push({
-                pathname: `/services`
+                pathname: `/salon`
             })
         }
     }
 
     const onCancel = async () =>{
         props.history.push({
-            pathname:`/services`
+            pathname:`/salon`
         })
-    }
-
-    const getDetail = async (id) => {
-        let res = await getServiceDetail({
-            id: id
-        })
-        console.log(res)
-        if(res) {
-            setServiceName(res?.data?.name)
-            setServiceDescription(res?.data?.description)
-            setServiceStatus(res?.data?.status)
-            setServicePrice(res?.data?.price)
-        }
     }
 
     return (
@@ -69,16 +55,16 @@ export default function CreateService(props) {
                     <TextField
                       required
                       id="outlined-basic"
-                      label="Service Name"
+                      label="Salon Name"
                       variant="outlined"
                       style={{
                           width: '100%',
                           marginTop: '1em',
                           marginBottom: '1em'
                       }}
-                      value={serviceName}
+                      value={salonName}
                       onChange={(event) => {
-                          setServiceName(event.target.value)
+                          setSalonName(event.target.value)
                       }}
                     />
                     <TextField
@@ -91,9 +77,9 @@ export default function CreateService(props) {
                           marginTop: '1em',
                           marginBottom: '1em'
                       }}
-                      value={serviceDescription}
+                      value={salonDescription}
                       onChange={(event) => {
-                          setServiceDescription(event.target.value)
+                          setSalonDescription(event.target.value)
                       }}
                     />
                     <TextField
@@ -107,24 +93,24 @@ export default function CreateService(props) {
                           marginTop: '1em',
                           marginBottom: '1em'
                       }}
-                      value={serviceStatus}
+                      value={salonStatus}
                       onChange={(event) => {
-                          setServiceStatus(event.target.value)
+                          setSalonStatus(event.target.value)
                       }}
                     />
                     <TextField
                       required
                       id="outlined-basic"
-                      label="Price"
+                      label="Address"
                       variant="outlined"
                       style={{
                           width: '100%',
                           marginTop: '1em',
                           marginBottom: '1em'
                       }}
-                      value={servicePrice}
+                      value={salonAddress}
                       onChange={(event) => {
-                          setServicePrice(event.target.value)
+                          setSalonAddress(event.target.value)
                       }}
                     />
                     <div style={{

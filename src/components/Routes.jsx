@@ -16,6 +16,8 @@ import CreateArticle from '../pages/CreateArticle'
 import Login from '../pages/Login'
 import CreateService from '../pages/CreateService'
 import UpdateService from '../pages/UpdateService'
+import CreateSalon from '../pages/CreateSalon'
+import CreateStaff from '../pages/CreateStaff'
 
 const Routes = () => {
     return (
@@ -30,8 +32,10 @@ const Routes = () => {
             <Route path='/transactions' component={Transactions} />
             <Route path='/analysics' component={Analysics} />
             <Route path='/promotions' component={Promotions} />
-            <Route path='/salon' component={Salon} />
-            <Route path='/staffs' component={Staffs} />
+            <Route exact path='/salon' component={Salon} />
+            <Route path='/salon/create' component={CreateSalon} />
+            <Route exact path='/staffs' component={Staffs} />
+            <Route path='/staffs/create' component={CreateStaff} />
             <Route exact path='/article' component={Article} />
             <Route path='/article/create' component={CreateArticle} />
         </Switch>
