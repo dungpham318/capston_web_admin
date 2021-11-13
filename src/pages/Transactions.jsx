@@ -1,8 +1,15 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { Component } from 'react';
 //import axios from 'axios';
 import Table from '../components/table/Table';
 import Modal from '../components/modal/Modal';
-import { assignAppointmentApi, cancelAppointmentApi, getTransactionDetailApi, getTransactionList } from '../apis/transactionApi';
+import {
+  assignAppointmentApi,
+  cancelAppointmentApi,
+  getTransactionDetailApi,
+  getTransactionList,
+  getAppointmentStatusApi
+} from '../apis/transactionApi';
 import { TextField } from '@material-ui/core';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete'
@@ -12,6 +19,10 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 export default class Transaction extends Component {
 
   constructor(props) {
@@ -25,12 +36,18 @@ export default class Transaction extends Component {
       isOpenModal: false,
       selectedTransaction: undefined,
       loading: false,
-      selectedStaffList: []
+      selectedStaffList: [],
+
+      appointmentStatusList: [
+        'All'
+      ],
+      selectedAppointmentStatus: 'All'
       // selectedStaff: undefined
     };
   }
   componentDidMount() {
     this.getTransaction()
+    this.getAppointmentStatus()
   }
 
   // componentDidMount() {
@@ -43,13 +60,31 @@ export default class Transaction extends Component {
     }
   }
 
+  getAppointmentStatus = async () => {
+    this.setState({ loading: true })
+    let statusList = await getAppointmentStatusApi()
+    console.log(statusList)
+    if (statusList) {
+      this.setState({
+        appointmentStatusList: [
+          ...this.state.appointmentStatusList,
+          ...statusList?.data
+        ]
+      })
+    }
+    this.setState({ loading: false })
+  }
+
   getTransaction = async () => {
     this.setState({ loading: true })
+    let status = []
+    if (this.state.selectedAppointmentStatus !== 'All') {
+      status = [this.state.selectedAppointmentStatus]
+    }
     let transactionList = await getTransactionList({
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
-      "statuses": [
-      ],
+      "statuses": status,
       "customerIds": [
       ],
       "customerUserIds": [
@@ -81,12 +116,6 @@ export default class Transaction extends Component {
     }
   }
 
-  tabRow() {
-    return this.state.business.map(function (object, i) {
-      return <Table obj={object} key={i} />;
-    });
-  }
-
   getTransactionDetail = async (id) => {
     this.setState({ loading: true })
     let res = await getTransactionDetailApi({
@@ -97,7 +126,6 @@ export default class Transaction extends Component {
     })
     this.setState({ loading: false })
     let data = res?.data
-    console.log(data)
 
     if (data?.appointmentDetails && data?.appointmentDetails.length > 0) {
       for (const item of data?.appointmentDetails) {
@@ -106,6 +134,16 @@ export default class Transaction extends Component {
           tmp.map(ele =>
             ele.label = `${ele?.name} (${ele?.numberOfAppointmentsOnDate})`
           )
+          function compare(a, b) {
+            if (a.numberOfAppointmentsOnDate < b.numberOfAppointmentsOnDate) {
+              return -1;
+            }
+            if (a.numberOfAppointmentsOnDate > b.numberOfAppointmentsOnDate) {
+              return 1;
+            }
+            return 0;
+          }
+          tmp.sort(compare)
           Object.assign(item, { staffList: tmp })
         }
       }
@@ -129,11 +167,6 @@ export default class Transaction extends Component {
       })
     }
     this.setState({ loading: false })
-    // if (staffList?.isSuccess) {
-    //   this.setState({ isOpenModal: false }, () => {
-    //     this.getTransaction()
-    //   })
-    // }
   }
 
   onSubmit = async () => {
@@ -163,6 +196,33 @@ export default class Transaction extends Component {
           Appointments
         </h2>
         <div className='card'>
+          <div>
+            <div style={{ width: '15em' }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={this.state.selectedAppointmentStatus}
+                  label="Age"
+                  onChange={(e) => {
+                    this.setState({
+                      selectedAppointmentStatus: e.target.value
+                    }, () => {
+                      this.getTransaction()
+                    })
+                  }}
+                >
+                  {
+                    this.state.appointmentStatusList.map(ele => {
+                      return <MenuItem value={ele}>{ele}</MenuItem>
+                    })
+                  }
+                </Select>
+              </FormControl>
+            </div>
+
+          </div>
 
           <Table
             loading={this.state.loading}
@@ -352,7 +412,6 @@ export default class Transaction extends Component {
                 </div>
                 {
                   this.state.selectedTransaction?.appointmentDetails && this.state.selectedTransaction?.appointmentDetails.map((item, index) => {
-                    console.log(item)
                     return (
                       <div style={{
                         display: 'flex',
@@ -386,8 +445,6 @@ export default class Transaction extends Component {
                                   })
                                   this.setState({
                                     selectedStaffList: tmp
-                                  }, () => {
-                                    console.log(tmp)
                                   })
                                 }}
                                 // inputValue={inputValue}
@@ -422,7 +479,39 @@ export default class Transaction extends Component {
                   })
                 }
               </div>
+              {
+                this.state.selectedTransaction?.status === 'completed' &&
+                <div style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}>
+                  <p style={{
+                    fontWeight: 'bold',
+                    marginBottom: '1em'
+                  }}>Appointment Detail</p>
+                  <img
+                    src={this.state.selectedTransaction?.imageUrl}
+                  />
+                  <TextField
+                    disabled
+                    id="outlined-basic"
+                    label="Note"
+                    variant="outlined"
+                    style={{
+                      width: '100%',
+                      marginTop: '1em',
+                      marginBottom: '1em'
+                    }}
+                    value={this.state.selectedTransaction?.note}
+                    onChange={(event) => {
+                    }}
+                  />
+                </div>
+              }
             </div>
+
+
             <div style={{
               display: 'flex',
               flexDirection: 'row',
@@ -442,27 +531,35 @@ export default class Transaction extends Component {
                   Close
                 </Button>
               </div>
-              <div style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                display: 'flex',
-                flexDirection: 'row'
-              }}>
-                <div style={{ flex: 1 }} />
-                <LoadingButton style={{
-                  marginRight: '1em'
-                }} variant="contained" color="error" loading={this.state.loading} onClick={() => {
-                  this.onCancel()
+              {
+                (this.state.selectedTransaction?.status !== 'completed' && this.state.selectedTransaction?.status !== 'canceled') &&
+                <div style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  display: 'flex',
+                  flexDirection: 'row'
                 }}>
-                  Cancel
-                </LoadingButton>
-                <LoadingButton variant="contained" color="success" loading={this.state.loading} onClick={() => {
-                  this.onSubmit()
-                }}>
-                  Submit
-                </LoadingButton>
-              </div>
+                  <div style={{ flex: 1 }} />
+                  <LoadingButton style={{
+                    marginRight: '1em'
+                  }} variant="contained" color="error" loading={this.state.loading} onClick={() => {
+                    this.onCancel()
+                  }}>
+                    Cancel
+                  </LoadingButton>
+                  {
+                    (this.state.selectedTransaction?.status !== 'ongoing' && this.state.selectedTransaction?.status !== 'approved') &&
+                    <LoadingButton variant="contained" color="success" loading={this.state.loading} onClick={() => {
+                      this.onSubmit()
+                    }}>
+                      Submit
+                    </LoadingButton>
+                  }
+
+                </div>
+              }
+
             </div>
           </div>
         </Modal>

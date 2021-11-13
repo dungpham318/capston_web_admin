@@ -108,3 +108,29 @@ export async function cancelAppointmentApi(input) {
       return false
     });
 }
+
+export async function getAppointmentStatusApi(input) {
+  console.log(input)
+  let url = `/api/Appointment/all_appointment_statuses`
+  return fetch(END_POINT + url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
+        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+}
