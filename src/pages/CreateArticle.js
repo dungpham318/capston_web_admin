@@ -21,7 +21,6 @@ export default function CreateArticle(props) {
   }, [])
 
   useEffect(() => {
-    console.log(12321312, articleTitle)
   }, [articleTitle])
 
   const handleEditorChange = content => {
@@ -49,6 +48,7 @@ export default function CreateArticle(props) {
     let res = await getArticleDetailApi({
       id: id
     })
+    console.log(res)
     if (res) {
       setArticleTitle(res?.data?.tittle)
       setArticleContent(res?.data?.description)
@@ -60,7 +60,7 @@ export default function CreateArticle(props) {
 
   return (
     <div>
-      <div className='card' style={{height: '45em'}}>
+      <div className='card' style={{ height: '45em' }}>
         <div style={{
           display: 'flex',
           flexDirection: 'column',
@@ -149,7 +149,7 @@ export default function CreateArticle(props) {
           </div>
 
         </div>
-        <div style={{display: 'flex',flex: 'row', }}>
+        <div style={{ display: 'flex', flex: 'row', }}>
           <Button variant="outlined" onClick={() => onSubmit()}>
             Submit
           </Button>
