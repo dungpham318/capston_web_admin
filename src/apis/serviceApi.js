@@ -28,7 +28,7 @@ export async function getServiceList(input) {
     });
 }
 
-export async function createService(input) {
+export async function createServiceApi(input) {
   let url = `/api/Service/create_service`
   return fetch(END_POINT + url, {
     method: 'POST',
@@ -63,6 +63,33 @@ export async function getServiceDetail(input) {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
     },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
+        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    });
+}
+
+export async function UpdateServiceApi(input) {
+  let url = `/api/Service/update_service`
+  return fetch(END_POINT + url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify(input)
   })
     .then((response) => {
       return response.json();

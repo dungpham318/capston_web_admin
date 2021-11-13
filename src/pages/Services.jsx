@@ -18,8 +18,8 @@ export default class Services extends Component {
       totalService: 100,
       page: 1,
       pageSize: 10,
-      minPrice: 0,
-      maxPrice: 100000000,
+      minPrice: -1,
+      maxPrice: -1,
       isOpenModal: false,
       selectedService: undefined
     };
@@ -43,9 +43,11 @@ export default class Services extends Component {
       ],
       "minCreatedDate": "",
       "maxCreatedDate": "",
+      "minLastUpdate": "",
+      "maxLastUpdate": "",
       "minPrice": this.state.minPrice,
       "maxPrice": this.state.maxPrice,
-      "sortBy": ""
+      "sortBy": "id_asc"
     })
 
     if (serviceList) {
@@ -90,7 +92,7 @@ export default class Services extends Component {
                 pathname: `/services/create`,
               })
             }}>
-              Create
+              New Service
             </Button>
           </div>
           {/* <div className='card'> */}
@@ -101,7 +103,7 @@ export default class Services extends Component {
               { id: 3, label: 'Description', value: 'description' },
               { id: 4, label: 'Status', value: 'status' },
               { id: 5, label: 'Created Date', value: 'createdDate' },
-              { id: 6, label: 'Last Update', value: 'lastupdated' },
+              { id: 6, label: 'Last Update', value: 'lastUpdated' },
               { id: 7, label: 'Price', value: 'price' },
             ]}
             rows={this.state.serviceList}
@@ -115,6 +117,12 @@ export default class Services extends Component {
               this.getDetail(row?.id)
             }}
             onClickEdit={(row) => {
+              this.props.history.push({
+                pathname:`/services/create`,
+                state:{
+                  serviceData: row
+                }
+              })
             }}
             onClickDelete={(row) => {
             }}
@@ -168,6 +176,36 @@ export default class Services extends Component {
               onChange={(event) => {
               }}
             />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Status"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedService?.status}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+                required
+                disabled
+                id="outlined-basic"
+                label="Created Date"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.selectedService?.createdDate ? this.state.selectedService?.createdDate.split(' ')[0] : ''}
+                onChange={(event) => {
+                }}
+              />
             <TextField
               required
               disabled

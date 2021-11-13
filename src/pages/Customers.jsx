@@ -1,7 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 //import axios from 'axios';
 import Table from '../components/table/Table';
-import { getCustomerList } from '../apis/customerApi';
+import { getCustomerList, getCustomerDetailApi } from '../apis/customerApi';
+import Button from '@mui/material/Button';
+import Modal from '../components/modal/Modal';
+import { TextField } from '@material-ui/core';
 
 export default class Customers extends Component {
 
@@ -11,11 +14,19 @@ export default class Customers extends Component {
       customerList: [],
       //totalCustomer: 100,
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      isOpenModal: false,
+      selectedCustomer: undefined
     };
   }
   componentDidMount() {
     this.getCustomer()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
+      this.setState({ selectedCustomer: undefined })
+    }
   }
 
   getCustomer = async () => {
@@ -44,11 +55,22 @@ export default class Customers extends Component {
     });
   }
 
+  getCustomerDetail = async (id) => {
+    let res = await getCustomerDetailApi({
+      id: id
+    })
+    console.log(res)
+
+    this.setState({
+      isOpenModal: true,
+      selectedCustomer: res?.data
+    })
+  }
   render() {
     return (
       <div>
         <h2 className="page-header">
-          Customers
+          Customers List
         </h2>
         <div className='card'>
           <Table
@@ -62,14 +84,15 @@ export default class Customers extends Component {
             rows={this.state.customerList}
             actionList={[
               'view',
-              'edit',
+              //'edit',
               'delete',
             ]}
             onClickView={(row) => {
               console.log(row)
+              this.getCustomerDetail(row?.userId)
             }}
-            onClickEdit={(row) => {
-            }}
+            // onClickEdit={(row) => {
+            // }}
             onClickDelete={(row) => {
             }}
             pagination
@@ -84,8 +107,100 @@ export default class Customers extends Component {
               })
             }}
           />
-
         </div>
+
+        <Modal isOpen={this.state.isOpenModal}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1
+          }}>
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Customer ID"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedCustomer?.customerId}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Customer Name"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedCustomer?.fullName}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Status"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedCustomer?.status}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Email"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedCustomer?.email}
+              onChange={(event) => {
+              }}
+            />
+            <TextField
+              required
+              disabled
+              id="outlined-basic"
+              label="Phone Number"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedCustomer?.phoneNumber}
+              onChange={(event) => {
+              }}
+            />
+          </div>
+          <div>
+            <Button variant="contained" color="inherit" onClick={() => {
+              this.setState({
+                isOpenModal: false
+              })
+            }}>
+              Close
+            </Button>
+          </div>
+        </Modal>
 
       </div>
     );

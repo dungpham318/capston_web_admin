@@ -253,7 +253,7 @@ export default class Transaction extends Component {
                 required
                 disabled
                 id="outlined-basic"
-                label="Start Time"
+                label="Customer Name"
                 variant="outlined"
                 style={{
                   width: '100%',
