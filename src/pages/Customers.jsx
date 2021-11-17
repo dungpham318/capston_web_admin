@@ -16,7 +16,8 @@ export default class Customers extends Component {
       page: 1,
       pageSize: 10,
       isOpenModal: false,
-      selectedCustomer: undefined
+      selectedCustomer: undefined,
+      loading: false
     };
   }
   componentDidMount() {
@@ -30,6 +31,7 @@ export default class Customers extends Component {
   }
 
   getCustomer = async () => {
+    this.setState({ loading: true })
     let customerList = await getCustomerList({
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
@@ -42,11 +44,11 @@ export default class Customers extends Component {
 
     if (customerList) {
       this.setState({
+        loading: false,
         customerList: customerList?.data?.items,
         totalCustomer: customerList?.data?.totalCount
       })
     }
-
   }
 
   tabRow() {
@@ -74,6 +76,7 @@ export default class Customers extends Component {
         </h2>
         <div className='card'>
           <Table
+            loading={this.state.loading}
             headers={[
               { id: 1, label: '#', value: 'index' },
               { id: 2, label: 'FullName', value: 'fullName' },
@@ -85,7 +88,7 @@ export default class Customers extends Component {
             actionList={[
               'view',
               //'edit',
-              'delete',
+              // 'delete',
             ]}
             onClickView={(row) => {
               console.log(row)

@@ -13,7 +13,7 @@ import './assets/css/grid.css'
 import './assets/css/theme.css'
 import './assets/css/index.css'
 
-import Layout from './components/layout/Layout'
+import Layout, { UnAuthLayout } from './components/layout/Layout'
 
 const store = createStore(
   rootReducer
@@ -21,12 +21,25 @@ const store = createStore(
 
 document.title = 'Cut.'
 
+
+let App = () => {
+  let user = localStorage.getItem('token')
+  console.log(user)
+  return (
+    <Provider store={store}>
+      <React.StrictMode>
+        <Layout />
+      </React.StrictMode>
+    </Provider>
+  )
+}
+// {
+//   user ?
+//     <Layout /> :
+//     <UnAuthLayout />
+// }
 ReactDOM.render(
-  <Provider store={store}>
-    <React.StrictMode>
-      <Layout />
-    </React.StrictMode>
-  </Provider>,
+  <App />,
   document.getElementById('root')
 );
 

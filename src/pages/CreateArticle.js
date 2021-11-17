@@ -119,33 +119,59 @@ export default function CreateArticle(props) {
             flex: 1,
           }}>
             {
-              props.location.state?.articleData?.id && props.location.state?.articleData?.id
+              (props.location.state?.articleData?.id && articleContent !== '') ?
+                <SunEditor
+                  // setContents="My contents"
+                  defaultValue={articleContent}
+                  showToolbar={true}
+                  onChange={handleEditorChange}
+                  setDefaultStyle="height: auto"
+                  setOptions={{
+                    buttonList: [
+                      [
+                        "bold",
+                        "underline",
+                        "italic",
+                        "strike",
+                        "list",
+                        "align",
+                        "fontSize",
+                        "formatBlock",
+                        "table",
+                        "image",
+                        "print",
+                        "save"
+                      ]
+                    ]
+                  }}
+                /> :
+                <SunEditor
+                  // setContents="My contents"
+                  defaultValue={articleContent}
+                  showToolbar={true}
+                  onChange={handleEditorChange}
+                  setDefaultStyle="height: auto"
+                  setOptions={{
+                    buttonList: [
+                      [
+                        "bold",
+                        "underline",
+                        "italic",
+                        "strike",
+                        "list",
+                        "align",
+                        "fontSize",
+                        "formatBlock",
+                        "table",
+                        "image",
+                        "print",
+                        "save"
+                      ]
+                    ]
+                  }}
+                />
             }
-            <SunEditor
-              // setContents="My contents"
-              defaultValue={articleContent}
-              showToolbar={true}
-              onChange={handleEditorChange}
-              setDefaultStyle="height: auto"
-              setOptions={{
-                buttonList: [
-                  [
-                    "bold",
-                    "underline",
-                    "italic",
-                    "strike",
-                    "list",
-                    "align",
-                    "fontSize",
-                    "formatBlock",
-                    "table",
-                    "image",
-                    "print",
-                    "save"
-                  ]
-                ]
-              }}
-            />
+
           </div>
 
         </div>

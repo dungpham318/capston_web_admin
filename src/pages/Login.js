@@ -1,73 +1,120 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react'
-import logo from '../assets/images/logo.jpg'
 import img_login from '../assets/images/img_login.svg'
-import Button from '../components/custom/Button'
-import TextField from '../components/custom/TextField'
 //import usePrevious from '../../functions/usePrevious'
-import { useNavigate } from 'react-router-dom';
-// import { Redirect, useHistory } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
+import { TextField } from '@material-ui/core';
+import bg_login from '../assets/images/bg_login.png'
+import logo from '../assets/images/logo.png'
+import Button from '@mui/material/Button'
+import { loginApi } from '../apis/loginApi';
+import LoadingButton from '@mui/lab/LoadingButton'
 export default function Login(props) {
-  const [username, setUsername] = useState('fis.tdc.hcm')
-  const [password, setPassword] = useState('123123')
+  let history = useHistory()
+  const [username, setUsername] = useState('manager123@gmail.com')
+  const [password, setPassword] = useState('Test123')
+  const [loading, setLoading] = useState(false)
 
-  const onLogin = () => {
-    //navigate("/fisinsight/admin/dashboard")
-
-    // props.loginAction({
-    //   "username": username,
-    //   "password": password
-    // })
+  const onLogin = async () => {
+    setLoading(true)
+    let res = await loginApi({
+      "email": username,
+      "password": password,
+      "deviceId": "string",
+      "deviceToken": "string"
+    })
+    setLoading(false)
+    console.log(res?.data?.role)
+    if (res && res?.data) {
+      if (res?.data?.role === 'manager' || res?.data?.role === 'administrator') {
+        localStorage.setItem('token', res?.data?.token)
+        localStorage.setItem('email', res?.data?.email)
+        localStorage.setItem('avatar', res?.data?.avatar)
+        localStorage.setItem('role', res?.data?.role)
+      }
+      history.push({
+        pathname: `/dashboard`
+      })
+    }
   }
 
   return (
-    <div className='flex flex-auto flex-row items-center justify-center h-screen w-screen px-32'>
+    <div style={{
+      width: '100vw',
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundImage: `url(${bg_login})`,
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat'
+    }}>
 
-      <div className='flex flex-col flex-initial items-start px-20'>
+      <div
+        className='card'
+        style={{
+          width: '30em',
+          height: '30em',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItem: 'center',
+          alignItems: 'center',
+        }}>
         <img
-          className='w-20 py-4'
           src={logo}
-        />
-        <span className='text-text font-text text-2xl font-black'>
-          Sign in to your account
-          </span>
-        <span className='text-left font-text text-sm font-bold text-text py-1 px-1 mt-3'>Username</span>
-        <TextField
-          className='mx-0.5 my-0.5 py-3 flex w-96'
-          container='my-0.5'
-          onChange={(text) => {
-            setUsername(text)
+          style={{
+            width: '6em',
           }}
-          value={username}
         />
-
-        <span className='text-left font-text text-sm font-bold text-text py-1 px-1 mt-3'>Password</span>
-        <TextField
-          className='mx-0.5 my-0.5 py-3 w-96'
-          container='my-0.5'
-          type='password'
-          onChange={(text) => {
-            setPassword(text)
-          }}
-          value={password}
-        />
-
-        <Button
-          className='w-96'
-          label='Sign in'
+        <div style={{
+          marginTop: '2em',
+          flex: '1 1 auto',
+        }}>
+          <TextField
+            required
+            id="outlined-basic"
+            label="Username"
+            variant="outlined"
+            style={{
+              width: '100%',
+              marginTop: '2em',
+            }}
+            value={username}
+            onChange={(event) => {
+              setUsername(event.target.value)
+            }}
+          />
+          <TextField
+            type='password'
+            required
+            id="outlined-basic"
+            label="Password"
+            variant="outlined"
+            style={{
+              width: '100%',
+              marginTop: '2em',
+              marginBottom: '2em',
+            }}
+            value={password}
+            onChange={(event) => {
+              setPassword(event.target.value)
+            }}
+          />
+        </div>
+        <LoadingButton style={{
+          width: '90%',
+          backgroundColor: '#2980b9',
+        }}
+          variant="contained"
+          loading={loading}
           onClick={() => {
             onLogin()
-          }}
-        />
+          }}>
+          Login
+        </LoadingButton>
       </div>
-      <div className='flex flex-col flex-1'>
-
-        <img
-          className=''
-          src={img_login}
-        />
-
-      </div>
-
 
     </div>
   )

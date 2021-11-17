@@ -7,7 +7,7 @@ export async function getComboList(input) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })
@@ -34,9 +34,9 @@ export async function getComboDetailApi(input) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
-    
+
   })
     .then((response) => {
       return response.json();

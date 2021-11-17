@@ -7,7 +7,7 @@ export async function getTransactionList(input) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })
@@ -34,7 +34,7 @@ export async function getTransactionDetailApi(input) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
   })
     .then((response) => {
@@ -60,7 +60,7 @@ export async function assignAppointmentApi(input) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })
@@ -88,7 +88,7 @@ export async function cancelAppointmentApi(input) {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })
@@ -116,7 +116,7 @@ export async function getAppointmentStatusApi(input) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
   })
     .then((response) => {

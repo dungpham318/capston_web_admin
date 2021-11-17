@@ -7,7 +7,7 @@ export async function getCustomerList(input) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })
@@ -34,7 +34,7 @@ export async function getCustomerDetailApi(input) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
   })
     .then((response) => {

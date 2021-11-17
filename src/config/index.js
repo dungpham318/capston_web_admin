@@ -1,5 +1,5 @@
-const END_POINT = 'https://8e74-27-77-22-215.ngrok.io'
-const token = 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsIm5iZiI6MTYzNjc4ODcyNCwiZXhwIjoxNjM3MzkzNTI0LCJpYXQiOjE2MzY3ODg3MjR9.RG5d0D6xNT_xFUjYrVQFZYsgBgpPeVsqg0YD94PCoeiqd21aO43ywh3M4l-SCpjPsqRpUMH2peOM9N9nMWFJMA'
+const END_POINT = 'https://de0c-14-186-225-203.ngrok.io'
+const token = localStorage.getItem('token')
 
 export {
   END_POINT,

@@ -13,6 +13,7 @@ import notifications from '../../assets/JsonData/notification.json'
 // import user_image from '../../assets/images/tuat.png'
 
 import user_menu from '../../assets/JsonData/user_menus.json'
+import { render } from '@testing-library/react'
 
 const curr_user = {
     display_name: 'Nha Tran',
@@ -37,14 +38,30 @@ const renderUserToggle = (user) => (
     </div>
 )
 
-const renderUserMenu =(item, index) => (
-    <Link to='/' key={index}>
-        <div className="notification-item">
-            <i className={item.icon}></i>
-            <span>{item.content}</span>
-        </div>
-    </Link>
-)
+const renderUserMenu = (item, index) => {
+    if (item?.content === 'Logout') {
+        return <Link onClick={() => {
+            localStorage.removeItem('token')
+            localStorage.removeItem('email')
+            localStorage.removeItem('avatar')
+            localStorage.removeItem('role')
+        }} to='/login' key={index}>
+            <div className="notification-item">
+                <i className={item.icon}></i>
+                <span>{item.content}</span>
+            </div>
+        </Link>
+    } else {
+        return <Link onClick={() => {
+            console.log(item)
+        }} to='/' key={index}>
+            <div className="notification-item">
+                <i className={item.icon}></i>
+                <span>{item.content}</span>
+            </div>
+        </Link>
+    }
+}
 
 const Topnav = () => {
     return (

@@ -7,7 +7,7 @@ export async function getSalonList(input) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })
@@ -34,7 +34,7 @@ export async function createSalonApi(input) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })

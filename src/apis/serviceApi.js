@@ -7,7 +7,7 @@ export async function getServiceList(input) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })
@@ -30,11 +30,12 @@ export async function getServiceList(input) {
 
 export async function createServiceApi(input) {
   let url = `/api/Service/create_service`
+  console.log(input)
   return fetch(END_POINT + url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })
@@ -42,6 +43,7 @@ export async function createServiceApi(input) {
       return response.json();
     })
     .then(data => {
+      console.log(data)
       if (!data.isSuccess) {
         alert(data.message)
         return false
@@ -61,7 +63,7 @@ export async function getServiceDetail(input) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
   })
     .then((response) => {
@@ -87,7 +89,7 @@ export async function UpdateServiceApi(input) {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
     body: JSON.stringify(input)
   })
