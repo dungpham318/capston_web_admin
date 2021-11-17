@@ -10,6 +10,7 @@ export default function CreateService(props) {
     const [serviceName, setServiceName] = useState('')
     const [serviceDescription, setServiceDescription] = useState('')
     const [servicePrice, setServicePrice] = useState('')
+    const [duration, setDuration] = useState('365')
     const [serviceStatus, setServiceStatus] = useState('active')
     const [isGettingService, setIsGettingService] = useState(true)
 
@@ -26,8 +27,8 @@ export default function CreateService(props) {
         let res = await createServiceApi({
             "name": serviceName,
             "description": serviceDescription,
-            "status": serviceStatus,
-            "price": servicePrice.split('.').join('')
+            "price": parseInt(servicePrice.split('.').join('')),
+            "duration": parseInt(duration)
         })
         setLoading(false)
 
@@ -59,12 +60,11 @@ export default function CreateService(props) {
 
     return (
         <div>
-            <div className='card' style={{ height: '25em' }}>
+            <div className='card'>
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
                     flex: 1,
-                    height: '38em'
                 }}>
                     <TextField
                         required
@@ -127,12 +127,29 @@ export default function CreateService(props) {
                             setServicePrice(convertMoney(event.target.value))
                         }}
                     />
+                    <TextField
+                        required
+                        id="outlined-basic"
+                        label="Price"
+                        variant="outlined"
+                        style={{
+                            width: '100%',
+                            marginTop: '1em',
+                            marginBottom: '1em'
+                        }}
+                        value={duration}
+                        onChange={(event) => {
+                            setDuration(event.target.value)
+                        }}
+                    />
+
                     <div style={{
                         flex: 1,
                         alignItems: 'center',
                         justifyContent: 'flex-end',
                         display: 'flex',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        marginTop: '2em'
                     }}>
                         <div style={{ flex: 1 }} />
                         <LoadingButton

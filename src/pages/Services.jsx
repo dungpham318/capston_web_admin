@@ -15,13 +15,14 @@ export default class Services extends Component {
     super(props);
     this.state = {
       serviceList: [],
-      totalService: 100,
+      totalService: 0,
       page: 1,
       pageSize: 10,
       minPrice: -1,
       maxPrice: -1,
       isOpenModal: false,
-      selectedService: undefined
+      selectedService: undefined,
+      loading: false
     };
   }
   componentDidMount() {
@@ -35,23 +36,25 @@ export default class Services extends Component {
   }
 
   getService = async () => {
+    this.setState({ loading: true })
     let serviceList = await getServiceList({
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
-      "statuses": [
-        "active"
-      ],
+      "name": "",
       "minCreatedDate": "",
       "maxCreatedDate": "",
       "minLastUpdate": "",
       "maxLastUpdate": "",
-      "minPrice": this.state.minPrice,
-      "maxPrice": this.state.maxPrice,
-      "sortBy": "id_asc"
+      "minPrice": -1,
+      "maxPrice": -1,
+      "minDuration": -1,
+      "maxDuration": -1,
+      "sortBy": ""
     })
-
+    console.log(serviceList)
     if (serviceList) {
       this.setState({
+        loading: false,
         serviceList: serviceList?.data?.items,
         totalService: serviceList?.data?.totalCount
       })
@@ -66,17 +69,19 @@ export default class Services extends Component {
   }
 
   getDetail = async (id) => {
+    this.setState({ loading: true })
     let res = await getServiceDetail({
       id: id
     })
     console.log(res)
 
     this.setState({
+      loading: false,
       isOpenModal: true,
       selectedService: res?.data
     })
   }
-  
+
 
   render() {
     return (
@@ -98,11 +103,12 @@ export default class Services extends Component {
           </div>
           {/* <div className='card'> */}
           <Table
+            loading={this.state.loading}
             headers={[
               { id: 1, label: '#', value: 'id' },
               { id: 2, label: 'Name', value: 'name' },
               { id: 3, label: 'Description', value: 'description' },
-              { id: 4, label: 'Status', value: 'status' },
+              { id: 4, label: 'Duration', value: 'duration' },
               { id: 5, label: 'Created Date', value: 'createdDate' },
               { id: 6, label: 'Last Update', value: 'lastUpdated' },
               { id: 7, label: 'Price', value: 'price' },
@@ -119,16 +125,15 @@ export default class Services extends Component {
             }}
             onClickEdit={(row) => {
               this.props.history.push({
-                pathname:`/services/create`,
-                state:{
+                pathname: `/services/create`,
+                state: {
                   serviceData: row
                 }
               })
             }}
-            // onClickDelete={(row) => {
-            //   console.log(row)
-            //   this.deleteService(row?.id)
-            // }}
+            onClickDelete={(row) => {
+              this.deleteService(row?.id)
+            }}
             pagination
             totalItem={this.state.totalService}
             onChangePage={(page, pageSize) => {
@@ -195,20 +200,20 @@ export default class Services extends Component {
               }}
             />
             <TextField
-                required
-                disabled
-                id="outlined-basic"
-                label="Created Date"
-                variant="outlined"
-                style={{
-                  width: '100%',
-                  marginTop: '1em',
-                  marginBottom: '1em'
-                }}
-                value={this.state.selectedService?.createdDate ? this.state.selectedService?.createdDate.split(' ')[0] : ''}
-                onChange={(event) => {
-                }}
-              />
+              required
+              disabled
+              id="outlined-basic"
+              label="Created Date"
+              variant="outlined"
+              style={{
+                width: '100%',
+                marginTop: '1em',
+                marginBottom: '1em'
+              }}
+              value={this.state.selectedService?.createdDate ? this.state.selectedService?.createdDate.split(' ')[0] : ''}
+              onChange={(event) => {
+              }}
+            />
             <TextField
               required
               disabled

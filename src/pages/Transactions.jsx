@@ -129,10 +129,20 @@ export default class Transaction extends Component {
 
     if (data?.appointmentDetails && data?.appointmentDetails.length > 0) {
       for (const item of data?.appointmentDetails) {
+        if (item?.staffType === 'stylist') {
+          this.setState({
+            selectedStaffList: [{
+              "staffId": item?.staffUserId,
+              "serviceId": item?.serviceId
+            }]
+          }, () => {
+            console.log(this.state.selectedStaffList)
+          })
+        }
         if (staffList?.data && staffList?.data.length > 0) {
           let tmp = staffList?.data
           tmp.map(ele =>
-            ele.label = `${ele?.name} (${ele?.numberOfAppointmentsOnDate})`
+            ele.label = `${ele?.name} - ${ele?.staffType} (${ele?.numberOfAppointmentsOnDate})`
           )
           function compare(a, b) {
             if (a.numberOfAppointmentsOnDate < b.numberOfAppointmentsOnDate) {
@@ -412,6 +422,7 @@ export default class Transaction extends Component {
                 </div>
                 {
                   this.state.selectedTransaction?.appointmentDetails && this.state.selectedTransaction?.appointmentDetails.map((item, index) => {
+
                     return (
                       <div style={{
                         display: 'flex',
@@ -431,9 +442,10 @@ export default class Transaction extends Component {
                           {
                             this.state.selectedTransaction?.status === 'pending' ?
                               <Autocomplete
-                                disabled={this.state.selectedTransaction?.status === 'pending' ? false : true}
-                                value={this.state.staffList?.name}
+                                disabled={item?.staffType === 'stylist' ? true : false}
+                                value={item?.staffType === 'stylist' ? item?.staffName : this.state.staffList?.name}
                                 onChange={(event, newValue) => {
+                                  console.log(newValue)
                                   let tmp = this.state.selectedStaffList
                                   let index = this.state.selectedStaffList.findIndex(ele => ele?.serviceId === item?.serviceId)
                                   if (index !== -1) {
@@ -445,6 +457,8 @@ export default class Transaction extends Component {
                                   })
                                   this.setState({
                                     selectedStaffList: tmp
+                                  }, () => {
+                                    console.log(this.state.selectedStaffList)
                                   })
                                 }}
                                 // inputValue={inputValue}

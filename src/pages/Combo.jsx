@@ -48,10 +48,10 @@ export default class Combo extends Component {
       "maxDuration": this.state.maxDuration,
       "sortBy": ""
     })
-    this.setState({ loading: false })
 
     if (comboList) {
       this.setState({
+        loading: false,
         comboList: comboList?.data?.items,
         totalCombo: comboList?.data?.totalCount
       })
@@ -66,28 +66,29 @@ export default class Combo extends Component {
   }
 
   getComboDetail = async (id) => {
+    this.setState({ loading: true })
+
     let res = await getComboDetailApi({
       id: id
     })
     let serviceList = await await getServiceList({
-      id:id
+      id: id
     })
-    this.setState({ loading: false })
     let data = res?.data
-    console.log(data)
 
-    if (data?.services && data?.services.length > 0){
-      for (const item of data?.services){
+    if (data?.services && data?.services.length > 0) {
+      for (const item of data?.services) {
         if (serviceList?.data && serviceList?.data.length > 0) {
           let tmp = serviceList?.data
           tmp.map(ele =>
             ele.label = `${ele?.name} (${ele?.numberOfServicesOnDate})`
-            )
-            Object.assign(item, { serviceList: tmp})
+          )
+          Object.assign(item, { serviceList: tmp })
         }
       }
     }
     this.setState({
+      loading: false,
       isOpenModal: true,
       selectedCombo: res?.data
     })
@@ -100,7 +101,7 @@ export default class Combo extends Component {
           Combo
         </h2>
         <div className='card'>
-        <div style={{
+          <div style={{
             marginBottom: '1em',
           }}>
             <Button variant="outlined" onClick={() => {
@@ -112,6 +113,7 @@ export default class Combo extends Component {
             </Button>
           </div>
           <Table
+            loading={this.state.loading}
             headers={[
               { id: 1, label: '#', value: 'id' },
               { id: 2, label: 'Name', value: 'name' },
@@ -120,7 +122,7 @@ export default class Combo extends Component {
               { id: 5, label: 'Duration', value: 'duration' },
               { id: 6, label: 'Price', value: 'price' },
               { id: 7, label: 'Created Date', value: 'createdDate' },
-              { id: 8, label: 'Last Update', value: 'lastupdated' },
+              { id: 8, label: 'Last Update', value: 'lastUpdated' },
             ]}
             rows={this.state.comboList}
             actionList={[
@@ -242,16 +244,16 @@ export default class Combo extends Component {
                 onChange={(event) => {
                 }}
               />
-              </div>
-              <div>
-                <Button variant="contained" color="inherit" onClick={() => {
-                  this.setState({
-                    isOpenModal: false
-                  })
-                }}>
-                  Close
-                </Button>
-              </div>
+            </div>
+            <div>
+              <Button variant="contained" color="inherit" onClick={() => {
+                this.setState({
+                  isOpenModal: false
+                })
+              }}>
+                Close
+              </Button>
+            </div>
           </div>
         </Modal>
 
