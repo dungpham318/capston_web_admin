@@ -63,7 +63,6 @@ export default class Transaction extends Component {
   getAppointmentStatus = async () => {
     this.setState({ loading: true })
     let statusList = await getAppointmentStatusApi()
-    console.log(statusList)
     if (statusList) {
       this.setState({
         appointmentStatusList: [
@@ -129,18 +128,20 @@ export default class Transaction extends Component {
 
     if (data?.appointmentDetails && data?.appointmentDetails.length > 0) {
       for (const item of data?.appointmentDetails) {
+        let staffs
+        console.log(123, item)
         if (item?.staffType === 'stylist') {
           this.setState({
             selectedStaffList: [{
               "staffId": item?.staffUserId,
               "serviceId": item?.serviceId
             }]
-          }, () => {
-            console.log(this.state.selectedStaffList)
           })
         }
-        if (staffList?.data && staffList?.data.length > 0) {
-          let tmp = staffList?.data
+        staffs = staffList?.data.find(ele => ele?.appointmentDetailId === item?.appointmentDetailId)
+
+        if (staffs && staffs?.staffs && staffs?.staffs.length > 0) {
+          let tmp = staffs?.staffs
           tmp.map(ele =>
             ele.label = `${ele?.name} - ${ele?.staffType} (${ele?.numberOfAppointmentsOnDate})`
           )
@@ -154,6 +155,8 @@ export default class Transaction extends Component {
             return 0;
           }
           tmp.sort(compare)
+          console.log(3333, tmp)
+
           Object.assign(item, { staffList: tmp })
         }
       }
@@ -402,7 +405,7 @@ export default class Transaction extends Component {
                 <p style={{
                   fontWeight: 'bold'
                 }}>Service List</p>
-                <div style={{
+                {/* <div style={{
                   display: 'flex',
                   flexDirection: 'row',
                   flex: '1 1 0%',
@@ -419,10 +422,10 @@ export default class Transaction extends Component {
                   }}>
                     {this.state.selectedTransaction?.chosenStylist?.staffName}
                   </div>
-                </div>
+                </div> */}
                 {
                   this.state.selectedTransaction?.appointmentDetails && this.state.selectedTransaction?.appointmentDetails.map((item, index) => {
-
+                    console.log(item)
                     return (
                       <div style={{
                         display: 'flex',
@@ -445,20 +448,20 @@ export default class Transaction extends Component {
                                 disabled={item?.staffType === 'stylist' ? true : false}
                                 value={item?.staffType === 'stylist' ? item?.staffName : this.state.staffList?.name}
                                 onChange={(event, newValue) => {
-                                  console.log(newValue)
                                   let tmp = this.state.selectedStaffList
                                   let index = this.state.selectedStaffList.findIndex(ele => ele?.serviceId === item?.serviceId)
                                   if (index !== -1) {
                                     this.state.selectedStaffList.splice(index, 1)
                                   }
+                                  // if (newValue === null && index !== -1) {
+
+                                  // }
                                   tmp.push({
                                     "staffId": newValue?.staffId,
                                     "serviceId": item?.serviceId
                                   })
                                   this.setState({
                                     selectedStaffList: tmp
-                                  }, () => {
-                                    console.log(this.state.selectedStaffList)
                                   })
                                 }}
                                 // inputValue={inputValue}
@@ -467,7 +470,8 @@ export default class Transaction extends Component {
                                 // }}
                                 disablePortal
                                 id="combo-box-demo"
-                                options={item?.staffList}
+                                // options={[]}
+                                options={item?.staffList || []}
                                 sx={{ width: '100%' }}
                                 renderInput={(params) => <TextField {...params} label="Staff" />}
                               /> :
