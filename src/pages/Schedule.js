@@ -59,6 +59,7 @@ export default class Schedule extends Component {
     if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
       this.setState({
         selectedSlot: [],
+        scheduleData: [],
         startSlot: undefined,
         endSlot: undefined,
       })
@@ -226,6 +227,7 @@ export default class Schedule extends Component {
     if (res) {
       alert(res?.message)
       this.setState({ isOpenModal: false })
+      this.getScheduleBySalon()
       // this.getScheduleByStaff()
     }
   }

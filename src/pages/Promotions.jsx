@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 //import axios from 'axios';
 import Table from '../components/table/Table';
 import Modal from '../components/modal/Modal';
-import { createPromotionApi, getDetailPromotionApi, getPromotionList } from '../apis/promotionApi';
+import { createPromotionApi, getDetailPromotionApi, getPromotionList, updatePromotionApi, updatePromotionCodeApi } from '../apis/promotionApi';
 import { Button } from '@mui/material'
 import { LoadingButton } from '@mui/lab';
 import { TextField } from '@material-ui/core';
@@ -177,6 +177,29 @@ export default class Promotions extends Component {
     }
   }
 
+  updatePromotionCode = async () => {
+    let salonList = []
+    for (const item of this.state.selectedSalon) {
+      salonList.push(item?.id)
+    }
+    const res = await updatePromotionApi({
+      "id": this.state.selectedPromotion?.id,
+      "code": this.state.code,
+      "percentage": parseInt(this.state.percentage),
+      "startDate": convertDateTime(this.state.startDate),
+      "expirationDate": convertDateTime(this.state.startDate),
+      "isUniversal": this.state.isUniversal,
+      "status": "active",
+      "salonIds": salonList,
+      "usesPerCustomer": parseInt(this.state.usersPerCustomer)
+    })
+    if (res) {
+      alert(res?.message)
+      this.setState({ isOpenModal: false })
+      this.getPromotion()
+    }
+  }
+
   render() {
     return (
       <div>
@@ -215,7 +238,7 @@ export default class Promotions extends Component {
             actionList={[
               'view',
               'edit',
-              'delete',
+              // 'delete',
             ]}
             onClickView={(row) => {
               this.setState({ action: 'view', selectedPromotion: row }, () => {
@@ -388,6 +411,7 @@ export default class Promotions extends Component {
               }}>
                 Close
               </Button>
+              { }
               <div style={{
                 flex: 1,
                 alignItems: 'center',
@@ -400,7 +424,7 @@ export default class Promotions extends Component {
                   if (this.state.action === 'create') {
                     this.createPromotion()
                   } else {
-                    this.updateService()
+                    this.updatePromotionCode()
                   }
                 }}>
                   {this.state.action === 'create' ? 'Save' : 'Update'}
