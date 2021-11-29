@@ -113,96 +113,111 @@ export default class Customers extends Component {
         </div>
 
         <Modal isOpen={this.state.isOpenModal}>
+          <h2 className="page-header">
+            Customer
+          </h2>
           <div style={{
+            height: '90%',
+            overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
-            flex: 1
+            flex: 1,
           }}>
-            <TextField
-              required
-              disabled
-              id="outlined-basic"
-              label="Customer ID"
-              variant="outlined"
-              style={{
-                width: '100%',
-                marginTop: '1em',
-                marginBottom: '1em'
-              }}
-              value={this.state.selectedCustomer?.customerId}
-              onChange={(event) => {
-              }}
-            />
-            <TextField
-              required
-              disabled
-              id="outlined-basic"
-              label="Customer Name"
-              variant="outlined"
-              style={{
-                width: '100%',
-                marginTop: '1em',
-                marginBottom: '1em'
-              }}
-              value={this.state.selectedCustomer?.fullName}
-              onChange={(event) => {
-              }}
-            />
-            <TextField
-              required
-              disabled
-              id="outlined-basic"
-              label="Status"
-              variant="outlined"
-              style={{
-                width: '100%',
-                marginTop: '1em',
-                marginBottom: '1em'
-              }}
-              value={this.state.selectedCustomer?.status}
-              onChange={(event) => {
-              }}
-            />
-            <TextField
-              required
-              disabled
-              id="outlined-basic"
-              label="Email"
-              variant="outlined"
-              style={{
-                width: '100%',
-                marginTop: '1em',
-                marginBottom: '1em'
-              }}
-              value={this.state.selectedCustomer?.email}
-              onChange={(event) => {
-              }}
-            />
-            <TextField
-              required
-              disabled
-              id="outlined-basic"
-              label="Phone Number"
-              variant="outlined"
-              style={{
-                width: '100%',
-                marginTop: '1em',
-                marginBottom: '1em'
-              }}
-              value={this.state.selectedCustomer?.phoneNumber}
-              onChange={(event) => {
-              }}
-            />
-          </div>
-          <div>
-            <Button variant="contained" color="inherit" onClick={() => {
-              this.setState({
-                isOpenModal: false
-              })
+            <div style={{
+              height: '90%',
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+              overflowY: 'scroll',
+              paddingRight: '2em'
             }}>
-              Close
-            </Button>
+              <TextField
+                required
+                disabled
+                id="outlined-basic"
+                label="Customer ID"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.selectedCustomer?.customerId}
+                onChange={(event) => {
+                }}
+              />
+              <TextField
+                required
+                disabled
+                id="outlined-basic"
+                label="Customer Name"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.selectedCustomer?.fullName}
+                onChange={(event) => {
+                }}
+              />
+              <TextField
+                required
+                disabled
+                id="outlined-basic"
+                label="Status"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.selectedCustomer?.status}
+                onChange={(event) => {
+                }}
+              />
+              <TextField
+                required
+                disabled
+                id="outlined-basic"
+                label="Email"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.selectedCustomer?.email}
+                onChange={(event) => {
+                }}
+              />
+              <TextField
+                required
+                disabled
+                id="outlined-basic"
+                label="Phone Number"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.selectedCustomer?.phoneNumber}
+                onChange={(event) => {
+                }}
+              />
+            </div>
+            <div>
+              <Button variant="contained" color="inherit" onClick={() => {
+                this.setState({
+                  isOpenModal: false
+                })
+              }}>
+                Close
+              </Button>
+            </div>
           </div>
+
         </Modal>
 
       </div>

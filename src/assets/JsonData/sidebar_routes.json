@@ -5,6 +5,11 @@
         "icon": "bx bx-category-alt"
     },
     {
+        "display_name": "Schedule",
+        "route": "/schedule",
+        "icon": "bx bx-file"
+    },
+    {
         "display_name": "Customers",
         "route": "/customers",
         "icon": "bx bx-user-pin"
@@ -48,10 +53,5 @@
         "display_name": "Articles",
         "route": "/article",
         "icon": "bx bx-gift"
-    },
-    {
-        "display_name": "settings",
-        "route": "/settings",
-        "icon": "bx bx-cog"
     }
 ]

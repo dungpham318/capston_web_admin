@@ -12,9 +12,9 @@ import ic_next from '../../assets/images/ic_next.png'
 import ic_back from '../../assets/images/ic_back.png'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-
+import Checkbox from '@mui/material/Checkbox'
 //import Form from 'react-bootstrap/Form'
-
+import './table.css'
 class Table extends Component {
   constructor(props) {
     super(props);
@@ -118,6 +118,18 @@ class Table extends Component {
                           return <td style={{
                             paddingTop: '2em'
                           }}>{index + 1 + ((this.state.page - 1) * this.state.pageSize)} </td>
+                        } else if (key === 'checkbox') {
+                          return <td style={{
+                            paddingTop: '2em'
+                          }}>
+                            <Checkbox
+                              checked={_?.checked}
+                              onChange={() => {
+                                _.checked = !_?.checked
+                              }}
+                              inputProps={{ 'aria-label': 'controlled' }}
+                            />
+                          </td>
                         } else {
                           return <td style={{
                             paddingTop: '2em'
@@ -132,21 +144,21 @@ class Table extends Component {
                         textAlign: 'center'
                       }}>
                         {
-                          actionList.map((actionName, index) => {
+                          actionList.map((actionName, i) => {
                             let icon
                             let action
                             switch (actionName) {
                               case 'view':
                                 icon = ic_view
-                                action = () => onClickView(_)
+                                action = () => onClickView(_, index)
                                 break;
                               case 'edit':
                                 icon = ic_edit
-                                action = () => onClickEdit(_)
+                                action = () => onClickEdit(_, index)
                                 break;
                               case 'delete':
                                 icon = ic_delete
-                                action = () => onClickDelete(_)
+                                action = () => onClickDelete(_, index)
                                 break;
                               default:
                                 break;

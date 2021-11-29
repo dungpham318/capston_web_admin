@@ -1,13 +1,14 @@
 import React, { Component, useState } from 'react';
 import axios from 'axios';
 import Table from '../components/table/Table';
-import { getServiceList } from '../apis/serviceApi';
+import { getServiceList, getServiceDetail, createServiceApi, updateServiceApi } from '../apis/serviceApi';
 import AddIcon from '@material-ui/icons/Add';
 import Popup from '../components/popup/Popup';
 import Button from '@mui/material/Button';
 import Modal from '../components/modal/Modal';
 import { TextField } from '@material-ui/core';
-import { getServiceDetail } from '../apis/serviceApi'
+import { convertMoney } from '../function';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 export default class Services extends Component {
 
@@ -22,7 +23,13 @@ export default class Services extends Component {
       maxPrice: -1,
       isOpenModal: false,
       selectedService: undefined,
-      loading: false
+      loading: false,
+
+      name: '',
+      description: '',
+      price: '',
+      duration: '',
+      action: undefined
     };
   }
   componentDidMount() {
@@ -31,7 +38,14 @@ export default class Services extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
-      this.setState({ selectedService: undefined })
+      this.setState({
+        selectedService: undefined,
+        action: undefined,
+        name: '',
+        description: '',
+        price: '',
+        duration: '',
+      })
     }
   }
 
@@ -52,20 +66,17 @@ export default class Services extends Component {
       "sortBy": ""
     })
     console.log(serviceList)
-    if (serviceList) {
+    if (serviceList && serviceList?.data?.items) {
+      serviceList?.data?.items.map(ele => {
+        ele.convertPrice = convertMoney(ele?.price)
+        ele.time = ele?.duration * 10 + ' minutes'
+      })
       this.setState({
         loading: false,
         serviceList: serviceList?.data?.items,
         totalService: serviceList?.data?.totalCount
       })
     }
-
-  }
-
-  tabRow() {
-    return this.state.business.map(function (object, i) {
-      return <Table obj={object} key={i} />;
-    });
   }
 
   getDetail = async (id) => {
@@ -73,13 +84,58 @@ export default class Services extends Component {
     let res = await getServiceDetail({
       id: id
     })
-    console.log(res)
-
+    if (res?.data) {
+      this.setState({
+        selectedService: res?.data,
+        name: res?.data?.name,
+        description: res?.data?.description,
+        duration: res?.data?.duration * 10,
+        price: convertMoney(res?.data?.price),
+      })
+    }
     this.setState({
       loading: false,
       isOpenModal: true,
-      selectedService: res?.data
     })
+  }
+
+  createService = async () => {
+    this.setState({ loading: true })
+    let res = await createServiceApi({
+      name: this.state.name,
+      description: this.state.description,
+      duration: Math.round(this.state.duration / 10),
+      price: this.state.price.split('.').join('')
+    })
+    if (res) {
+      alert(res?.message)
+      this.setState({
+        isOpenModal: false,
+        loading: false
+      }, () => {
+        this.getService()
+      })
+    }
+  }
+
+  updateService = async () => {
+    this.setState({ loading: true })
+    let res = await updateServiceApi({
+      id: this.state.selectedService?.id,
+      name: this.state.name,
+      description: this.state.description,
+      duration: Math.round(this.state.duration / 10),
+      price: this.state.price.split('.').join('')
+    })
+    if (res) {
+      alert(res?.message)
+      this.setState({
+        isOpenModal: false,
+        loading: false
+      }, () => {
+        this.getService()
+      })
+    }
   }
 
 
@@ -87,16 +143,20 @@ export default class Services extends Component {
     return (
       <div>
         <h2 className="page-header">
-          Services List
+          Services
         </h2>
         <div className='card'>
           <div style={{
             marginBottom: '1em',
           }}>
             <Button variant="outlined" onClick={() => {
-              this.props.history.push({
-                pathname: `/services/create`,
+              this.setState({
+                isOpenModal: true,
+                action: 'create'
               })
+              // this.props.history.push({
+              //   pathname: `/services/create`,
+              // })
             }}>
               New Service
             </Button>
@@ -108,10 +168,10 @@ export default class Services extends Component {
               { id: 1, label: '#', value: 'id' },
               { id: 2, label: 'Name', value: 'name' },
               { id: 3, label: 'Description', value: 'description' },
-              { id: 4, label: 'Duration', value: 'duration' },
-              { id: 5, label: 'Created Date', value: 'createdDate' },
-              { id: 6, label: 'Last Update', value: 'lastUpdated' },
-              { id: 7, label: 'Price', value: 'price' },
+              { id: 4, label: 'Duration', value: 'time' },
+              // { id: 5, label: 'Created Date', value: 'createdDate' },
+              // { id: 6, label: 'Last Update', value: 'lastUpdated' },
+              { id: 7, label: 'Price', value: 'convertPrice' },
             ]}
             rows={this.state.serviceList}
             actionList={[
@@ -120,16 +180,12 @@ export default class Services extends Component {
               //'delete',
             ]}
             onClickView={(row) => {
-              console.log(row)
+              this.setState({ action: 'view' })
               this.getDetail(row?.id)
             }}
             onClickEdit={(row) => {
-              this.props.history.push({
-                pathname: `/services/create`,
-                state: {
-                  serviceData: row
-                }
-              })
+              this.setState({ action: 'edit' })
+              this.getDetail(row?.id)
             }}
             onClickDelete={(row) => {
               this.deleteService(row?.id)
@@ -149,44 +205,62 @@ export default class Services extends Component {
         </div>
 
         <Modal isOpen={this.state.isOpenModal}>
+
           <div style={{
+            height: '100%',
+            overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
-            flex: 1
+            flex: 1,
           }}>
-            <TextField
+            <h2 className="page-header">
+              {
+                this.state.action === 'view' ? 'Service' : this.state.action === 'create' ? 'Create Service' : 'Edit Service'
+              }
+            </h2>
+            <div style={{
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+              overflowY: 'scroll',
+              paddingRight: '2em'
+            }}>
+              <TextField
+                required
+                disabled={this.state.action === 'view'}
+                id="outlined-basic"
+                label="Service Name"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.name}
+                onChange={(event) => {
+                  this.setState({ name: event.target.value })
+                }}
+              />
+              <TextField
+                required
+                disabled={this.state.action === 'view'}
+                id="outlined-basic"
+                label="Description"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.description}
+                onChange={(event) => {
+                  this.setState({ description: event.target.value })
+                }}
+              />
+              {/* <TextField
               required
-              disabled
-              id="outlined-basic"
-              label="Service Name"
-              variant="outlined"
-              style={{
-                width: '100%',
-                marginTop: '1em',
-                marginBottom: '1em'
-              }}
-              value={this.state.selectedService?.name}
-              onChange={(event) => {
-              }}
-            />
-            <TextField
-              required
-              disabled
-              id="outlined-basic"
-              label="Description"
-              variant="outlined"
-              style={{
-                width: '100%',
-                marginTop: '1em',
-                marginBottom: '1em'
-              }}
-              value={this.state.selectedService?.description}
-              onChange={(event) => {
-              }}
-            />
-            <TextField
-              required
-              disabled
+               disabled={this.state.action === 'view'}
               id="outlined-basic"
               label="Status"
               variant="outlined"
@@ -198,47 +272,89 @@ export default class Services extends Component {
               value={this.state.selectedService?.status}
               onChange={(event) => {
               }}
-            />
-            <TextField
-              required
-              disabled
-              id="outlined-basic"
-              label="Created Date"
-              variant="outlined"
-              style={{
-                width: '100%',
-                marginTop: '1em',
-                marginBottom: '1em'
-              }}
-              value={this.state.selectedService?.createdDate ? this.state.selectedService?.createdDate.split(' ')[0] : ''}
-              onChange={(event) => {
-              }}
-            />
-            <TextField
-              required
-              disabled
-              id="outlined-basic"
-              label="Price"
-              variant="outlined"
-              style={{
-                width: '100%',
-                marginTop: '1em',
-                marginBottom: '1em'
-              }}
-              value={this.state.selectedService?.price}
-              onChange={(event) => {
-              }}
-            />
-          </div>
-          <div>
-            <Button variant="contained" color="inherit" onClick={() => {
-              this.setState({
-                isOpenModal: false
-              })
+            /> */}
+              <TextField
+                required
+                disabled={this.state.action === 'view'}
+                id="outlined-basic"
+                label="Duration (minutes)"
+                variant="outlined"
+                placeholder='60'
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.duration}
+                onChange={(event) => {
+                  this.setState({ duration: event.target.value })
+                }}
+              />
+              {/* <TextField
+                required
+                disabled={this.state.action === 'view'}
+                id="outlined-basic"
+                label="Created Date"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.selectedService?.createdDate ? this.state.selectedService?.createdDate.split(' ')[0] : ''}
+                onChange={(event) => {
+                }}
+              /> */}
+              <TextField
+                required
+                disabled={this.state.action === 'view'}
+                id="outlined-basic"
+                label="Price"
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}
+                value={this.state.price}
+                onChange={(event) => {
+                  this.setState({ price: convertMoney(event.target.value) })
+                }}
+              />
+            </div>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'row',
+              marginTop: '1em'
             }}>
-              Close
-            </Button>
+              <Button variant="contained" color="inherit" onClick={() => {
+                this.setState({
+                  isOpenModal: false
+                })
+              }}>
+                Close
+              </Button>
+              <div style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+                <div style={{ flex: 1 }} />
+                <LoadingButton variant="contained" color="success" loading={this.state.loading} onClick={() => {
+                  if (this.state.action === 'create') {
+                    this.createService()
+                  } else {
+                    this.updateService()
+                  }
+                }}>
+                  {this.state.action === 'create' ? 'Save' : 'Update'}
+                </LoadingButton>
+              </div>
+            </div>
           </div>
+
         </Modal>
 
       </div>

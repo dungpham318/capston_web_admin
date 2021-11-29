@@ -1,6 +1,32 @@
 import { END_POINT } from '../config/index';
 import { token } from '../config/index'
 
+export async function getAllSlot(input) {
+  let url = `/api/SlotOfDay`
+  return fetch(END_POINT + url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
+        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    });
+}
+
 export async function getStaffList(input) {
   let url = `/api/Staff/advanced_get_staffs`
   return fetch(END_POINT + url, {

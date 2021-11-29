@@ -5,7 +5,7 @@ import img_login from '../assets/images/img_login.svg'
 import { Redirect, useHistory } from 'react-router-dom'
 import { TextField } from '@material-ui/core';
 import bg_login from '../assets/images/bg_login.png'
-import logo from '../assets/images/logo.png'
+import logo from '../assets/images/logo.jpg'
 import Button from '@mui/material/Button'
 import { loginApi } from '../apis/loginApi';
 import LoadingButton from '@mui/lab/LoadingButton'

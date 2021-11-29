@@ -83,6 +83,7 @@ export async function getArticleDetailApi(input) {
     })
     .catch((error) => {
       console.log(error)
+      alert(error)
       return false
     });
 }

@@ -120,13 +120,13 @@ export default class Transaction extends Component {
     let res = await getTransactionDetailApi({
       id: id
     })
-    let staffList = await await getAvailableStaffList({
+    let staffList = await getAvailableStaffList({
       id: id
     })
     this.setState({ loading: false })
     let data = res?.data
 
-    if (data?.appointmentDetails && data?.appointmentDetails.length > 0) {
+    if (data?.appointmentDetails && data?.appointmentDetails.length > 0 && staffList?.data) {
       for (const item of data?.appointmentDetails) {
         let staffs
         console.log(123, item)
@@ -210,14 +210,18 @@ export default class Transaction extends Component {
         </h2>
         <div className='card'>
           <div>
-            <div style={{ width: '15em' }}>
+            <div style={{ width: '15em', }}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Status</InputLabel>
                 <Select
+                  style={{
+                    // paddingTop: '0.5em',
+                    // paddingLeft: '1em'
+                  }}
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={this.state.selectedAppointmentStatus}
-                  label="Age"
+                  label="Status"
                   onChange={(e) => {
                     this.setState({
                       selectedAppointmentStatus: e.target.value
@@ -278,15 +282,18 @@ export default class Transaction extends Component {
         </div>
 
         <Modal isOpen={this.state.isOpenModal}>
+          <h2 className="page-header">
+            Appointment
+          </h2>
           <div style={{
-            height: '100%',
+            height: '90%',
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
           }}>
             <div style={{
-              height: '100%',
+              height: '90%',
               display: 'flex',
               flexDirection: 'column',
               flex: 1,

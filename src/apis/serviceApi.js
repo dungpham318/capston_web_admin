@@ -83,7 +83,7 @@ export async function getServiceDetail(input) {
     });
 }
 
-export async function UpdateServiceApi(input) {
+export async function updateServiceApi(input) {
   let url = `/api/Service/update_service`
   return fetch(END_POINT + url, {
     method: 'PUT',

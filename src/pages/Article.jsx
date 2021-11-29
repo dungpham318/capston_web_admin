@@ -55,12 +55,6 @@ export default class Article extends Component {
 
   }
 
-  tabRow() {
-    return this.state.business.map(function (object, i) {
-      return <Table obj={object} key={i} />;
-    });
-  }
-
   render() {
     return (
       <div>

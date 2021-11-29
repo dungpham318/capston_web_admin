@@ -15,7 +15,8 @@ export default class Salon extends Component {
       totalSalon: 100,
       page: 1,
       pageSize: 10,
-      isOpenModal: false
+      isOpenModal: false,
+      loading: false
     };
   }
   componentDidMount() {
@@ -23,6 +24,7 @@ export default class Salon extends Component {
   }
 
   getSalon = async () => {
+    this.setState({ loading: true })
     let salonList = await getSalonList({
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
@@ -31,8 +33,9 @@ export default class Salon extends Component {
       ],
       "sortBy": ""
     })
+    this.setState({ loading: false })
 
-    if (salonList) {
+    if (salonList?.data?.items) {
       this.setState({
         salonList: salonList?.data?.items,
         totalSalon: salonList?.data?.totalCount
@@ -66,6 +69,7 @@ export default class Salon extends Component {
             </Button>
           </div>
           <Table
+            loading={this.state.loading}
             headers={[
               { id: 1, label: '#', value: 'id' },
               { id: 2, label: 'Salon Name', value: 'name' },
@@ -86,8 +90,8 @@ export default class Salon extends Component {
             // }}
             onClickEdit={(row) => {
               this.props.history.push({
-                pathname:`/salon/create`,
-                state:{
+                pathname: `/salon/create`,
+                state: {
                   salonData: row
                 }
               })

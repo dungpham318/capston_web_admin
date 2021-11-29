@@ -42,3 +42,59 @@ export const convertMoney = (_text) => {
     return ""
   }
 }
+
+export function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+export const convertDate = (day) => {
+  let date = new Date(day)
+  let time
+  let dd = date.getUTCDate()
+  if (dd < 10) {
+    dd = '0' + dd
+  }
+  let mm = date.getUTCMonth() + 1
+  if (mm < 10) {
+    mm = '0' + mm
+  }
+  let yyyy = date.getUTCFullYear()
+  return dd + '/' + mm + '/' + yyyy
+}
+
+export const convertDateTime = (time) => {
+  if (time === null || time === undefined) {
+    return "";
+  }
+  let day = time.getUTCDate();
+  if (day < 10) {
+    day = "0" + day;
+  }
+  let month = time.getUTCMonth() + 1;
+  if (month < 10) {
+    month = "0" + month;
+  }
+  let year = time.getFullYear();
+  if (year < 10) {
+    year = "0" + year;
+  }
+  let hours = time.getUTCHours();
+  if (hours < 10) {
+    hours = "0" + hours;
+  }
+  let minutes = time.getUTCMinutes();
+  if (minutes < 10) {
+    minutes = "0" + minutes;
+  }
+  let seconds = time.getUTCSeconds();
+  if (seconds < 10) {
+    seconds = "0" + seconds;
+  }
+
+  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
+}

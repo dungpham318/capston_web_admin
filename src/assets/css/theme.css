@@ -36,3 +36,5 @@
     --main-color: var(--main-color-orange);
     --second-color: var(--second-color-orange);
 }
+
+.table-bordered th, .table-bordered td { border: 1px solid #ddd!important }

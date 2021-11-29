@@ -4,6 +4,7 @@ import "suneditor/dist/css/suneditor.min.css";
 import { addArticleApi, getArticleDetailApi } from '../apis/articleApi';
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import { LoadingButton } from '@mui/lab';
 
 export default function CreateArticle(props) {
 
@@ -11,6 +12,7 @@ export default function CreateArticle(props) {
   const [articleContent, setArticleContent] = useState('')
   const [imageFile, setImageFile] = useState(undefined)
   const [isGettingArticle, setIsGettingArticle] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (props.location.state?.articleData) {
@@ -44,11 +46,13 @@ export default function CreateArticle(props) {
   }
 
   const getArticleDetail = async (id) => {
-
+    setLoading(true)
     let res = await getArticleDetailApi({
       id: id
     })
     console.log(res)
+    setLoading(false)
+
     if (res) {
       setArticleTitle(res?.data?.tittle)
       setArticleContent(res?.data?.description)
@@ -61,6 +65,11 @@ export default function CreateArticle(props) {
   return (
     <div>
       <div className='card' style={{ height: '45em' }}>
+        <div style={{ display: 'flex', flex: 'row', }}>
+          <LoadingButton variant="outlined" onClick={() => onSubmit()}>
+            Save
+          </LoadingButton>
+        </div>
         <div style={{
           display: 'flex',
           flexDirection: 'column',
@@ -175,11 +184,7 @@ export default function CreateArticle(props) {
           </div>
 
         </div>
-        <div style={{ display: 'flex', flex: 'row', }}>
-          <Button variant="outlined" onClick={() => onSubmit()}>
-            Submit
-          </Button>
-        </div>
+
 
       </div>
     </div>

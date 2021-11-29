@@ -14,9 +14,9 @@ export default function UpdateService(props) {
     const [isGettingService, setIsGettingService] = useState(true)
 
     useEffect(() => {
-        if (props.location.state?.serviceData){
+        if (props.location.state?.serviceData) {
             getDetail(props.location.state?.serviceData?.id)
-        }else{
+        } else {
             setIsGettingService(false)
         }
     }, [])
@@ -26,24 +26,24 @@ export default function UpdateService(props) {
     }, [serviceName])
 
     const onUpdate = async () => {
-        let res = await UpdateServiceApi({
-            "id": serviceId,
-            "name": serviceName,
-            "description": serviceDescription,
-            "status": serviceStatus,
-            "price": servicePrice
-        })
+        // let res = await UpdateServiceApi({
+        //     "id": serviceId,
+        //     "name": serviceName,
+        //     "description": serviceDescription,
+        //     "status": serviceStatus,
+        //     "price": servicePrice
+        // })
 
-        if(res) {
-            props.history.push({
-                pathname: `/services`
-            })
-        }
+        // if (res) {
+        //     props.history.push({
+        //         pathname: `/services`
+        //     })
+        // }
     }
 
-    const onCancel = async () =>{
+    const onCancel = async () => {
         props.history.push({
-            pathname:`/service`
+            pathname: `/service`
         })
     }
 
@@ -52,7 +52,7 @@ export default function UpdateService(props) {
             id: id
         })
         console.log(res)
-        if(res) {
+        if (res) {
             setServiceId(res?.data?.id)
             setServiceName(res?.data?.name)
             setServiceDescription(res?.data?.description)
@@ -63,7 +63,7 @@ export default function UpdateService(props) {
 
     return (
         <div>
-            <div className='card' style={{height: '30em'}}>
+            <div className='card' style={{ height: '30em' }}>
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -71,81 +71,81 @@ export default function UpdateService(props) {
                     height: '38em'
                 }}>
                     <TextField
-                      required
-                      disabled
-                      id="outlined-basic"
-                      label="Service Id"
-                      variant="outlined"
-                      style={{
-                          width: '100%',
-                          marginTop: '1em',
-                          marginBottom: '1em'
-                      }}
-                      value={serviceId}
-                      onChange={(event) => {
-                          setServiceId(event.target.value)
-                      }}
-                    />  
-                    <TextField
-                      required
-                      id="outlined-basic"
-                      label="Service Name"
-                      variant="outlined"
-                      style={{
-                          width: '100%',
-                          marginTop: '1em',
-                          marginBottom: '1em'
-                      }}
-                      value={serviceName}
-                      onChange={(event) => {
-                          setServiceName(event.target.value)
-                      }}
+                        required
+                        disabled
+                        id="outlined-basic"
+                        label="Service Id"
+                        variant="outlined"
+                        style={{
+                            width: '100%',
+                            marginTop: '1em',
+                            marginBottom: '1em'
+                        }}
+                        value={serviceId}
+                        onChange={(event) => {
+                            setServiceId(event.target.value)
+                        }}
                     />
                     <TextField
-                      required
-                      id="outlined-basic"
-                      label="Desription"
-                      variant="outlined"
-                      style={{
-                          width: '100%',
-                          marginTop: '1em',
-                          marginBottom: '1em'
-                      }}
-                      value={serviceDescription}
-                      onChange={(event) => {
-                          setServiceDescription(event.target.value)
-                      }}
+                        required
+                        id="outlined-basic"
+                        label="Service Name"
+                        variant="outlined"
+                        style={{
+                            width: '100%',
+                            marginTop: '1em',
+                            marginBottom: '1em'
+                        }}
+                        value={serviceName}
+                        onChange={(event) => {
+                            setServiceName(event.target.value)
+                        }}
                     />
                     <TextField
-                      required
-                      disabled
-                      id="outlined-basic"
-                      label="Status"
-                      variant="outlined"
-                      style={{
-                          width: '100%',
-                          marginTop: '1em',
-                          marginBottom: '1em'
-                      }}
-                      value={serviceStatus}
-                      onChange={(event) => {
-                          setServiceStatus(event.target.value)
-                      }}
+                        required
+                        id="outlined-basic"
+                        label="Desription"
+                        variant="outlined"
+                        style={{
+                            width: '100%',
+                            marginTop: '1em',
+                            marginBottom: '1em'
+                        }}
+                        value={serviceDescription}
+                        onChange={(event) => {
+                            setServiceDescription(event.target.value)
+                        }}
                     />
                     <TextField
-                      required
-                      id="outlined-basic"
-                      label="Price"
-                      variant="outlined"
-                      style={{
-                          width: '100%',
-                          marginTop: '1em',
-                          marginBottom: '1em'
-                      }}
-                      value={servicePrice}
-                      onChange={(event) => {
-                          setServicePrice(event.target.value)
-                      }}
+                        required
+                        disabled
+                        id="outlined-basic"
+                        label="Status"
+                        variant="outlined"
+                        style={{
+                            width: '100%',
+                            marginTop: '1em',
+                            marginBottom: '1em'
+                        }}
+                        value={serviceStatus}
+                        onChange={(event) => {
+                            setServiceStatus(event.target.value)
+                        }}
+                    />
+                    <TextField
+                        required
+                        id="outlined-basic"
+                        label="Price"
+                        variant="outlined"
+                        style={{
+                            width: '100%',
+                            marginTop: '1em',
+                            marginBottom: '1em'
+                        }}
+                        value={servicePrice}
+                        onChange={(event) => {
+                            setServicePrice(event.target.value)
+                        }}
                     />
                     <div style={{
                         flex: 1,
@@ -154,17 +154,17 @@ export default function UpdateService(props) {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        <div style={{ flex: 1}}/>
-                        <LoadingButton  style ={{
+                        <div style={{ flex: 1 }} />
+                        <LoadingButton style={{
                             marginRight: '1em'
-                        }}variant="contained" color="blue" onClick={() => onUpdate()}>
+                        }} variant="contained" color="blue" onClick={() => onUpdate()}>
                             Update
                         </LoadingButton>
                         <LoadingButton variant="contained" color="error" onClick={() => onCancel()}>
                             Cancel
                         </LoadingButton>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     );

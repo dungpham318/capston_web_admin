@@ -27,9 +27,9 @@ export default class Staffs extends Component {
     let staffList = await getStaffList({
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
-    //   "statuses": [
-    //     "active"
-    //   ],
+      //   "statuses": [
+      //     "active"
+      //   ],
       "sortBy": ""
     })
 
@@ -40,12 +40,6 @@ export default class Staffs extends Component {
       })
     }
 
-  }
-
-  tabRow() {
-    return this.state.business.map(function (object, i) {
-      return <Table obj={object} key={i} />;
-    });
   }
 
   getStaffDetail = async (id) => {
@@ -60,6 +54,10 @@ export default class Staffs extends Component {
     })
   }
 
+  createStaff = async () => {
+
+  }
+
   render() {
     return (
       <div>
@@ -67,7 +65,7 @@ export default class Staffs extends Component {
           Staffs List
         </h2>
         <div className='card'>
-        <div style={{
+          <div style={{
             marginBottom: '1em',
           }}>
             <Button variant="outlined" onClick={() => {
@@ -85,7 +83,7 @@ export default class Staffs extends Component {
               { id: 3, label: 'Full Name', value: 'fullName' },
               { id: 4, label: 'Role', value: 'staffType' },
               { id: 5, label: 'Description', value: 'description' },
-            //   { id: 6, label: 'Salon', value: 'salon ID' },
+              //   { id: 6, label: 'Salon', value: 'salon ID' },
               { id: 6, label: 'Salon Name', value: 'salonName' },
               { id: 7, label: 'Email', value: 'email' },
               { id: 8, label: 'Phone Number', value: 'phoneNumber' },

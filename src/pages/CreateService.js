@@ -10,7 +10,7 @@ export default function CreateService(props) {
     const [serviceName, setServiceName] = useState('')
     const [serviceDescription, setServiceDescription] = useState('')
     const [servicePrice, setServicePrice] = useState('')
-    const [duration, setDuration] = useState('365')
+    const [duration, setDuration] = useState('')
     const [serviceStatus, setServiceStatus] = useState('active')
     const [isGettingService, setIsGettingService] = useState(true)
 

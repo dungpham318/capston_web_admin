@@ -3,9 +3,9 @@
 }
 
 table {
-    width: 100%;
+    /* width: 100%;
     min-width: 400px;
-    border-spacing: 0;
+    border-spacing: 0; */
 }
 
 thead {
@@ -23,8 +23,8 @@ td {
 }
 
 tbody > tr:hover {
-    background-color: var(--main-color);
-    color: var(--txt-white);
+    /* background-color: var(--main-color);
+    color: var(--txt-white); */
 }
 
 .table__pagination {
@@ -60,3 +60,4 @@ tbody > tr:hover {
     color: var(--txt-white);
     background-color: var(--second-color);
 }
+

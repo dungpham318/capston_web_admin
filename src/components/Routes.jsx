@@ -18,6 +18,7 @@ import CreateService from '../pages/CreateService'
 import UpdateService from '../pages/UpdateService'
 import CreateSalon from '../pages/CreateSalon'
 import CreateStaff from '../pages/CreateStaff'
+import Schedule from '../pages/Schedule'
 
 const Routes = () => {
 
@@ -46,6 +47,9 @@ const Routes = () => {
                         <Route path='/staffs/create' component={CreateStaff} />
                         <Route exact path='/article' component={Article} />
                         <Route path='/article/create' component={CreateArticle} />
+                        <Route path='/schedule' component={Schedule} />
+
+
 
                     </>
             }
