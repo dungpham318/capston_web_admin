@@ -41,7 +41,7 @@ export default function Login(props) {
         localStorage.setItem('fullName', res?.data?.fullName)
       }
       history.push({
-        pathname: `/dashboard`
+        pathname: `/`
       })
     }
   }
