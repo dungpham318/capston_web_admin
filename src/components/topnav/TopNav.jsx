@@ -16,7 +16,7 @@ import user_menu from '../../assets/JsonData/user_menus.json'
 import { render } from '@testing-library/react'
 
 const curr_user = {
-    display_name: 'Nha Tran',
+    display_name: localStorage.getItem('fullName'),
     // image: user_image
 }
 
@@ -67,8 +67,8 @@ const Topnav = () => {
     return (
         <div className='topnav'>
             <div className="topnav__search">
-                <input type="text" placeholder='Search here...' />
-                <i className='bx bx-search'></i>
+                {/* <input type="text" placeholder='Search here...' />
+                <i className='bx bx-search'></i> */}
             </div>
             <div className="topnav__right">
                 <div className="topnav__right-item">

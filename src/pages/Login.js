@@ -9,11 +9,18 @@ import logo from '../assets/images/logo.jpg'
 import Button from '@mui/material/Button'
 import { loginApi } from '../apis/loginApi';
 import LoadingButton from '@mui/lab/LoadingButton'
+
+// import { getToken } from '../firebase'
+
 export default function Login(props) {
   let history = useHistory()
   const [username, setUsername] = useState('manager123@gmail.com')
   const [password, setPassword] = useState('Test123')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    // getToken()
+  }, [])
 
   const onLogin = async () => {
     setLoading(true)
@@ -31,6 +38,7 @@ export default function Login(props) {
         localStorage.setItem('email', res?.data?.email)
         localStorage.setItem('avatar', res?.data?.avatar)
         localStorage.setItem('role', res?.data?.role)
+        localStorage.setItem('fullName', res?.data?.fullName)
       }
       history.push({
         pathname: `/dashboard`
@@ -66,11 +74,11 @@ export default function Login(props) {
           src={logo}
           style={{
             width: '6em',
+            height: '6em',
           }}
         />
         <div style={{
-          marginTop: '2em',
-          flex: '1 1 auto',
+          marginTop: '1em',
         }}>
           <TextField
             required
@@ -104,8 +112,9 @@ export default function Login(props) {
           />
         </div>
         <LoadingButton style={{
-          width: '90%',
-          backgroundColor: '#2980b9',
+          width: '95%',
+          // backgroundColor: '#2980b9',
+          height: '3em'
         }}
           variant="contained"
           loading={loading}

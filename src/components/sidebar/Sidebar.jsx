@@ -31,11 +31,16 @@ const Sidebar = props => {
     return (
         <div className='sidebar'>
             <div className="sidebar__logo">
-                <img src={logo} alt="company logo" />
+                <img style={{
+                    width: '5em',
+                    height: '5em'
+                }} src={logo} alt="company logo" />
             </div>
             {
                 sidebar_items.map((item, index) => {
-                    if (props.location.pathname.includes(item?.route) && item?.route.length > 2) {
+                    if ((props.location.pathname === '/' && item?.route === '/') || (props.location.pathname === '/dashboard' && item?.route === '/dashboard')) {
+                        activeItem = true
+                    } else if (props.location.pathname.includes(item?.route) && item?.route.length > 2) {
                         activeItem = true
                     } else {
                         activeItem = false

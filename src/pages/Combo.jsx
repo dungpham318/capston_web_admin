@@ -408,7 +408,7 @@ export default class Combo extends Component {
                     id="combo-box-demo"
                     options={this.state.serviceList}
                     sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="Service" />}
+                    renderInput={(params) => <TextField {...params} label="Service" variant="outlined" />}
                   />
                   <div style={{ marginLeft: '2em' }}>
                     <LoadingButton variant="outlined" color="primary" loading={this.state.loading} onClick={() => {

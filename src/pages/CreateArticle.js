@@ -67,7 +67,7 @@ export default function CreateArticle(props) {
       <div className='card' style={{ height: '45em' }}>
         <div style={{ display: 'flex', flex: 'row', }}>
           <LoadingButton variant="outlined" onClick={() => onSubmit()}>
-            Save
+            Update
           </LoadingButton>
         </div>
         <div style={{

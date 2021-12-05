@@ -154,7 +154,7 @@ export default class Schedule extends Component {
     })
     if (res?.data?.items) {
       this.setState({
-        salonList: res?.data?.items
+        salonList: res?.data?.items,
       })
     }
   }
@@ -471,14 +471,14 @@ export default class Schedule extends Component {
                                     }
                                     return (
                                       <tr style={{
-                                        width: '5em',
+                                        width: '3em',
                                         height: '3em',
                                         textAlign: 'center',
                                         backgroundColor: isAvailable !== -1 ? '#2980b9' : '#ffffff',
 
                                       }}>
                                         <td style={{
-                                          width: '5em',
+                                          width: '3em',
                                           height: '3em',
                                           textAlign: 'center',
                                           backgroundColor: isAvailable !== -1 ? '#2980b9' : '#ffffff',
@@ -486,7 +486,7 @@ export default class Schedule extends Component {
                                         // rowSpan={6}
                                         >
                                           <div style={{
-                                            width: '5em',
+                                            width: '3em',
                                             height: '3em',
                                             textAlign: 'center',
                                             backgroundColor: isAvailable !== -1 ? '#2980b9' : '#ffffff',
@@ -644,7 +644,7 @@ export default class Schedule extends Component {
                 <Button variant="contained" color="success" onClick={() => {
                   this.createSchedule()
                 }}>
-                  Submit
+                  Update
                 </Button>
               </div>
             </div>

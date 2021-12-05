@@ -111,10 +111,9 @@ export async function createStaffApi(input) {
   return fetch(END_POINT + url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + localStorage.getItem('token')
     },
-    body: JSON.stringify(input)
+    body: input
   })
     .then((response) => {
       return response.json();
