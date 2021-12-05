@@ -99,8 +99,9 @@ export default class Schedule extends Component {
         ele.color = getRandomColor()
         ele.label = ele?.fullName + ' - ' + ele?.staffType
       })
+      let tmp = res?.data?.items.filter(ele => ele?.staffType !== 'manager')
       this.setState({
-        staffList: res?.data?.items
+        staffList: tmp
       }, () => {
         // this.getScheduleByStaff()
         this.getScheduleBySalon()
