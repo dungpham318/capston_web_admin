@@ -140,6 +140,15 @@ export default class Services extends Component {
 
 
   render() {
+    let actionList = [
+      'view',
+      'edit'
+    ]
+
+    if (localStorage.getItem('role') === 'manager') {
+      actionList = ['view']
+    }
+
     return (
       <div>
         <h2 className="page-header">
@@ -149,17 +158,21 @@ export default class Services extends Component {
           <div style={{
             marginBottom: '1em',
           }}>
-            <Button variant="outlined" onClick={() => {
-              this.setState({
-                isOpenModal: true,
-                action: 'create'
-              })
-              // this.props.history.push({
-              //   pathname: `/services/create`,
-              // })
-            }}>
-              New Service
-            </Button>
+            {
+              localStorage.getItem('role') !== 'manager' &&
+              <Button variant="outlined" onClick={() => {
+                this.setState({
+                  isOpenModal: true,
+                  action: 'create'
+                })
+                // this.props.history.push({
+                //   pathname: `/services/create`,
+                // })
+              }}>
+                New Service
+              </Button>
+            }
+
           </div>
           {/* <div className='card'> */}
           <Table
@@ -174,11 +187,7 @@ export default class Services extends Component {
               { id: 7, label: 'Price', value: 'convertPrice' },
             ]}
             rows={this.state.serviceList}
-            actionList={[
-              'view',
-              'edit',
-              //'delete',
-            ]}
+            actionList={actionList}
             onClickView={(row) => {
               this.setState({ action: 'view' })
               this.getDetail(row?.id)

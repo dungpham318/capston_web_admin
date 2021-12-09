@@ -42,7 +42,7 @@ export default class Salon extends Component {
         height: 500,
         latitude: 10.816128715830608,
         longitude: 106.67656939773919,
-        zoom: 15
+        zoom: 15,
       },
       imageLink: undefined
     };
@@ -201,6 +201,15 @@ export default class Salon extends Component {
   }
 
   render() {
+    let actionList = [
+      'view',
+      'edit',
+      'delete'
+    ]
+
+    if (localStorage.getItem('role') === 'manager') {
+      actionList = ['view']
+    }
     return (
       <div>
         <h2 className="page-header">
@@ -210,11 +219,14 @@ export default class Salon extends Component {
           <div style={{
             marginBottom: '1em',
           }}>
-            <Button variant="outlined" onClick={() => {
-              this.setState({ isOpenModal: true, action: 'create' })
-            }}>
-              New Salon
-            </Button>
+            {
+              localStorage.getItem('role') !== 'manager' &&
+              <Button variant="outlined" onClick={() => {
+                this.setState({ isOpenModal: true, action: 'create' })
+              }}>
+                New Salon
+              </Button>
+            }
           </div>
           <Table
             loading={this.state.loading}
@@ -227,11 +239,7 @@ export default class Salon extends Component {
               { id: 6, label: 'Last Updated', value: 'lastUpdate' },
             ]}
             rows={this.state.salonList}
-            actionList={[
-              'view',
-              'edit',
-              'delete',
-            ]}
+            actionList={actionList}
             onClickView={(row) => {
               this.setState({
                 selectedSalon: row,

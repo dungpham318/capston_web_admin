@@ -134,3 +134,29 @@ export async function getAppointmentStatusApi(input) {
       console.log(error)
     });
 }
+
+export async function managerConfirmApi(input) {
+  let url = `/api/Appointment/manage_finish_appointment`
+  return fetch(END_POINT + url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    },
+    body: JSON.stringify(input)
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
+        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+}

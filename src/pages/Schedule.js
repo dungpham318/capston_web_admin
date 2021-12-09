@@ -19,6 +19,9 @@ import Modal from '../components/modal/Modal'
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import { createBulkScheduleApi, getScheduleApi, getScheduleByStaffApi, getScheduleBySalonApi } from '../apis/scheduleApi'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import { minHeight } from '@mui/system'
 export default class Schedule extends Component {
 
   constructor(props) {
@@ -28,7 +31,7 @@ export default class Schedule extends Component {
       fromDate: new Date(new Date().setUTCHours(0, 0, 0, 0)),
       toDate: new Date(new Date().setUTCHours(0, 0, 0, 0) + 86400000 * 7),
       dateList: [],
-
+      loading: false,
 
       salonList: [],
       selectedSalon: undefined,
@@ -77,6 +80,8 @@ export default class Schedule extends Component {
   }
 
   getStaffList = async () => {
+    this.setState({ loading: true })
+    this.convertDate()
     let res = await getStaffList({
       "pageNumber": 1,
       "pageSize": 100,
@@ -94,6 +99,8 @@ export default class Schedule extends Component {
       "salonName": "",
       "email": ""
     })
+    this.setState({ loading: false })
+
     if (res?.data?.items) {
       res?.data?.items.map(ele => {
         ele.color = getRandomColor()
@@ -110,19 +117,27 @@ export default class Schedule extends Component {
   }
 
   getScheduleBySalon = async () => {
+    this.setState({ loading: true })
+
     for (const item of this.state.dateList) {
       const res = await getScheduleBySalonApi({
         id: this.state.selectedSalon,
         date: item
       })
+
       if (res?.data?.staffs) {
+        console.log(res?.data?.staffs)
         let tmp = []
         let staffList = []
         for (const ele of this.state.staffList) {
           let index = res?.data?.staffs.findIndex(_ => _?.staffId === ele?.staffId)
+          console.log('index', index)
+          console.log('data', res?.data?.staffs[index])
+          ele.workSlot = []
           if (index !== -1) {
             ele.workSlot = res?.data?.staffs[index]?.workSlots
           }
+          console.log(ele.workSlot)
           staffList.push({
             ...ele,
             workSlot: ele?.workSlot
@@ -134,14 +149,16 @@ export default class Schedule extends Component {
         })
         this.setState({
           scheduleData: [...this.state.scheduleData, ...tmp]
-        }, () => {
-          console.log(this.state.scheduleData)
         })
       }
+      this.setState({ loading: false })
+
     }
   }
 
   getSalonList = async () => {
+    this.setState({ loading: true })
+
     let res = await getSalonList({
       "pageNumber": 1,
       "pageSize": 100,
@@ -153,15 +170,32 @@ export default class Schedule extends Component {
       "maxLastUpdate": "",
       "sortBy": ""
     })
+    this.setState({ loading: false })
+
     if (res?.data?.items) {
+
       this.setState({
         salonList: res?.data?.items,
+      }, () => {
+        if (localStorage.getItem('role') === 'manager') {
+          let selectedSalonID = localStorage.getItem('salonId')
+          if (selectedSalonID) {
+            this.setState({
+              selectedSalon: selectedSalonID
+            }, () => {
+              this.getStaffList()
+            })
+          }
+        }
       })
     }
   }
 
   getAllSlot = async () => {
+    this.setState({ loading: true })
     let res = await getAllSlot()
+    this.setState({ loading: false })
+
     if (res?.data) {
       this.setState({ slotList: res?.data })
     }
@@ -224,7 +258,11 @@ export default class Schedule extends Component {
       }
     }
 
+    this.setState({ loading: true })
+
     const res = await createBulkScheduleApi(data)
+    this.setState({ loading: false })
+
     if (res) {
       alert(res?.message)
       this.setState({ isOpenModal: false })
@@ -259,7 +297,27 @@ export default class Schedule extends Component {
     return (
       <div>
 
-        <div className='card'>
+        <div className='card' style={{
+          minHeight: '40em'
+        }}>
+          {
+            this.state.loading &&
+            <div style={{
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              left: '60%',
+              top: 0,
+              position: 'absolute',
+
+            }}>
+              <Box sx={{ display: 'flex' }}>
+                <CircularProgress />
+              </Box>
+            </div>
+          }
           <div style={{
             display: 'flex',
             flex: '1 1 0%',
@@ -267,32 +325,38 @@ export default class Schedule extends Component {
             alignItems: 'flex-center',
             justifyContent: 'flex-start',
           }}>
-            <FormControl style={{ width: '15em', marginRight: '1em' }}>
-              <InputLabel id="demo-simple-select-label">Salon</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={this.state.selectedSalon}
-                label="Salon"
-                style={{
-                  height: '3em',
-                  paddingLeft: '1em'
-                }}
-                onChange={(e) => {
-                  this.setState({
-                    selectedSalon: e.target.value
-                  }, () => {
-                    this.getStaffList()
-                  })
-                }}
-              >
-                {
-                  this.state.salonList.map(ele => {
-                    return <MenuItem value={ele?.id}>{ele?.name}</MenuItem>
-                  })
-                }
-              </Select>
-            </FormControl>
+            {
+              localStorage.getItem('role') !== 'manager' &&
+              <FormControl style={{ width: '15em', marginRight: '1em' }}>
+                <InputLabel id="demo-simple-select-label">Salon</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={this.state.selectedSalon}
+                  label="Salon"
+                  style={{
+                    height: '3em',
+                    paddingLeft: '2em'
+                  }}
+                  onChange={(e) => {
+                    this.setState({
+                      staffList: [],
+                      selectedSalon: e.target.value,
+                      scheduleData: []
+                    }, () => {
+                      this.getStaffList()
+                    })
+                  }}
+                >
+                  {
+                    this.state.salonList.map(ele => {
+                      return <MenuItem value={ele?.id}>{ele?.name}</MenuItem>
+                    })
+                  }
+                </Select>
+              </FormControl>
+            }
+
 
             <div style={{ marginRight: '1em' }}>
               <LocalizationProvider dateAdapter={AdapterDateFns} >
@@ -301,7 +365,9 @@ export default class Schedule extends Component {
                   inputFormat="MM/dd/yyyy"
                   value={this.state.fromDate}
                   onChange={(value) => {
-                    this.setState({ fromDate: value })
+                    this.setState({ fromDate: new Date(value.setHours(0, 0, 0, 0)), scheduleData: [] }, () => {
+                      this.getStaffList()
+                    })
                   }}
                   renderInput={(params) => <TextField {...params} />}
                 />
@@ -314,18 +380,23 @@ export default class Schedule extends Component {
                 inputFormat="MM/dd/yyyy"
                 value={this.state.toDate}
                 onChange={(value) => {
-                  this.setState({ toDate: value })
+                  this.setState({ toDate: new Date(value.setHours(0, 0, 0, 0)), scheduleData: [] }, () => {
+                    this.getStaffList()
+                  })
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
             </LocalizationProvider>
             <div style={{ flex: 1 }} />
             <div>
-              <Button variant="outlined" onClick={() => {
-                this.setState({ isOpenModal: true })
-              }}>
-                Add Schedule
-              </Button>
+              {
+                localStorage.getItem('role') === 'manager' &&
+                <Button variant="outlined" onClick={() => {
+                  this.setState({ isOpenModal: true })
+                }}>
+                  Add Schedule
+                </Button>
+              }
             </div>
           </div>
 
@@ -466,23 +537,31 @@ export default class Schedule extends Component {
                               >
                                 {
                                   item?.staffs.map((staff, index2) => {
+                                    let color = '#ffffff'
                                     let isAvailable = -1
                                     if (staff?.workSlot) {
                                       isAvailable = staff?.workSlot.findIndex(_ => _.slotOfDayId === slot?.id)
+                                    }
+                                    if (isAvailable !== -1) {
+                                      if (staff?.workSlot[isAvailable].status === 'taken') {
+                                        color = '#019707'
+                                      } else {
+                                        color = '#62b4ff'
+                                      }
                                     }
                                     return (
                                       <tr style={{
                                         width: '3em',
                                         height: '3em',
                                         textAlign: 'center',
-                                        backgroundColor: isAvailable !== -1 ? '#2980b9' : '#ffffff',
+                                        backgroundColor: color,
 
                                       }}>
                                         <td style={{
                                           width: '3em',
                                           height: '3em',
                                           textAlign: 'center',
-                                          backgroundColor: isAvailable !== -1 ? '#2980b9' : '#ffffff',
+                                          backgroundColor: color,
                                         }}
                                         // rowSpan={6}
                                         >
@@ -490,7 +569,7 @@ export default class Schedule extends Component {
                                             width: '3em',
                                             height: '3em',
                                             textAlign: 'center',
-                                            backgroundColor: isAvailable !== -1 ? '#2980b9' : '#ffffff',
+                                            backgroundColor: color,
                                           }}>
                                             {/* {staff?.fullName} */}
 

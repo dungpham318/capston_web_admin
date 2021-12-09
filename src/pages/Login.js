@@ -39,6 +39,7 @@ export default function Login(props) {
         localStorage.setItem('avatar', res?.data?.avatar)
         localStorage.setItem('role', res?.data?.role)
         localStorage.setItem('fullName', res?.data?.fullName)
+        localStorage.setItem('salonId', 1)
       }
       history.push({
         pathname: `/`

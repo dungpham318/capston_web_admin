@@ -136,6 +136,15 @@ export default class Staffs extends Component {
 
 
   render() {
+    let actionList = [
+      'view',
+      'edit',
+      'delete'
+    ]
+
+    if (localStorage.getItem('role') === 'manager') {
+      actionList = ['view']
+    }
     return (
       <div>
         <h2 className="page-header">
@@ -145,14 +154,17 @@ export default class Staffs extends Component {
           <div style={{
             marginBottom: '1em',
           }}>
-            <Button variant="outlined" onClick={() => {
-              this.setState({
-                isOpenModal: true,
-                action: 'create'
-              })
-            }}>
-              New Staff
-            </Button>
+            {
+              localStorage.getItem('role') !== 'manager' &&
+              <Button variant="outlined" onClick={() => {
+                this.setState({
+                  isOpenModal: true,
+                  action: 'create'
+                })
+              }}>
+                New Staff
+              </Button>
+            }
           </div>
           <Table
             loading={this.state.loading}
@@ -162,17 +174,12 @@ export default class Staffs extends Component {
               { id: 3, label: 'Full Name', value: 'fullName' },
               { id: 4, label: 'Role', value: 'staffType' },
               { id: 5, label: 'Description', value: 'description' },
-              //   { id: 6, label: 'Salon', value: 'salon ID' },
               { id: 6, label: 'Salon Name', value: 'salonName' },
               { id: 7, label: 'Email', value: 'email' },
               { id: 8, label: 'Phone Number', value: 'phoneNumber' },
             ]}
             rows={this.state.staffList}
-            actionList={[
-              'view',
-              'edit',
-              'delete',
-            ]}
+            actionList={actionList}
             onClickView={(row) => {
               this.setState({
                 action: 'view',

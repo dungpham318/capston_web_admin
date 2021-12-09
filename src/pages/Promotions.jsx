@@ -210,17 +210,20 @@ export default class Promotions extends Component {
           <div style={{
             marginBottom: '1em',
           }}>
-            <Button variant="outlined" onClick={() => {
-              this.setState({
-                isOpenModal: true,
-                action: 'create'
-              })
-              // this.props.history.push({
-              //   pathname: `/services/create`,
-              // })
-            }}>
-              New Promotion Code
-            </Button>
+            {
+              localStorage.getItem('role') !== 'manager' &&
+              <Button variant="outlined" onClick={() => {
+                this.setState({
+                  isOpenModal: true,
+                  action: 'create'
+                })
+                // this.props.history.push({
+                //   pathname: `/services/create`,
+                // })
+              }}>
+                New Promotion Code
+              </Button>
+            }
           </div>
           <Table
             headers={[

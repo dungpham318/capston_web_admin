@@ -56,6 +56,15 @@ export default class Article extends Component {
   }
 
   render() {
+    let actionList = [
+      'view',
+      'edit',
+      'delete'
+    ]
+
+    if (localStorage.getItem('role') === 'manager') {
+      actionList = ['view']
+    }
     return (
       <div>
         {/* <h2 className="page-header">
@@ -66,13 +75,16 @@ export default class Article extends Component {
           <div style={{
             marginBottom: '1em',
           }}>
-            <Button variant="outlined" onClick={() => {
-              this.props.history.push({
-                pathname: `/article/create`,
-              })
-            }}>
-              Create
-            </Button>
+            {
+              localStorage.getItem('role') !== 'manager' &&
+              <Button variant="outlined" onClick={() => {
+                this.props.history.push({
+                  pathname: `/article/create`,
+                })
+              }}>
+                Create
+              </Button>
+            }
           </div>
 
           <Table
@@ -86,11 +98,7 @@ export default class Article extends Component {
             ]}
             totalItem={this.state.totalItem}
             rows={this.state.articleList}
-            actionList={[
-              'view',
-              'edit',
-              'delete',
-            ]}
+            actionList={actionList}
             onClickView={(row) => {
               this.props.history.push({
                 pathname: `/article/create`,

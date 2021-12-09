@@ -8,7 +8,8 @@ import {
   cancelAppointmentApi,
   getTransactionDetailApi,
   getTransactionList,
-  getAppointmentStatusApi
+  getAppointmentStatusApi,
+  managerConfirmApi
 } from '../apis/transactionApi';
 import { TextField } from '@material-ui/core';
 import Button from '@mui/material/Button';
@@ -200,6 +201,23 @@ export default class Transaction extends Component {
         })
       }
     }
+  }
+
+  onFinish = async () => {
+    this.setState({ loading: true })
+    console.log(this.state.selectedTransaction?.id)
+    let res = await managerConfirmApi(this.state.selectedTransaction?.id)
+
+    if (res) {
+      this.setState({
+        isOpenModal: false
+      }, () => {
+        this.getTransaction()
+      })
+    }
+
+    this.setState({ loading: false })
+
   }
 
   render() {
@@ -432,7 +450,6 @@ export default class Transaction extends Component {
                 </div> */}
                 {
                   this.state.selectedTransaction?.appointmentDetails && this.state.selectedTransaction?.appointmentDetails.map((item, index) => {
-                    console.log(item)
                     return (
                       <div style={{
                         display: 'flex',
@@ -557,7 +574,8 @@ export default class Transaction extends Component {
                 </Button>
               </div>
               {
-                (this.state.selectedTransaction?.status !== 'completed' && this.state.selectedTransaction?.status !== 'canceled') &&
+                (localStorage.getItem('role') === 'manager' && this.state.selectedTransaction?.status !== 'completed' && this.state.selectedTransaction?.status !== 'canceled' &&
+                  this.state.selectedTransaction?.status !== 'staff_confirmed') &&
                 <div style={{
                   flex: 1,
                   alignItems: 'center',
@@ -581,6 +599,26 @@ export default class Transaction extends Component {
                       Submit
                     </LoadingButton>
                   }
+
+                </div>
+              }
+              {
+                (localStorage.getItem('role') === 'manager' && this.state.selectedTransaction?.status === 'staff_confirmed') &&
+                <div style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  display: 'flex',
+                  flexDirection: 'row'
+                }}>
+                  <div style={{ flex: 1 }} />
+                  <LoadingButton style={{
+                    marginRight: '1em'
+                  }} variant="contained" color="primary" loading={this.state.loading} onClick={() => {
+                    this.onFinish()
+                  }}>
+                    Finish
+                  </LoadingButton>
 
                 </div>
               }

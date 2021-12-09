@@ -223,6 +223,14 @@ export default class Combo extends Component {
   }
 
   render() {
+    let actionList = [
+      'view',
+      'edit'
+    ]
+
+    if (localStorage.getItem('role') === 'manager') {
+      actionList = ['view']
+    }
     return (
       <div>
         <h2 className="page-header">
@@ -232,12 +240,15 @@ export default class Combo extends Component {
           <div style={{
             marginBottom: '1em',
           }}>
-            <Button variant="outlined" onClick={() => {
-              this.getService()
-              this.setState({ isOpenModal: true, action: 'create' })
-            }}>
-              New Combo
-            </Button>
+            {
+              localStorage.getItem('role') !== 'manager' &&
+              <Button variant="outlined" onClick={() => {
+                this.getService()
+                this.setState({ isOpenModal: true, action: 'create' })
+              }}>
+                New Combo
+              </Button>
+            }
           </div>
           <Table
             loading={this.state.loading}
@@ -252,11 +263,7 @@ export default class Combo extends Component {
               // { id: 8, label: 'Last Update', value: 'lastUpdated' },
             ]}
             rows={this.state.comboList}
-            actionList={[
-              // 'view',
-              'edit',
-              // 'delete',
-            ]}
+            actionList={actionList}
             onClickView={(row) => {
               this.setState({ action: 'view' })
               this.getComboDetail(row?.id)
