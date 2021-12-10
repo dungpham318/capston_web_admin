@@ -1,8 +1,7 @@
-// Import the functions you need from the SDKs you need
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/messaging';
-const messaging = firebase.messaging()
+import firebase from "firebase/app";
+import "firebase/messaging";
 
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAQmr9ELsidHbD6LEl-DyfjxP5fRj2GvSE",
   authDomain: "capstone-96c55.firebaseapp.com",
@@ -15,20 +14,31 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-export const getToken = (setTokenFound) => {
-  return messaging.getToken({ vapidKey: 'GENERATED_MESSAGING_KEY' }).then((currentToken) => {
+const messaging = firebase.messaging();
+
+const { REACT_APP_VAPID_KEY } = process.env;
+const publicKey = REACT_APP_VAPID_KEY;
+
+export const getToken = async (setTokenFound) => {
+  let currentToken = "";
+
+  try {
+    currentToken = await messaging.getToken({ vapidKey: publicKey });
     if (currentToken) {
-      console.log('current token for client: ', currentToken);
       setTokenFound(true);
-      // Track the token -> client mapping, by sending to backend server
-      // show on the UI that permission is secured
     } else {
-      console.log('No registration token available. Request permission to generate one.');
       setTokenFound(false);
-      // shows on the UI that permission is required 
     }
-  }).catch((err) => {
-    console.log('An error occurred while retrieving token. ', err);
-    // catch error while creating client token
+  } catch (error) {
+    console.log("An error occurred while retrieving token. ", error);
+  }
+
+  return currentToken;
+};
+
+export const onMessageListener = () =>
+  new Promise((resolve) => {
+    messaging.onMessage((payload) => {
+      resolve(payload);
+    });
   });
-}

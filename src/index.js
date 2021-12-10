@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals'
 
@@ -14,21 +14,39 @@ import './assets/css/theme.css'
 import './assets/css/index.css'
 
 import Layout, { UnAuthLayout } from './components/layout/Layout'
-
+import Notification from './components/notification/Notification';
+import { onMessageListener } from './firebase'
 const store = createStore(
   rootReducer
 )
 
-document.title = 'Cut.'
+document.title = "Man's HairCut Service"
 
 
 let App = () => {
+  const [show, setShow] = useState(false);
+  const [notification, setNotification] = useState({ title: "", body: "" });
+  onMessageListener()
+    .then((payload) => {
+      setShow(true);
+      setNotification({
+        title: payload.notification.title,
+        body: payload.notification.body,
+      });
+      console.log(payload);
+    })
+    .catch((err) => console.log("failed: ", err));
+
   let user = localStorage.getItem('token')
   console.log(user)
   return (
     <Provider store={store}>
       <React.StrictMode>
         <Layout />
+        <Notification
+          title={notification.title}
+          body={notification.body}
+        />
       </React.StrictMode>
     </Provider>
   )

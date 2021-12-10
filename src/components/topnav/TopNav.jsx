@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import './topnav.css'
 
@@ -14,6 +14,7 @@ import notifications from '../../assets/JsonData/notification.json'
 
 import user_menu from '../../assets/JsonData/user_menus.json'
 import { render } from '@testing-library/react'
+import { getNotificationListApi } from '../../apis/notificationApi'
 
 const curr_user = {
     display_name: localStorage.getItem('fullName'),
@@ -21,9 +22,16 @@ const curr_user = {
 }
 
 const renderNotificationItem = (item, index) => (
-    <div className="notification-item" key={index}>
-        <i className={item.icon}></i>
-        <span>{item.content}</span>
+    <div className="notification-item" key={index} style={{
+        backgroundColor: item?.status === 'seen' ? '#ffffff' : '#e6f8ff'
+    }}>
+        <div>
+            <p style={{
+                fontWeight: 'bold',
+                paddingBottom: '1em'
+            }}>{item.title}</p>
+            <p>{item.detail}</p>
+        </div>
     </div>
 )
 
@@ -64,6 +72,33 @@ const renderUserMenu = (item, index) => {
 }
 
 const Topnav = () => {
+    const [notificationList, setNotificationList] = useState([])
+
+    useEffect(() => {
+        async function getNotification() {
+            let res = await getNotificationListApi({
+                "pageNumber": 1,
+                "pageSize": 5,
+                "filterByIds": [
+                ],
+                "filterByAppointmentId": [
+                ],
+                "statuses": [
+                ],
+                "minLastUpdate": "",
+                "maxLastUpdate": "",
+                "minCreatedDate": "",
+                "maxCreatedDate": "",
+                "sortBy": "createddate_desc"
+            })
+            if (res?.data?.items) {
+                console.log(res?.data?.items)
+                setNotificationList(res?.data?.items)
+            }
+        }
+        getNotification()
+    }, [])
+
     return (
         <div className='topnav'>
             <div className="topnav__search">
@@ -79,13 +114,14 @@ const Topnav = () => {
                         renderItems={(item, index) => renderUserMenu(item, index)}
                     />
                 </div>
-                <div className="topnav__right-item">
+                <div className="topnav__right-item" onClick={() => {
+                }}>
                     <Dropdown
                         icon='bx bx-bell'
-                        badge='12'
-                        contentData={notifications}
+                        // badge='12'
+                        contentData={notificationList}
                         renderItems={(item, index) => renderNotificationItem(item, index)}
-                        renderFooter={() => <Link to='/'>View All</Link>}
+                        renderFooter={() => <Link to='/notification'>View All</Link>}
                     />
                     {/* dropdown here */}
                 </div>

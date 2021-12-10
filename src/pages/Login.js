@@ -9,6 +9,7 @@ import logo from '../assets/images/logo.jpg'
 import Button from '@mui/material/Button'
 import { loginApi } from '../apis/loginApi';
 import LoadingButton from '@mui/lab/LoadingButton'
+import { getToken } from '../firebase';
 
 // import { getToken } from '../firebase'
 
@@ -16,10 +17,22 @@ export default function Login(props) {
   let history = useHistory()
   const [username, setUsername] = useState('manager123@gmail.com')
   const [password, setPassword] = useState('Test123')
+  const [token, setToken] = useState('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    // getToken()
+    let data;
+
+    async function tokenFunc() {
+      data = await getToken(() => { });
+      if (data) {
+        setToken(data)
+        console.log("Token is", data);
+      }
+      return data;
+    }
+
+    tokenFunc();
   }, [])
 
   const onLogin = async () => {
@@ -27,19 +40,20 @@ export default function Login(props) {
     let res = await loginApi({
       "email": username,
       "password": password,
-      "deviceId": "string",
-      "deviceToken": "string"
+      "deviceId": token,
+      "deviceToken": token
     })
     setLoading(false)
     console.log(res?.data?.role)
     if (res && res?.data) {
       if (res?.data?.role === 'manager' || res?.data?.role === 'administrator') {
+        console.log(res?.data)
         localStorage.setItem('token', res?.data?.token)
         localStorage.setItem('email', res?.data?.email)
         localStorage.setItem('avatar', res?.data?.avatar)
         localStorage.setItem('role', res?.data?.role)
         localStorage.setItem('fullName', res?.data?.fullName)
-        localStorage.setItem('salonId', 1)
+        localStorage.setItem('salonId', res?.data?.salonId)
       }
       history.push({
         pathname: `/`

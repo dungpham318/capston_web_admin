@@ -406,7 +406,7 @@ export default class Schedule extends Component {
             flexDirection: 'row',
             flexWrap: 'wrap'
           }}>
-            {
+            {/* {
               (this.state.staffList && this.state.staffList.length > 0) &&
               this.state.staffList.map((item, index) => {
                 return (
@@ -429,7 +429,7 @@ export default class Schedule extends Component {
                   </div>
                 )
               })
-            }
+            } */}
           </div>
 
           <div style={{
@@ -652,8 +652,8 @@ export default class Schedule extends Component {
                         paddingRight: '1em',
                         paddingTop: '0.5em',
                         paddingBottom: '0.5em',
-                        borderStyle: 'solid',
-                        borderWidth: 'thin',
+                        // borderStyle: 'solid',
+                        // borderWidth: 'thin',
                         margin: '0.5em',
                         borderRadius: 5,
                         backgroundColor: '#ffffff',
