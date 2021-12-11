@@ -48,10 +48,5 @@
         "display_name": "Articles",
         "route": "/article",
         "icon": "bx bx-gift"
-    },
-    {
-        "display_name": "Notification",
-        "route": "/notification",
-        "icon": "bx bx-bell"
     }
 ]

@@ -131,3 +131,54 @@ export async function createStaffApi(input) {
       return false
     });
 }
+
+export async function updateStaffApi(input) {
+  let url = `/api/Staff/admin_update_staff`
+  return fetch(END_POINT + url, {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    },
+    body: JSON.stringify(input)
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
+        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    });
+}
+
+export async function removeStaffApi(input) {
+  let url = `/api/Staff/remove_staff_from_salon/${input.id}`
+  return fetch(END_POINT + url, {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
+        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    });
+}

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 //import axios from 'axios';
 import Table from '../components/table/Table';
-import { createStaffApi, getStaffDetailApi, getStaffList } from '../apis/staffApi';
+import { createStaffApi, getStaffDetailApi, getStaffList, removeStaffApi, updateStaffApi } from '../apis/staffApi';
 import Button from '@mui/material/Button';
 import Modal from '../components/modal/Modal';
 import { TextField } from '@material-ui/core';
@@ -40,8 +40,27 @@ export default class Staffs extends Component {
     };
   }
   componentDidMount() {
+
     this.getStaff()
     this.getSalon()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
+      this.setState({
+        action: undefined,
+        fullName: '',
+        password: '',
+        confirmPassword: '',
+        description: '',
+        email: '',
+        phoneNumber: '',
+        selectedSalon: undefined,
+        staffType: undefined,
+        image: '',
+        imageURL: '',
+      })
+    }
   }
 
   getSalon = async () => {
@@ -94,10 +113,11 @@ export default class Staffs extends Component {
       if (index !== -1) {
         selectedSalon = this.state.salonList[index]
       }
+      console.log(res?.data)
       this.setState({
         isOpenModal: true,
         fullName: res?.data?.fullName,
-        staffType: { name: res?.data?.fullName },
+        staffType: { name: res?.data?.staffType.charAt(0).toUpperCase() + res?.data?.staffType.slice(1) },
         description: this.state.description,
         selectedSalon: selectedSalon,
         email: res?.data?.email,
@@ -119,7 +139,7 @@ export default class Staffs extends Component {
     formData.append('Email', this.state.email)
     formData.append('PhoneNumber', this.state.phoneNumber)
     formData.append('SalonId', this.state.selectedSalon?.id)
-    formData.append('StaffType', this.state.staffType?.name)
+    formData.append('StaffType', this.state.staffType?.name.toLowerCase())
     formData.append('ImageFile', this.state.image)
 
     let res = await createStaffApi(formData)
@@ -133,7 +153,42 @@ export default class Staffs extends Component {
     }
   }
 
+  updateStaff = async () => {
+    this.setState({ loading: true })
+    console.log(this.state.selectedStaff)
+    let res = await updateStaffApi({
+      "staffId": this.state.selectedStaff?.staffId,
+      "staffType": this.state.staffType?.name.toLowerCase(),
+      "status": "active",
+      "salonId": this.state.selectedSalon?.id,
+      "description": this.state.description
+    })
+    if (res?.data) {
+      this.setState({
+        isOpenModal: false
+      }, () => {
+        this.getStaff()
+      })
+    }
+    this.setState({ loading: false })
 
+  }
+
+  deleteStaff = async () => {
+    this.setState({ loading: true })
+    console.log(this.state.selectedStaff)
+    let res = await removeStaffApi({
+      "id": this.state.selectedStaff?.staffId,
+    })
+    this.setState({
+      loading: false,
+      selectedStaff: undefined
+    })
+
+    if (res?.data) {
+      this.getStaff()
+    }
+  }
 
   render() {
     let actionList = [
@@ -170,7 +225,7 @@ export default class Staffs extends Component {
             loading={this.state.loading}
             headers={[
               { id: 1, label: '#', value: 'index' },
-              { id: 2, label: 'Staff ID', value: 'staffId' },
+              // { id: 2, label: 'Staff ID', value: 'staffId' },
               { id: 3, label: 'Full Name', value: 'fullName' },
               { id: 4, label: 'Role', value: 'staffType' },
               { id: 5, label: 'Description', value: 'description' },
@@ -197,6 +252,11 @@ export default class Staffs extends Component {
               })
             }}
             onClickDelete={(row) => {
+              this.setState({
+                selectedStaff: row
+              }, () => {
+                this.deleteStaff()
+              })
             }}
             pagination
             totalItem={this.state.totalStaff}
@@ -291,40 +351,46 @@ export default class Staffs extends Component {
                   this.setState({ fullName: event.target.value })
                 }}
               />
-              <TextField
-                required
-                disabled={this.state.action === 'view'}
-                id="outlined-basic"
-                label="Password"
-                variant="outlined"
-                style={{
-                  width: '100%',
-                  marginTop: '1em',
-                  marginBottom: '1em'
-                }}
-                type='password'
-                value={this.state.password}
-                onChange={(event) => {
-                  this.setState({ password: event.target.value })
-                }}
-              />
-              <TextField
-                required
-                disabled={this.state.action === 'view'}
-                id="outlined-basic"
-                label="Confirm Password"
-                variant="outlined"
-                style={{
-                  width: '100%',
-                  marginTop: '1em',
-                  marginBottom: '1em'
-                }}
-                type='password'
-                value={this.state.confirmPassword}
-                onChange={(event) => {
-                  this.setState({ confirmPassword: event.target.value })
-                }}
-              />
+              {
+                this.state.action === 'create' &&
+                <TextField
+                  required
+                  disabled={this.state.action === 'view'}
+                  id="outlined-basic"
+                  label="Password"
+                  variant="outlined"
+                  style={{
+                    width: '100%',
+                    marginTop: '1em',
+                    marginBottom: '1em'
+                  }}
+                  type='password'
+                  value={this.state.password}
+                  onChange={(event) => {
+                    this.setState({ password: event.target.value })
+                  }}
+                />
+              }
+              {
+                this.state.action === 'create' &&
+                <TextField
+                  required
+                  disabled={this.state.action === 'view'}
+                  id="outlined-basic"
+                  label="Confirm Password"
+                  variant="outlined"
+                  style={{
+                    width: '100%',
+                    marginTop: '1em',
+                    marginBottom: '1em'
+                  }}
+                  type='password'
+                  value={this.state.confirmPassword}
+                  onChange={(event) => {
+                    this.setState({ confirmPassword: event.target.value })
+                  }}
+                />
+              }
 
               <TextField
                 disabled={this.state.action === 'view'}
@@ -410,12 +476,12 @@ export default class Staffs extends Component {
                 disablePortal
                 id="combo-box-demo"
                 options={[
-                  { name: 'stylist' },
-                  { name: 'beautician' },
-                  { name: 'manager' },
+                  { name: 'Stylist' },
+                  { name: 'Beautician' },
+                  { name: 'Manager' },
                 ]}
                 sx={{ width: '100%' }}
-                renderInput={(params) => <TextField {...params} label="Staff" variant="outlined" />}
+                renderInput={(params) => <TextField {...params} label="Staff Type" variant="outlined" />}
               />
 
 
@@ -447,7 +513,7 @@ export default class Staffs extends Component {
                     if (this.state.action === 'create') {
                       this.createStaff()
                     } else {
-                      this.updateSalon()
+                      this.updateStaff()
                     }
                   }}>
                     {this.state.action === 'create' ? 'Save' : 'Update'}

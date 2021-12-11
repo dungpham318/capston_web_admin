@@ -46,9 +46,13 @@ export default class Transaction extends Component {
       // selectedStaff: undefined
     };
   }
-  componentDidMount() {
-    this.getTransaction()
-    this.getAppointmentStatus()
+  async componentDidMount() {
+    await this.getTransaction()
+    await this.getAppointmentStatus()
+    if (this?.props?.location?.state?.appointmentId) {
+      let data = await this.getTransactionDetail(this.props.location.state.appointmentId)
+    }
+
   }
 
   // componentDidMount() {

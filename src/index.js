@@ -20,7 +20,7 @@ const store = createStore(
   rootReducer
 )
 
-document.title = "Man's HairCut Service"
+document.title = "Men's HairCut Service"
 
 
 let App = () => {

@@ -1,20 +1,22 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
-
 import './topnav.css'
-
-import { Link } from 'react-router-dom'
-
+import { Link, useHistory } from 'react-router-dom'
 import Dropdown from '../dropdown/Dropdown'
-
-//import ThemeMenu from '../thememenu/ThemeMenu'
-
 import notifications from '../../assets/JsonData/notification.json'
-
-// import user_image from '../../assets/images/tuat.png'
-
 import user_menu from '../../assets/JsonData/user_menus.json'
 import { render } from '@testing-library/react'
-import { getNotificationListApi } from '../../apis/notificationApi'
+import { getNotificationListApi, updateNotificationStatus } from '../../apis/notificationApi'
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+
+
 
 const curr_user = {
     display_name: localStorage.getItem('fullName'),
@@ -22,17 +24,25 @@ const curr_user = {
 }
 
 const renderNotificationItem = (item, index) => (
-    <div className="notification-item" key={index} style={{
-        backgroundColor: item?.status === 'seen' ? '#ffffff' : '#e6f8ff'
+    <a href='' onClick={() => {
+        updateNotificationStatus({
+            id: item.id
+        })
+        item.onClick()
     }}>
-        <div>
-            <p style={{
-                fontWeight: 'bold',
-                paddingBottom: '1em'
-            }}>{item.title}</p>
-            <p>{item.detail}</p>
+        <div className="notification-item" key={index} style={{
+            backgroundColor: item?.status === 'seen' ? '#ffffff' : '#e6f8ff'
+        }}>
+            <div>
+                <p style={{
+                    fontWeight: 'bold',
+                    paddingBottom: '1em'
+                }}>{item.title}</p>
+                <p>{item.detail}</p>
+            </div>
         </div>
-    </div>
+        <Divider />
+    </a>
 )
 
 const renderUserToggle = (user) => (
@@ -71,43 +81,86 @@ const renderUserMenu = (item, index) => {
     }
 }
 
-const Topnav = () => {
+const Topnav = (props) => {
     const [notificationList, setNotificationList] = useState([])
-
+    const history = useHistory()
     useEffect(() => {
-        async function getNotification() {
-            let res = await getNotificationListApi({
-                "pageNumber": 1,
-                "pageSize": 5,
-                "filterByIds": [
-                ],
-                "filterByAppointmentId": [
-                ],
-                "statuses": [
-                ],
-                "minLastUpdate": "",
-                "maxLastUpdate": "",
-                "minCreatedDate": "",
-                "maxCreatedDate": "",
-                "sortBy": "createddate_desc"
-            })
-            if (res?.data?.items) {
-                console.log(res?.data?.items)
-                setNotificationList(res?.data?.items)
-            }
-        }
         getNotification()
     }, [])
+
+    const getNotification = async () => {
+        let res = await getNotificationListApi({
+            "pageNumber": 1,
+            "pageSize": 50,
+            "filterByIds": [
+            ],
+            "filterByAppointmentId": [
+            ],
+            "statuses": [
+            ],
+            "minLastUpdate": "",
+            "maxLastUpdate": "",
+            "minCreatedDate": "",
+            "maxCreatedDate": "",
+            "sortBy": "createddate_desc"
+        })
+        if (res?.data?.items) {
+            for (const item of res?.data?.items) {
+                console.log(item)
+                item.onClick = () => {
+                    history.push({
+                        pathname: `/transactions`,
+                        state: {
+                            appointmentId: item?.appointmentId,
+                        }
+                    })
+                    getNotification()
+                }
+            }
+            setNotificationList(res?.data?.items)
+        }
+    }
+
+    const [state, setState] = React.useState({
+        top: false,
+        left: false,
+        bottom: false,
+        right: false,
+    });
+
+    const toggleDrawer = (anchor, open) => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+
+        setState({ ...state, [anchor]: open });
+    };
+
+    const list = (anchor) => (
+        <Box
+            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 500 }}
+            role="presentation"
+            onClick={toggleDrawer(anchor, false)}
+            onKeyDown={toggleDrawer(anchor, false)}
+        >
+            <p style={{
+                paddingLeft: '1em',
+                paddingTop: '1em',
+                fontSize: '1.2em',
+                fontWeight: 'bold'
+            }}>Notification</p>
+            {
+                notificationList.map((item, index) => renderNotificationItem(item, index))
+            }
+        </Box>
+    );
 
     return (
         <div className='topnav'>
             <div className="topnav__search">
-                {/* <input type="text" placeholder='Search here...' />
-                <i className='bx bx-search'></i> */}
             </div>
             <div className="topnav__right">
                 <div className="topnav__right-item">
-                    {/* dropdown here */}
                     <Dropdown
                         customToggle={() => renderUserToggle(curr_user)}
                         contentData={user_menu}
@@ -116,19 +169,20 @@ const Topnav = () => {
                 </div>
                 <div className="topnav__right-item" onClick={() => {
                 }}>
-                    <Dropdown
-                        icon='bx bx-bell'
-                        // badge='12'
-                        contentData={notificationList}
-                        renderItems={(item, index) => renderNotificationItem(item, index)}
-                        renderFooter={() => <Link to='/notification'>View All</Link>}
-                    />
-                    {/* dropdown here */}
+                    <React.Fragment>
+                        <button className="dropdown__toggle" onClick={toggleDrawer('right', true)}> <i className={'bx bx-bell'}></i></button>
+                        <Drawer
+                            anchor={'right'}
+                            open={state['right']}
+                            onClose={toggleDrawer('right', false)}
+                        >
+                            {list('right')}
+                        </Drawer>
+                    </React.Fragment>
                 </div>
-                {/* <div className="topnav__right-item">
-                    <ThemeMenu/>
-                </div> */}
+
             </div>
+
         </div>
     )
 }

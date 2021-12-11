@@ -27,3 +27,29 @@ export async function getNotificationListApi(input) {
       return false
     });
 }
+
+export async function updateNotificationStatus(input) {
+  let url = `/api/Notification/see_notification/${input.id}`
+  return fetch(END_POINT + url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      // if (!data.isSuccess) {
+      //   alert(data.message)
+      //   return false
+      // } else {
+      //   return data
+      // }
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    });
+}
