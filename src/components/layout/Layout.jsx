@@ -29,7 +29,7 @@ const Layout = () => {
     }, [dispatch])
     return (
 
-        <BrowserRouter>
+        <BrowserRouter basename='/test'>
             <Route render={(props) => {
                 let user = localStorage.getItem('token')
                 if (user) {
