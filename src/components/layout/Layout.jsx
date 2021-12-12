@@ -32,7 +32,7 @@ const Layout = () => {
         <BrowserRouter basename='/test'>
             <Route render={(props) => {
                 let user = localStorage.getItem('token')
-                if (user) {
+                if (user && props?.location?.pathname !== '/verify_email') {
                     return (
                         <div className={`layout ${themeReducer.mode} ${themeReducer.color}`}>
                             <Sidebar {...props} />

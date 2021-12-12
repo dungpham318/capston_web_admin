@@ -27,3 +27,31 @@ export async function loginApi(input) {
       return false
     });
 }
+
+export async function verifyEmailApi(input) {
+  console.log(input)
+
+  let url = `/api/Users/confirm_email`
+  return fetch(END_POINT + url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(input)
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
+        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    });
+}

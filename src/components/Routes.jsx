@@ -19,6 +19,7 @@ import UpdateService from '../pages/UpdateService'
 import CreateSalon from '../pages/CreateSalon'
 import CreateStaff from '../pages/CreateStaff'
 import Schedule from '../pages/Schedule'
+import VerifyEmail from '../pages/VerifyEmail'
 
 const Routes = () => {
 
@@ -27,7 +28,11 @@ const Routes = () => {
     console.log(user)
     return (
         <Switch>
+            <>
+                <Route path='/verify_email' exact component={VerifyEmail} />
+            </>
             {
+
                 !user ?
                     <>
                         <Route path='/login' exact component={Login} />
