@@ -17,7 +17,7 @@ module.exports = merge(common, {
   output: {
     filename: '[name].[fullhash].js',
     path: path.resolve(__dirname, 'build'),
-    // publicPath: '/sovico_medical_declaration/',
+    publicPath: '/test/',
   },
   // optimization: {
   //   runtimeChunk: false,
