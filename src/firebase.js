@@ -11,10 +11,14 @@ const firebaseConfig = {
   appId: "1:1047493414521:web:05de095c28a764b054cea8",
   measurementId: "G-CKF4NKQXFB"
 };
+let messaging
 
-firebase.initializeApp(firebaseConfig);
+if (firebase.messaging.isSupported()) {
+  firebase.initializeApp(firebaseConfig);
 
-const messaging = firebase.messaging();
+  messaging = firebase.messaging();
+}
+
 
 const { REACT_APP_VAPID_KEY } = process.env;
 const publicKey = REACT_APP_VAPID_KEY;
