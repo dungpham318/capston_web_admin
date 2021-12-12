@@ -59,10 +59,7 @@ const renderUserToggle = (user) => (
 const renderUserMenu = (item, index) => {
     if (item?.content === 'Logout') {
         return <Link onClick={() => {
-            localStorage.removeItem('token')
-            localStorage.removeItem('email')
-            localStorage.removeItem('avatar')
-            localStorage.removeItem('role')
+            localStorage.clear();
         }} to='/login' key={index}>
             <div className="notification-item">
                 <i className={item.icon}></i>
@@ -83,9 +80,16 @@ const renderUserMenu = (item, index) => {
 
 const Topnav = (props) => {
     const [notificationList, setNotificationList] = useState([])
+    const [currentUser, setCurrentUser] = useState({
+        display_name: localStorage.getItem('fullName'),
+    })
     const history = useHistory()
     useEffect(() => {
         getNotification()
+        setCurrentUser({
+            display_name: localStorage.getItem('fullName'),
+        })
+        curr_user.display_name = localStorage.getItem('fullName')
     }, [])
 
     const getNotification = async () => {
@@ -162,7 +166,7 @@ const Topnav = (props) => {
             <div className="topnav__right">
                 <div className="topnav__right-item">
                     <Dropdown
-                        customToggle={() => renderUserToggle(curr_user)}
+                        customToggle={() => renderUserToggle(currentUser)}
                         contentData={user_menu}
                         renderItems={(item, index) => renderUserMenu(item, index)}
                     />
