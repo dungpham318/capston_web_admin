@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react'
 import { getSalonList } from '../apis/salonApi'
 import { getStaffList, getAllSlot } from '../apis/staffApi'
@@ -49,6 +50,9 @@ export default class Schedule extends Component {
 
       scheduleData: [],
 
+      selectedSchedule: undefined,
+      action: undefined
+
     }
   }
 
@@ -62,9 +66,11 @@ export default class Schedule extends Component {
     if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
       this.setState({
         selectedSlot: [],
-        scheduleData: [],
+        // scheduleData: [],
         startSlot: undefined,
         endSlot: undefined,
+        selectedSchedule: undefined,
+        action: undefined
       })
     }
   }
@@ -126,18 +132,14 @@ export default class Schedule extends Component {
       })
 
       if (res?.data?.staffs) {
-        console.log(res?.data?.staffs)
         let tmp = []
         let staffList = []
         for (const ele of this.state.staffList) {
           let index = res?.data?.staffs.findIndex(_ => _?.staffId === ele?.staffId)
-          console.log('index', index)
-          console.log('data', res?.data?.staffs[index])
           ele.workSlot = []
           if (index !== -1) {
             ele.workSlot = res?.data?.staffs[index]?.workSlots
           }
-          console.log(ele.workSlot)
           staffList.push({
             ...ele,
             workSlot: ele?.workSlot
@@ -509,14 +511,32 @@ export default class Schedule extends Component {
                                 }}
                                 // rowSpan={6}
                                 >
-                                  <div style={{
-                                    width: '5em',
-                                    height: '3em',
-                                    textAlign: 'center',
+                                  <a href='' onClick={(e) => {
+                                    e.preventDefault()
+                                    console.log(staff)
+                                    staff?.workSlot.sort((a, b) => (a.slotOfDayId > b.slotOfDayId) ? 1 : ((b.slotOfDayId > a.slotOfDayId) ? -1 : 0))
+                                    staff?.workSlot.map(_ => _.id = _.slotOfDayId)
+                                    this.setState({
+                                      isOpenModal: true,
+                                      selectedSchedule: staff,
+                                      action: 'edit',
+                                      selectedSlot: staff?.workSlot,
+                                      startSlot: staff?.workSlot[0],
+                                      endSlot: staff?.workSlot[staff?.workSlot.length - 1],
+                                      selectedStaff: staff
+                                    })
                                   }}>
-                                    {staff?.fullName}
 
-                                  </div>
+                                    <div style={{
+                                      width: '5em',
+                                      height: '3em',
+                                      textAlign: 'center',
+                                    }}>
+                                      {staff?.fullName}
+
+                                    </div>
+                                  </a>
+
                                 </td>
                               </tr>
                             )
@@ -533,7 +553,6 @@ export default class Schedule extends Component {
                                 paddingRight: 0,
                                 textAlign: 'center',
                               }}
-                              // rowSpan={6}
                               >
                                 {
                                   item?.staffs.map((staff, index2) => {
@@ -616,6 +635,7 @@ export default class Schedule extends Component {
               paddingRight: '2em'
             }}>
               <Autocomplete
+                disabled={this.state.action === 'edit' ? true : false}
                 value={this.state.selectedStaff}
                 onChange={(event, newValue) => {
                   this.setState({
@@ -629,7 +649,7 @@ export default class Schedule extends Component {
                 id="combo-box-demo"
                 options={this.state.staffList || []}
                 sx={{ width: '100%' }}
-                renderInput={(params) => <TextField {...params} label="Staff" />}
+                renderInput={(params) => <TextField {...params} label="Staff" variant="outlined" />}
               />
 
               <p style={{
@@ -645,15 +665,15 @@ export default class Schedule extends Component {
               }}>
                 {
                   this.state.slotList.map((item, index) => {
-                    let isSelected = this.state.selectedSlot.findIndex(ele => ele?.id === item?.id)
+                    let isSelected = this.state.selectedSlot.findIndex(ele => ele?.id === item?.id || ele?.slotOfDayId === item?.id)
                     return (
                       <button style={{
                         paddingLeft: '1em',
                         paddingRight: '1em',
                         paddingTop: '0.5em',
                         paddingBottom: '0.5em',
-                        // borderStyle: 'solid',
-                        // borderWidth: 'thin',
+                        borderStyle: 'solid',
+                        borderWidth: 'thin',
                         margin: '0.5em',
                         borderRadius: 5,
                         backgroundColor: '#ffffff',
@@ -672,29 +692,35 @@ export default class Schedule extends Component {
                   })
                 }
               </div>
-              <p style={{
-                marginTop: '1em',
-                marginBottom: '1em',
-                fontWeight: 'bold'
-              }}>Date</p>
-              <FormGroup>
-                {
-                  this.state.dateList.map((ele => {
-                    return <FormControlLabel control={
-                      <Checkbox
-                        // checked={_?.checked}
-                        onChange={(event) => {
-                          let index = this.state.dateList.findIndex(e => e?.id === ele?.id)
-                          if (event.target.checked) {
-                            this.state.selectedDate.push(ele)
-                          } else {
-                            this.state.selectedDate.splice(index, 1)
-                          }
-                          this.setState({ selectedDate: this.state.selectedDate })
-                        }} />} label={ele} />
-                  }))
-                }
-              </FormGroup>
+              {
+                this.state.action !== 'edit' &&
+                <>
+                  <p style={{
+                    marginTop: '1em',
+                    marginBottom: '1em',
+                    fontWeight: 'bold'
+                  }}>Date</p>
+                  <FormGroup>
+                    {
+                      this.state.dateList.map((ele => {
+                        return <FormControlLabel control={
+                          <Checkbox
+                            // checked={_?.checked}
+                            onChange={(event) => {
+                              let index = this.state.dateList.findIndex(e => e?.id === ele?.id)
+                              if (event.target.checked) {
+                                this.state.selectedDate.push(ele)
+                              } else {
+                                this.state.selectedDate.splice(index, 1)
+                              }
+                              this.setState({ selectedDate: this.state.selectedDate })
+                            }} />} label={ele} />
+                      }))
+                    }
+                  </FormGroup>
+                </>
+              }
+
             </div>
             <div style={{
               display: 'flex',
