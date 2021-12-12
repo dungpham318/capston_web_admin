@@ -28,15 +28,13 @@ const Routes = () => {
     console.log(user)
     return (
         <Switch>
-            <>
-                <Route path='/verify_email' exact component={VerifyEmail} />
-            </>
             {
-
                 !user ?
                     <>
                         <Route path='/login' exact component={Login} />
-                        <Route path='*' exact component={Login} />
+                        <Route path='/verify_email' exact component={VerifyEmail} />
+
+                        {/* <Route path='*' exact component={Login} /> */}
                     </>
                     :
                     <>
@@ -57,6 +55,7 @@ const Routes = () => {
                         <Route exact path='/article' component={Article} />
                         <Route path='/article/create' component={CreateArticle} />
                         <Route path='/schedule' component={Schedule} />
+                        <Route path='/verify_email' exact component={VerifyEmail} />
 
 
 
