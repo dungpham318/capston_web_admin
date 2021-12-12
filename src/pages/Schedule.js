@@ -19,10 +19,12 @@ import { Button } from '@mui/material'
 import Modal from '../components/modal/Modal'
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
-import { createBulkScheduleApi, getScheduleApi, getScheduleByStaffApi, getScheduleBySalonApi } from '../apis/scheduleApi'
+import { createBulkScheduleApi, getScheduleApi, getScheduleByStaffApi, getScheduleBySalonApi, removeScheduleApi } from '../apis/scheduleApi'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { minHeight } from '@mui/system'
+import { LoadingButton } from '@mui/lab';
+
 export default class Schedule extends Component {
 
   constructor(props) {
@@ -66,11 +68,13 @@ export default class Schedule extends Component {
     if (this.state.isOpenModal !== prevState.isOpenModal && !this.state.isOpenModal) {
       this.setState({
         selectedSlot: [],
-        // scheduleData: [],
+        scheduleData: [],
         startSlot: undefined,
         endSlot: undefined,
         selectedSchedule: undefined,
-        action: undefined
+        action: undefined,
+        selectedStaff: undefined,
+        selectedDate: [],
       })
     }
   }
@@ -237,62 +241,93 @@ export default class Schedule extends Component {
       }
     }
   }
-  // {
-  //   "code": "DISCOUNT10",
-  //   "percentage": 10,
-  //   "startDate": "10/11/2021",
-  //   "expirationDate": "30/11/2021",
-  //   "isUniversal": true,
-  //   "salonIds": [
 
-  //   ],
-  //   "usesPerCustomer": 10
-  // }
   createSchedule = async () => {
-    let data = []
-    for (const ele of this.state.selectedDate) {
-      for (const item of this.state.selectedSlot) {
-        data.push({
-          "staffId": this.state.selectedStaff?.staffId,
-          "slotOfDayId": item?.id,
-          "date": ele
-        })
+    if (this.state.action === 'edit') {
+      let dateIndex = this.state.scheduleData.findIndex(ele => ele?.date === this.state.selectedDate[0])
+      let added = []
+      let removed = []
+      if (dateIndex !== -1) {
+        let scheduleByDate = this.state.scheduleData[dateIndex]
+        let scheduleIndex = scheduleByDate?.staffs.findIndex(ele => ele?.staffId === this.state.selectedStaff?.staffId)
+        let schedule = this.state.scheduleData[dateIndex]?.staffs[scheduleIndex]?.workSlot
+        for (const item of schedule) {
+          let index = this.state.selectedSlot.findIndex(ele => ele?.id === item?.slotOfDayId)
+          if (index === -1) {
+            removed.push(item)
+          }
+        }
+
+        for (const item of this.state.selectedSlot) {
+          let index = schedule.findIndex(ele => ele?.slotOfDayId === item?.id)
+          if (index === -1) {
+            added.push(item)
+          }
+        }
       }
-    }
 
-    this.setState({ loading: true })
 
-    const res = await createBulkScheduleApi(data)
-    this.setState({ loading: false })
+      let dataAdded = []
+      if (added.length > 0) {
+        for (const item of added) {
+          dataAdded.push({
+            "staffId": this.state.selectedStaff?.staffId,
+            "slotOfDayId": item?.id,
+            "date": this.state.selectedDate[0]
+          })
+        }
+        this.setState({ loading: true })
 
-    if (res) {
-      alert(res?.message)
+        const res = await createBulkScheduleApi(dataAdded)
+        this.setState({ loading: false })
+      }
+
+
+      if (removed.length > 0) {
+        removed.sort((a, b) => (a.slotOfDayId > b.slotOfDayId) ? 1 : ((b.slotOfDayId > a.slotOfDayId) ? -1 : 0))
+        let startTimeIndex = this.state.slotList.findIndex(ele => removed[0]?.slotOfDayId === ele?.id)
+        let endTimeIndex = this.state.slotList.findIndex(ele => removed[removed.length - 1]?.slotOfDayId === ele?.id)
+        console.log(this.state.selectedDate[0])
+        console.log(this.state.slotList[startTimeIndex])
+        console.log(this.state.selectedDate[0] + ' ' + this.state.slotList[startTimeIndex]?.startTime + ':00')
+        console.log(this.state.selectedDate[0] + ' ' + this.state.slotList[endTimeIndex]?.endTime + ':00')
+        const res = await removeScheduleApi({
+          "staffId": this.state.selectedStaff?.staffId,
+          "startDate": this.state.selectedDate[0] + ' ' + this.state.slotList[startTimeIndex]?.startTime + ':00',
+          "endDate": this.state.selectedDate[0] + ' ' + this.state.slotList[endTimeIndex]?.endTime + ':00',
+        })
+        this.setState({ loading: false })
+      }
+
+
       this.setState({ isOpenModal: false })
       this.getScheduleBySalon()
-      // this.getScheduleByStaff()
+
+
+
+    } else {
+      let data = []
+      for (const ele of this.state.selectedDate) {
+        for (const item of this.state.selectedSlot) {
+          data.push({
+            "staffId": this.state.selectedStaff?.staffId,
+            "slotOfDayId": item?.id,
+            "date": ele
+          })
+        }
+      }
+      this.setState({ loading: true })
+      const res = await createBulkScheduleApi(data)
+      if (res) {
+        this.setState({ isOpenModal: false })
+        this.getScheduleBySalon()
+      }
+      this.setState({ loading: false })
     }
+
+
   }
 
-  // getScheduleByStaff = async () => {
-  //   for (const item of this.state.staffList) {
-  //     let res = await getScheduleApi({
-  //       "pageNumber": 1,
-  //       "pageSize": 100000,
-  //       "statuses": [],
-  //       "staffIds": [
-  //         item?.staffId
-  //       ],
-  //       "slotOfDayIds": [],
-  //       "exactStaffNames": [],
-  //       "staffName": "",
-  //       "minDate": convertDateTime(this.state.fromDate),
-  //       "maxDate": convertDateTime(this.state.toDate),
-  //       "minTime": "",
-  //       "maxTime": "",
-  //       "sortBy": ""
-  //     })
-  //   }
-  // }
 
   render() {
 
@@ -513,7 +548,6 @@ export default class Schedule extends Component {
                                 >
                                   <a href='' onClick={(e) => {
                                     e.preventDefault()
-                                    console.log(staff)
                                     staff?.workSlot.sort((a, b) => (a.slotOfDayId > b.slotOfDayId) ? 1 : ((b.slotOfDayId > a.slotOfDayId) ? -1 : 0))
                                     staff?.workSlot.map(_ => _.id = _.slotOfDayId)
                                     this.setState({
@@ -523,7 +557,8 @@ export default class Schedule extends Component {
                                       selectedSlot: staff?.workSlot,
                                       startSlot: staff?.workSlot[0],
                                       endSlot: staff?.workSlot[staff?.workSlot.length - 1],
-                                      selectedStaff: staff
+                                      selectedStaff: staff,
+                                      selectedDate: [item?.date]
                                     })
                                   }}>
 
@@ -747,11 +782,11 @@ export default class Schedule extends Component {
                 alignItems: 'center',
                 justifyContent: 'flex-end',
               }}>
-                <Button variant="contained" color="success" onClick={() => {
+                <LoadingButton loading={this.state.loading} variant="contained" color="success" onClick={() => {
                   this.createSchedule()
                 }}>
                   Update
-                </Button>
+                </LoadingButton>
               </div>
             </div>
           </div>
