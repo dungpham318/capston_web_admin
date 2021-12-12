@@ -49,14 +49,15 @@ module.exports = merge(common, {
       favicon: path.join(__dirname, 'public', 'favicon.ico'),
       filename: 'index.html',
     }),
-    // new Dotenv({
-    //   path:
-    //     process.env.sovico === 'prod'
-    //       ? './.env.aws.prod'
-    //       : process.env.sovico === 'uat'
-    //         ? './.env.aws.uat'
-    //         : './.env.fis',
-    // }),
+    new Dotenv({
+      path:
+        './.env'
+      // process.env.sovico === 'prod'
+      //   ? './.env.aws.prod'
+      //   : process.env.sovico === 'uat'
+      //     ? './.env.aws.uat'
+      //     : './.env.fis',
+    }),
   ],
   performance: {
     hints: 'warning',
