@@ -232,6 +232,7 @@ export default class Promotions extends Component {
               { id: 3, label: 'Percentage', value: 'percentage' },
               // { id: 4, label: 'Created Date', value: 'createdDate' },
               // { id: 5, label: 'Last Update', value: 'lastUpdate' },
+              { id: 6, label: 'Status', value: 'status' },
               { id: 6, label: 'Start Date', value: 'startDate' },
               { id: 7, label: 'Expiration Date', value: 'expirationDate' },
               // { id: 8, label: 'Is Universal', value: 'isUniversal' },
