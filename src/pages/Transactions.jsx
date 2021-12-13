@@ -24,6 +24,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import RatingView from '../components/rating/RatingView';
 export default class Transaction extends Component {
 
   constructor(props) {
@@ -552,6 +553,31 @@ export default class Transaction extends Component {
                     value={this.state.selectedTransaction?.note}
                     onChange={(event) => {
                     }}
+                  />
+                </div>
+              }
+              {
+                this.state.selectedTransaction?.ratingId &&
+                <div style={{
+                  width: '100%',
+                  marginBottom: '1em'
+                }}>
+                  <p style={{
+                    fontWeight: 'bold',
+                    marginBottom: '1em'
+                  }}>Feedback</p>
+                  <RatingView value={this.state.selectedTransaction?.rating} />
+                  <TextField
+                    disabled
+                    id="outlined-basic"
+                    label="Note"
+                    variant="outlined"
+                    style={{
+                      width: '100%',
+                      marginTop: '1em',
+                      marginBottom: '1em'
+                    }}
+                    value={this.state.selectedTransaction?.ratingComment}
                   />
                 </div>
               }
