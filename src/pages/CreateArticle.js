@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import SunEditor from "suneditor-react";
-import "suneditor/dist/css/suneditor.min.css";
+// import "suneditor/dist/css/suneditor.min.css";
+import "../assets/css/suneditor.min.css";
 import { addArticleApi, getArticleDetailApi } from '../apis/articleApi';
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
