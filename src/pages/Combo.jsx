@@ -124,22 +124,25 @@ export default class Combo extends Component {
     let res = await getComboDetailApi({
       id: id
     })
-    let serviceList = await getServiceList({
-      id: id
-    })
+    // let serviceList = await getServiceList({
+    //   id: id
+    // })
     let data = res?.data
     if (data?.services && data?.services.length > 0) {
       for (const item of data?.services) {
-        if (serviceList?.data && serviceList?.data.length > 0) {
-          let tmp = serviceList?.data
-          tmp.map(ele =>
+        if (res?.data?.services && res?.data?.services.length > 0) {
+          let tmp = res?.data?.services
+          tmp.map(ele => {
             ele.label = `${ele?.name} (${ele?.numberOfServicesOnDate})`
-          )
+            ele.convertPrice = convertMoney(ele?.price)
+            ele.time = ele?.duration * 10 + ' minutes'
+            ele.checked = ele?.isDoneByStylist
+          })
+          console.log(tmp)
           Object.assign(item, { serviceList: tmp })
         }
       }
     }
-    console.log(data)
     this.setState({
       loading: false,
       isOpenModal: true,
@@ -265,10 +268,12 @@ export default class Combo extends Component {
             rows={this.state.comboList}
             actionList={actionList}
             onClickView={(row) => {
+              this.getService()
               this.setState({ action: 'view' })
               this.getComboDetail(row?.id)
             }}
             onClickEdit={(row) => {
+              this.getService()
               this.setState({ action: 'view' })
               this.getComboDetail(row?.id)
             }}

@@ -68,7 +68,6 @@ const renderUserMenu = (item, index) => {
         </Link>
     } else {
         return <Link onClick={() => {
-            console.log(item)
         }} to='/' key={index}>
             <div className="notification-item">
                 <i className={item.icon}></i>
@@ -110,7 +109,6 @@ const Topnav = (props) => {
         })
         if (res?.data?.items) {
             for (const item of res?.data?.items) {
-                console.log(item)
                 item.onClick = () => {
                     history.push({
                         pathname: `/transactions`,
