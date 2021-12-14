@@ -56,7 +56,7 @@ class Table extends Component {
       }}>
         <div style={{
           overflowY: 'scroll',
-          height: '60vh',
+          height: this.props.height ? this.props.height : '60vh',
           overflow: 'auto',
           position: 'relative'
         }}>
