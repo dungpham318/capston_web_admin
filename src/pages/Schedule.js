@@ -270,29 +270,45 @@ export default class Schedule extends Component {
 
 
       let dataAdded = []
+      console.log(12732, added)
       if (added.length > 0) {
+        // for (const item of added) {
+        //   dataAdded.push({
+        //     "staffId": this.state.selectedStaff?.staffId,
+        //     "slotOfDayId": item?.id,
+        //     "date": this.state.selectedDate[0]
+        //   })
+        // }
+        // this.setState({ loading: true })
+
+        // const res = await createBulkScheduleApi(dataAdded)
+        // this.setState({ loading: false })
+        let tmp = []
         for (const item of added) {
-          dataAdded.push({
+          tmp.push(item)
+          // data.push({
+          //   "staffId": this.state.selectedStaff?.staffId,
+          //   "slotOfDayId": item?.id,
+          //   "date": ele
+          // })
+        }
+        console.log(tmp)
+        let startTime = tmp[0]?.startTime + ':00'
+        let endTime = tmp[tmp.length - 1]?.endTime + ':00'
+        for (const ele of this.state.selectedDate) {
+          const res = await createBulkScheduleSpanTimeApi({
             "staffId": this.state.selectedStaff?.staffId,
-            "slotOfDayId": item?.id,
-            "date": this.state.selectedDate[0]
+            "startDate": ele + ' ' + startTime,
+            "endDate": ele + ' ' + endTime,
           })
         }
-        this.setState({ loading: true })
 
-        const res = await createBulkScheduleApi(dataAdded)
-        this.setState({ loading: false })
       }
-
 
       if (removed.length > 0) {
         removed.sort((a, b) => (a.slotOfDayId > b.slotOfDayId) ? 1 : ((b.slotOfDayId > a.slotOfDayId) ? -1 : 0))
         let startTimeIndex = this.state.slotList.findIndex(ele => removed[0]?.slotOfDayId === ele?.id)
         let endTimeIndex = this.state.slotList.findIndex(ele => removed[removed.length - 1]?.slotOfDayId === ele?.id)
-        console.log(this.state.selectedDate[0])
-        console.log(this.state.slotList[startTimeIndex])
-        console.log(this.state.selectedDate[0] + ' ' + this.state.slotList[startTimeIndex]?.startTime + ':00')
-        console.log(this.state.selectedDate[0] + ' ' + this.state.slotList[endTimeIndex]?.endTime + ':00')
         const res = await removeScheduleApi({
           "staffId": this.state.selectedStaff?.staffId,
           "startDate": this.state.selectedDate[0] + ' ' + this.state.slotList[startTimeIndex]?.startTime + ':00',
@@ -563,6 +579,7 @@ export default class Schedule extends Component {
                                     e.preventDefault()
                                     staff?.workSlot.sort((a, b) => (a.slotOfDayId > b.slotOfDayId) ? 1 : ((b.slotOfDayId > a.slotOfDayId) ? -1 : 0))
                                     staff?.workSlot.map(_ => _.id = _.slotOfDayId)
+                                    staff.workSlot = staff?.workSlot.filter(_ => _.status !== 'not available')
                                     this.setState({
                                       isOpenModal: true,
                                       selectedSchedule: staff,
