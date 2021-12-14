@@ -571,9 +571,7 @@ export default class Schedule extends Component {
                                   // paddingTop: '0.5em',
                                   // paddingBottom: '0.5em',
                                   textAlign: 'center',
-
                                 }}
-                                // rowSpan={6}
                                 >
                                   <a href='' onClick={(e) => {
                                     e.preventDefault()

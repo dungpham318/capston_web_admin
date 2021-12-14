@@ -261,7 +261,7 @@ export default class Combo extends Component {
               { id: 3, label: 'Description', value: 'description' },
               { id: 4, label: 'Status', value: 'status' },
               // { id: 5, label: 'Duration', value: 'duration' },
-              { id: 6, label: 'Price', value: 'price' },
+              { id: 6, label: 'Price', value: 'convertPrice' },
               // { id: 7, label: 'Created Date', value: 'createdDate' },
               // { id: 8, label: 'Last Update', value: 'lastUpdated' },
             ]}

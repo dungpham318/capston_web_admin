@@ -178,7 +178,7 @@ export default class Services extends Component {
           <Table
             loading={this.state.loading}
             headers={[
-              { id: 1, label: '#', value: 'id' },
+              { id: 1, label: '#', value: 'index' },
               { id: 2, label: 'Name', value: 'name' },
               { id: 3, label: 'Description', value: 'description' },
               { id: 4, label: 'Duration', value: 'time' },
