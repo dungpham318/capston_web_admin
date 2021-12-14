@@ -116,6 +116,9 @@ const Topnav = (props) => {
                             appointmentId: item?.appointmentId,
                         }
                     })
+                    updateNotificationStatus({
+                        id: item?.id
+                    })
                     getNotification()
                 }
             }
@@ -170,6 +173,8 @@ const Topnav = (props) => {
                     />
                 </div>
                 <div className="topnav__right-item" onClick={() => {
+                    getNotification()
+
                 }}>
                     <React.Fragment>
                         <button className="dropdown__toggle" onClick={toggleDrawer('right', true)}> <i className={'bx bx-bell'}></i></button>
