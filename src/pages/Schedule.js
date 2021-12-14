@@ -636,27 +636,41 @@ export default class Schedule extends Component {
                                         width: '3em',
                                         height: '3em',
                                         textAlign: 'center',
-                                        backgroundColor: color,
-
                                       }}>
-                                        <td style={{
-                                          width: '3em',
-                                          height: '3em',
-                                          textAlign: 'center',
-                                          backgroundColor: color,
-                                        }}
-                                        // rowSpan={6}
-                                        >
-                                          <div style={{
+                                        <a href='' onClick={(e) => {
+                                          e.preventDefault()
+                                          if (isAvailable !== -1 && staff?.workSlot[isAvailable]?.appointmentId) {
+                                            this.props.history.push({
+                                              pathname: `/transactions`,
+                                              state: {
+                                                appointmentId: staff?.workSlot[isAvailable]?.appointmentId,
+                                              }
+                                            })
+                                            console.log(staff?.workSlot[isAvailable])
+                                          }
+                                        }}>
+
+                                          <td style={{
                                             width: '3em',
                                             height: '3em',
                                             textAlign: 'center',
                                             backgroundColor: color,
-                                          }}>
-                                            {/* {staff?.fullName} */}
+                                          }}
+                                          // rowSpan={6}
+                                          >
+                                            <div style={{
+                                              width: '3em',
+                                              height: '3em',
+                                              textAlign: 'center',
+                                              backgroundColor: color,
+                                            }}>
+                                              {/* {staff?.fullName} */}
 
-                                          </div>
-                                        </td>
+                                            </div>
+                                          </td>
+
+                                        </a>
+
                                       </tr>
                                     )
                                   })
