@@ -62,6 +62,7 @@ export default class Combo extends Component {
         image: undefined,
         action: undefined,
         serviceList: [],
+        comboServiceList: [],
       })
     }
   }
@@ -381,7 +382,7 @@ export default class Combo extends Component {
                   }} />} label={'Active'} />
 
               {
-                localStorage.getItem('role') !== 'manager' &&
+                this.state.action !== 'view' &&
                 <div className={'flex flex-row my-1 items-center '} style={{
                   display: 'flex',
                   flexDirection: 'row',
