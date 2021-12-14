@@ -460,7 +460,7 @@ export default class Schedule extends Component {
                 <Button variant="outlined" onClick={() => {
                   this.setState({ isOpenModal: true })
                 }}>
-                  Add Schedule
+                  Create Schedule
                 </Button>
               }
             </div>

@@ -15,7 +15,6 @@ export async function getRevenueApi(input) {
     })
     .then(data => {
       if (!data.isSuccess) {
-        alert(data.message)
         return false
       } else {
         return data
@@ -41,7 +40,6 @@ export async function getTotalCustomerApi(input) {
     })
     .then(data => {
       if (!data.isSuccess) {
-        alert(data.message)
         return false
       } else {
         return data
@@ -68,7 +66,32 @@ export async function getTotalAppointmentApi(input) {
     })
     .then(data => {
       if (!data.isSuccess) {
-        alert(data.message)
+        return false
+      } else {
+        return data
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    });
+}
+
+export async function getRevenueBySalonInMonthApi(input) {
+  let url = `/api/Statistic/get_earning_in_month_by_salon`
+  return fetch(END_POINT + url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    },
+    body: JSON.stringify(input)
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(data => {
+      if (!data.isSuccess) {
         return false
       } else {
         return data
@@ -95,7 +118,6 @@ export async function getRevenueBySalonApi(input) {
     })
     .then(data => {
       if (!data.isSuccess) {
-        alert(data.message)
         return false
       } else {
         return data
@@ -122,7 +144,6 @@ export async function getTopCustomerApi(input) {
     })
     .then(data => {
       if (!data.isSuccess) {
-        alert(data.message)
         return false
       } else {
         return data
@@ -150,7 +171,6 @@ export async function getRevenueInMonthApi(input) {
     })
     .then(data => {
       if (!data.isSuccess) {
-        alert(data.message)
         return false
       } else {
         return data
@@ -176,7 +196,6 @@ export async function getUsedComboApi(input) {
     })
     .then(data => {
       if (!data.isSuccess) {
-        alert(data.message)
         return false
       } else {
         return data

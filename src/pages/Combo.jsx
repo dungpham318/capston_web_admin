@@ -10,6 +10,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Modal from '../components/modal/Modal';
 import { TextField } from '@material-ui/core';
 import { convertMoney } from '../function';
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 
 export default class Combo extends Component {
 
@@ -39,7 +41,9 @@ export default class Combo extends Component {
 
       serviceList: [],
       selectedService: undefined,
-      comboServiceList: []
+      comboServiceList: [],
+
+      status: false
     };
   }
   componentDidMount() {
@@ -69,7 +73,7 @@ export default class Combo extends Component {
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
       "statuses": [
-        "active"
+        // "active"
       ],
       "minCreatedDate": "",
       "maxCreatedDate": "",
@@ -81,7 +85,11 @@ export default class Combo extends Component {
     })
 
     if (comboList) {
-      console.log(comboList)
+      if (comboList?.data?.items) {
+        comboList.data.items.map(ele => {
+          ele.convertPrice = convertMoney(ele?.price)
+        })
+      }
       this.setState({
         loading: false,
         comboList: comboList?.data?.items,
@@ -149,6 +157,7 @@ export default class Combo extends Component {
       selectedCombo: res?.data,
       comboName: res?.data?.name,
       comboDescription: res?.data?.description,
+      status: res?.data?.status === 'active' ? true : false,
       avatarFile: undefined,
       price: convertMoney(res?.data?.price),
       comboServiceList: res?.data?.services,
@@ -175,7 +184,7 @@ export default class Combo extends Component {
     formData.append('AvatarFile', this.state.avatarFile)
     formData.append('Name', this.state.comboName)
     formData.append('Description', this.state.comboDescription)
-    formData.append('Status', 'active')
+    formData.append('Status', this.state.status ? 'active' : 'inactive')
     // formData.append('Details', tmp)
     formData.append('Price', this.state.price.split('.').join(''))
     let res = await createComboApi(formData)
@@ -210,7 +219,7 @@ export default class Combo extends Component {
       "id": id,
       "name": this.state.comboName,
       "description": this.state.comboDescription,
-      "status": "active",
+      "status": this.state.status ? 'active' : 'inactive',
       "price": parseInt(this.state.price.split('.').join('')),
       "details": tmp
     })
@@ -274,7 +283,7 @@ export default class Combo extends Component {
             }}
             onClickEdit={(row) => {
               this.getService()
-              this.setState({ action: 'view' })
+              this.setState({ action: 'edit' })
               this.getComboDetail(row?.id)
             }}
             onClickDelete={(row) => {
@@ -316,6 +325,7 @@ export default class Combo extends Component {
               paddingRight: '2em'
             }}>
               <TextField
+                disabled={this.state.action === 'view'}
                 required
                 id="outlined-basic"
                 label="Name"
@@ -330,6 +340,7 @@ export default class Combo extends Component {
                 }}
               />
               <TextField
+                disabled={this.state.action === 'view'}
                 required
                 id="outlined-basic"
                 label="Description"
@@ -344,6 +355,7 @@ export default class Combo extends Component {
                 }}
               />
               <TextField
+                disabled={this.state.action === 'view'}
                 required
                 id="outlined-basic"
                 label="Price"
@@ -357,36 +369,51 @@ export default class Combo extends Component {
                   this.setState({ price: convertMoney(event.target.value) })
                 }}
               />
-              <div className={'flex flex-row my-1 items-center '} style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center'
-              }}>
-                <span style={{
-                  textAlign: 'left',
-                  width: '8rem',
-                  marginTop: '1em',
-                  marginBottom: '1em'
-                }}>Upload image</span>
-                <div>
-                  {/* <img src={imageLink} className='w-40 mx-10' /> */}
-                  <input
-                    type='file'
-                    accept="image/*"
-                    style={{
-                      display: 'flex',
-                      flex: '1 1 auto',
-                      outline: '2px solid transparent',
-                      outlineOffset: '2px',
-                    }}
-                    onChange={(event) => {
-                      console.log(event.target.files[0])
-                      this.setState({ avatarFile: event.target.files[0] })
-                      // setImageFile(event.target.files[0])
-                    }}
-                  />
+
+              <FormControlLabel control={
+                <Checkbox
+                  disabled={this.state.action === 'view'}
+                  checked={this.state.status}
+                  onChange={(event) => {
+                    this.setState({
+                      status: event.target.checked
+                    })
+                  }} />} label={'Active'} />
+
+              {
+                localStorage.getItem('role') !== 'manager' &&
+                <div className={'flex flex-row my-1 items-center '} style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <span style={{
+                    textAlign: 'left',
+                    width: '8rem',
+                    marginTop: '1em',
+                    marginBottom: '1em'
+                  }}>Upload image</span>
+                  <div>
+                    {/* <img src={imageLink} className='w-40 mx-10' /> */}
+                    <input
+                      type='file'
+                      accept="image/*"
+                      style={{
+                        display: 'flex',
+                        flex: '1 1 auto',
+                        outline: '2px solid transparent',
+                        outlineOffset: '2px',
+                      }}
+                      onChange={(event) => {
+                        console.log(event.target.files[0])
+                        this.setState({ avatarFile: event.target.files[0] })
+                        // setImageFile(event.target.files[0])
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
+              }
+
               {
                 this.state.image &&
                 <img
@@ -397,62 +424,71 @@ export default class Combo extends Component {
                   }}
                 />
               }
+              {
+                this.state.action !== 'view' &&
+                <div style={{
+                  marginTop: '1em',
+                  marginBottom: '1em'
+                }}>
+                  <p style={{
+                    fontWeight: 'bold'
+                  }}>Service</p>
+                  <div style={{
+                    display: 'flex',
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <Autocomplete
+                      value={this.state.selectedService}
+                      onChange={(event, newValue) => {
+                        this.setState({ selectedService: newValue })
+                      }}
+                      disablePortal
+                      id="combo-box-demo"
+                      options={this.state.serviceList}
+                      sx={{ width: '100%' }}
+                      renderInput={(params) => <TextField {...params} label="Service" variant="outlined" />}
+                    />
+                    <div style={{ marginLeft: '2em' }}>
+                      <LoadingButton variant="outlined" color="primary" loading={this.state.loading} onClick={() => {
+                        this.setState({
+                          comboServiceList: [...this.state.comboServiceList, this.state.selectedService],
+                          selectedService: undefined
+                        })
+                      }}>
+                        Add Service
+                      </LoadingButton>
+                    </div>
+                  </div>
+                </div>
+              }
+
               <div style={{
                 marginTop: '1em',
                 marginBottom: '1em'
               }}>
-                <p style={{
-                  fontWeight: 'bold'
-                }}>Service</p>
-                <div style={{
-                  display: 'flex',
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}>
-                  <Autocomplete
-                    value={this.state.selectedService}
-                    onChange={(event, newValue) => {
-                      this.setState({ selectedService: newValue })
-                    }}
-                    disablePortal
-                    id="combo-box-demo"
-                    options={this.state.serviceList}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="Service" variant="outlined" />}
-                  />
-                  <div style={{ marginLeft: '2em' }}>
-                    <LoadingButton variant="outlined" color="primary" loading={this.state.loading} onClick={() => {
-                      this.setState({
-                        comboServiceList: [...this.state.comboServiceList, this.state.selectedService],
-                        selectedService: undefined
-                      })
-                    }}>
-                      Add Service
-                    </LoadingButton>
-                  </div>
-                </div>
+                <Table
+                  loading={this.state.loading}
+                  headers={[
+                    { id: 1, label: '#', value: 'index' },
+                    { id: 2, label: 'Name', value: 'name' },
+                    { id: 3, label: 'Description', value: 'description' },
+                    { id: 4, label: 'Duration', value: 'time' },
+                    { id: 4, label: 'Stylist', value: 'checkbox' },
+                    { id: 7, label: 'Price', value: 'convertPrice' },
+                  ]}
+                  rows={this.state.comboServiceList}
+                  actionList={this.state.action !== 'view' ? [
+                    'delete',
+                  ] : []}
+                  onClickDelete={(row, index) => {
+                    this.state.comboServiceList.splice(index, 1)
+                    this.setState({ comboServiceList: this.state.comboServiceList })
+                  }}
+                />
               </div>
-              <Table
-                loading={this.state.loading}
-                headers={[
-                  { id: 1, label: '#', value: 'index' },
-                  { id: 2, label: 'Name', value: 'name' },
-                  { id: 3, label: 'Description', value: 'description' },
-                  { id: 4, label: 'Duration', value: 'time' },
-                  { id: 4, label: 'Stylist', value: 'checkbox' },
-                  { id: 7, label: 'Price', value: 'convertPrice' },
-                ]}
-                rows={this.state.comboServiceList}
-                actionList={[
-                  'delete',
-                ]}
-                onClickDelete={(row, index) => {
-                  this.state.comboServiceList.splice(index, 1)
-                  this.setState({ comboServiceList: this.state.comboServiceList })
-                }}
-              />
             </div>
             <div style={{
               display: 'flex',
@@ -466,24 +502,28 @@ export default class Combo extends Component {
               }}>
                 Close
               </Button>
-              <div style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                display: 'flex',
-                flexDirection: 'row'
-              }}>
-                <div style={{ flex: 1 }} />
-                <LoadingButton variant="contained" color="success" loading={this.state.loading} onClick={() => {
-                  if (this.state.action === 'create') {
-                    this.createCombo()
-                  } else {
-                    this.updateCombo(this.state.selectedCombo?.id)
-                  }
+              {
+                this.state.action !== 'view' &&
+                <div style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  display: 'flex',
+                  flexDirection: 'row'
                 }}>
-                  {this.state.action === 'create' ? 'Save' : 'Update'}
-                </LoadingButton>
-              </div>
+                  <div style={{ flex: 1 }} />
+                  <LoadingButton variant="contained" color="success" loading={this.state.loading} onClick={() => {
+                    if (this.state.action === 'create') {
+                      this.createCombo()
+                    } else {
+                      this.updateCombo(this.state.selectedCombo?.id)
+                    }
+                  }}>
+                    {this.state.action === 'create' ? 'Save' : 'Update'}
+                  </LoadingButton>
+                </div>
+              }
+
             </div>
           </div>
         </Modal>

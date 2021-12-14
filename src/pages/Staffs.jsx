@@ -12,6 +12,11 @@ import { getSalonList } from '../apis/salonApi';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import ic_upload_avatar from '../assets/images/ic_upload_avatar.png'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select'
 export default class Staffs extends Component {
 
   constructor(props) {
@@ -37,6 +42,8 @@ export default class Staffs extends Component {
       staffType: undefined,
       image: '',
       imageURL: '',
+
+      searchRole: 'all'
     };
   }
   componentDidMount() {
@@ -86,10 +93,22 @@ export default class Staffs extends Component {
 
   getStaff = async () => {
     this.setState({ loading: true })
+    let staffType = []
+    if (this.state.searchRole !== 'all') {
+      staffType.push(this.state.searchRole)
+    }
     let staffList = await getStaffList({
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
-      "sortBy": "userid_desc"
+      "userIds": [],
+      "staffIds": [],
+      "salonIds": [],
+      "staffTypes": staffType,
+      "statuses": [],
+      "sortBy": "",
+      "fullName": "",
+      "salonName": "",
+      "email": ""
     })
     this.setState({ loading: false })
     if (staffList) {
@@ -208,6 +227,8 @@ export default class Staffs extends Component {
         <div className='card'>
           <div style={{
             marginBottom: '1em',
+            display: 'flex',
+            flexDirection: 'row'
           }}>
             {
               localStorage.getItem('role') !== 'manager' &&
@@ -216,10 +237,53 @@ export default class Staffs extends Component {
                   isOpenModal: true,
                   action: 'create'
                 })
-              }}>
+              }}
+                style={{
+                  height: '3em'
+                }}>
                 New Staff
               </Button>
             }
+
+            <div style={{ flex: 1 }} />
+            <div>
+
+              <FormControl style={{ width: '15em', marginRight: '1em' }}>
+                <InputLabel id="demo-simple-select-label">Staff Type</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={this.state.searchRole}
+                  label="Salon"
+                  style={{
+                    // height: '3em',
+                    // paddingLeft: '2em'
+                  }}
+                  onChange={(e) => {
+                    console.log(e.target.value)
+                    this.setState({
+                      searchRole: e.target.value,
+                      page: 1,
+                    }, () => {
+                      this.getStaff()
+                    })
+                  }}
+                >
+                  {
+                    [
+                      { name: 'All', value: 'all' },
+                      { name: 'Stylist', value: 'stylist' },
+                      { name: 'Beautician', value: 'beautician' },
+                      { name: 'Manager', value: 'manager' },
+                    ].map(ele => {
+                      return <MenuItem value={ele?.value}>{ele?.name}</MenuItem>
+                    })
+                  }
+                </Select>
+              </FormControl>
+
+            </div>
+
           </div>
           <Table
             loading={this.state.loading}

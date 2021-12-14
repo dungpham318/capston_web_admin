@@ -86,6 +86,10 @@ export default class Transaction extends Component {
     if (this.state.selectedAppointmentStatus !== 'All') {
       status = [this.state.selectedAppointmentStatus]
     }
+    let salonId = []
+    if (localStorage.getItem('salonId') !== 'null') {
+      salonId.push(parseInt(localStorage.getItem('salonId')))
+    }
     let transactionList = await getTransactionList({
       "pageNumber": this.state.page,
       "pageSize": this.state.pageSize,
@@ -96,8 +100,7 @@ export default class Transaction extends Component {
       ],
       "comboIds": [
       ],
-      "salonIds": [
-      ],
+      "salonIds": salonId,
       "customerName": "",
       "comboName": "",
       "salonName": "",

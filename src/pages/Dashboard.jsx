@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import LineChart from '../components/chart/LineChart'
 import {
-  getRevenueApi, getRevenueBySalonApi, getTopCustomerApi, getTotalAppointmentApi, getTotalCustomerApi, getUsedComboApi
+  getRevenueApi, getRevenueBySalonApi, getRevenueBySalonInMonthApi, getTopCustomerApi, getTotalAppointmentApi, getTotalCustomerApi, getUsedComboApi
 } from '../apis/dashboardApi'
 import { getSalonList } from '../apis/salonApi';
-import { convertDate } from '../function';
+import { convertDate, convertMoney } from '../function';
 import BarChart from '../components/chart/BarChart';
 import PieChart from '../components/chart/PieChart';
 import Table from '../components/table/Table';
@@ -53,6 +53,7 @@ export default class Dashboard extends Component {
 
 
   async componentDidMount() {
+    await this.getSalonList()
     let dateList = []
     let tmp = this.state.startDate.getTime() + 86400000
     while (this.state.endDate.getTime() + 86400000 - tmp > 0) {
@@ -67,11 +68,33 @@ export default class Dashboard extends Component {
     this.getAppointmentBySalon()
     this.getUsedCombo()
     this.getTransaction()
+    this.getRevenueInMonth()
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.salonList !== this.state.salonList && this.state.salonList.length > 0) {
       this.getRevenueBySalon()
+    }
+  }
+
+  getSalonList = async () => {
+    let res = await getSalonList({
+      "pageNumber": 1,
+      "pageSize": 100,
+      "statuses": [
+        "active"
+      ],
+      "name": "",
+      "minCreatedDate": "",
+      "maxCreatedDate": "",
+      "minLastUpdate": "",
+      "maxLastUpdate": "",
+      "sortBy": ""
+    })
+    if (res?.data?.items) {
+      await this.setState({
+        salonList: res?.data?.items
+      })
     }
   }
 
@@ -188,12 +211,10 @@ export default class Dashboard extends Component {
         fill: false,
         borderColor: colorList[index],
       })
-      console.log(total)
       revenueListBarChart.push(total)
       salonNameList.push(item.name)
       ++index
     }
-    console.log(revenueListBarChart)
 
     this.setState({
       revenueList: revenueList,
@@ -203,14 +224,30 @@ export default class Dashboard extends Component {
   }
 
   getRevenueInMonth = async () => {
-    for (const item of this.state.salonList) {
-      let res = await getRevenueBySalonApi({
-        "salonId": item?.id,
-        "fromDate": convertDate(this.state.startDate),
-        "toDate": convertDate(this.state.startDate)
-      })
-      console.log(res)
+    let total = 0
+    let salonList = []
+    if (localStorage.getItem('salonId') === 'null') {
+      salonList = this.state.salonList
+    } else {
+      let index = this.state.salonList.findIndex(ele => ele.id == parseInt(localStorage.getItem('salonId')))
+      if (index !== -1) {
+        salonList.push(this.state.salonList[index])
+      } else {
+        salonList = this.state.salonList
+      }
     }
+
+    for (const item of salonList) {
+      let res = await getRevenueBySalonInMonthApi({
+        "salonId": item?.id,
+        "date": convertDate(new Date()),
+      })
+      if (res?.data) {
+        total = total + res?.data
+      }
+    }
+    this.setState({ totalRevenueInMonth: total })
+    console.log(9328943, total)
   }
 
   getTopCustomer = async () => {
@@ -224,7 +261,6 @@ export default class Dashboard extends Component {
 
   getUsedCombo = async (salonID) => {
     let res = await getUsedComboApi()
-    console.log(res)
     let label = []
     let datasets = []
     let data = []
@@ -243,7 +279,6 @@ export default class Dashboard extends Component {
         // )
       }
     }
-    console.log(datasets)
     this.setState({
       comboPieChart: {
         labels: label,
@@ -323,10 +358,10 @@ export default class Dashboard extends Component {
           <div className='card' style={{
             width: '20em',
           }}>
-            <p>Today Month Revenue</p>
+            <p>Month Revenue</p>
             <h2 style={{
               paddingTop: '1em',
-            }}>{this.state.totalRevenueInMonth}</h2>
+            }}>{convertMoney(this.state.totalRevenueInMonth)}</h2>
           </div>
           <div className='card' style={{
             width: '20em',
