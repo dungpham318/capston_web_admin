@@ -19,7 +19,7 @@ import { Button } from '@mui/material'
 import Modal from '../components/modal/Modal'
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
-import { createBulkScheduleApi, getScheduleApi, getScheduleByStaffApi, getScheduleBySalonApi, removeScheduleApi } from '../apis/scheduleApi'
+import { createBulkScheduleApi, getScheduleApi, getScheduleByStaffApi, getScheduleBySalonApi, removeScheduleApi, createBulkScheduleSpanTimeApi } from '../apis/scheduleApi'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { minHeight } from '@mui/system'
@@ -75,6 +75,8 @@ export default class Schedule extends Component {
         action: undefined,
         selectedStaff: undefined,
         selectedDate: [],
+      }, () => {
+
       })
     }
   }
@@ -306,23 +308,34 @@ export default class Schedule extends Component {
 
 
     } else {
-      let data = []
-      for (const ele of this.state.selectedDate) {
-        for (const item of this.state.selectedSlot) {
-          data.push({
-            "staffId": this.state.selectedStaff?.staffId,
-            "slotOfDayId": item?.id,
-            "date": ele
-          })
-        }
-      }
       this.setState({ loading: true })
-      const res = await createBulkScheduleApi(data)
-      if (res) {
-        this.setState({ isOpenModal: false })
-        this.getScheduleBySalon()
+      let data = []
+      let tmp = []
+      for (const item of this.state.selectedSlot) {
+        tmp.push(item)
+        // data.push({
+        //   "staffId": this.state.selectedStaff?.staffId,
+        //   "slotOfDayId": item?.id,
+        //   "date": ele
+        // })
       }
-      this.setState({ loading: false })
+      let startTime = tmp[0]?.startTime + ':00'
+      let endTime = tmp[tmp.length - 1]?.endTime + ':00'
+      for (const ele of this.state.selectedDate) {
+        const res = await createBulkScheduleSpanTimeApi({
+          "staffId": this.state.selectedStaff?.staffId,
+          "startDate": ele + ' ' + startTime,
+          "endDate": ele + ' ' + endTime,
+        })
+      }
+
+
+      // const res = await createBulkScheduleApi(data)
+      // if (res) {
+      this.setState({ isOpenModal: false })
+      this.getScheduleBySalon()
+      // }
+      // this.setState({ loading: false })
     }
 
 
@@ -594,7 +607,7 @@ export default class Schedule extends Component {
                                     let color = '#ffffff'
                                     let isAvailable = -1
                                     if (staff?.workSlot) {
-                                      isAvailable = staff?.workSlot.findIndex(_ => _.slotOfDayId === slot?.id)
+                                      isAvailable = staff?.workSlot.findIndex(_ => _.slotOfDayId === slot?.id && _.status !== 'not available')
                                     }
                                     if (isAvailable !== -1) {
                                       if (staff?.workSlot[isAvailable].status === 'taken') {
@@ -770,6 +783,8 @@ export default class Schedule extends Component {
                 <Button variant="contained" color="inherit" onClick={() => {
                   this.setState({
                     isOpenModal: false
+                  }, () => {
+                    this.getScheduleBySalon()
                   })
                 }}>
                   Close
