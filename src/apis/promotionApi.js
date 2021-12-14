@@ -84,7 +84,7 @@ export async function getDetailPromotionApi(input) {
 export async function updatePromotionApi(input) {
   let url = `/api/PromotionalCode/update_code`
   return fetch(END_POINT + url, {
-    method: 'POST',
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + localStorage.getItem('token')

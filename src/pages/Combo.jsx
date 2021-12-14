@@ -43,7 +43,7 @@ export default class Combo extends Component {
       selectedService: undefined,
       comboServiceList: [],
 
-      status: false
+      status: true
     };
   }
   componentDidMount() {

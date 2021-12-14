@@ -15,7 +15,6 @@ import DatePicker from '@mui/lab/DatePicker';
 import { getSalonList } from '../apis/salonApi';
 import { convertDate, convertDateTime } from '../function';
 import FormControlLabel from '@mui/material/FormControlLabel'
-
 export default class Promotions extends Component {
   constructor(props) {
     super(props);
@@ -41,7 +40,9 @@ export default class Promotions extends Component {
 
       action: undefined,
 
-      loading: false
+      loading: false,
+
+      status: true,
     };
   }
   componentDidMount() {
@@ -165,14 +166,20 @@ export default class Promotions extends Component {
         }
         this.setState({ selectedSalon: this.state.selectedSalon })
       }
+      let startDate = res?.data?.startDate.split(' ')[0]
+      startDate = startDate.split('/')[2] + '-' + startDate.split('/')[1] + '-' + startDate.split('/')[0]
+      let expirationDate = res?.data?.expirationDate.split(' ')[0]
+      expirationDate = expirationDate.split('/')[2] + '-' + expirationDate.split('/')[1] + '-' + expirationDate.split('/')[0]
+
       this.setState({
         isOpenModal: true,
         code: res?.data?.code,
         percentage: res?.data?.percentage,
-        startDate: new Date(),
-        expirationDate: new Date(),
+        startDate: new Date(new Date(startDate).setUTCHours(0, 0, 0, 0)),
+        expirationDate: new Date(new Date(expirationDate).setUTCHours(0, 0, 0, 0)),
         isUniversal: res?.data?.isUniversal,
         usersPerCustomer: 1,
+        status: res?.data?.status === 'active' ? true : false,
       })
     }
   }
@@ -187,9 +194,9 @@ export default class Promotions extends Component {
       "code": this.state.code,
       "percentage": parseInt(this.state.percentage),
       "startDate": convertDateTime(this.state.startDate),
-      "expirationDate": convertDateTime(this.state.startDate),
+      "expirationDate": convertDateTime(this.state.expirationDate),
       "isUniversal": this.state.isUniversal,
-      "status": "active",
+      "status": this.state.status ? "active" : 'inactive',
       "salonIds": salonList,
       "usesPerCustomer": parseInt(this.state.usersPerCustomer)
     })
@@ -379,6 +386,14 @@ export default class Promotions extends Component {
                       isUniversal: event.target.checked
                     })
                   }} />} label={'Apply for all salon'} />
+              <FormControlLabel control={
+                <Checkbox
+                  checked={this.state.status}
+                  onChange={(event) => {
+                    this.setState({
+                      status: event.target.checked
+                    })
+                  }} />} label={'Active'} />
               {
                 !this.state.isUniversal &&
                 <Autocomplete
