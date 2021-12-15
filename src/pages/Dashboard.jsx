@@ -161,17 +161,19 @@ export default class Dashboard extends Component {
 
     if (localStorage.getItem('salonId') !== 'null') {
       let appointmentData = await this.getTotalAppointment(parseInt(localStorage.getItem('salonId')))
-      if (appointmentData?.data) {
-        totalAppointment = totalAppointment + totalAppointment?.totalAppointments
+      console.log(322323, appointmentData)
+      if (appointmentData) {
+        totalAppointment = totalAppointment + appointmentData?.totalAppointments
       }
     } else {
       for (const item of this.state.salonList) {
         let appointmentData = await this.getTotalAppointment(item?.id)
-        if (appointmentData?.data) {
-          totalAppointment = totalAppointment + totalAppointment?.totalAppointments
+        if (appointmentData) {
+          totalAppointment = totalAppointment + appointmentData?.totalAppointments
         }
       }
     }
+    console.log(9898989898989, totalAppointment)
     this.setState({
       totalAppointment: totalAppointment
     })

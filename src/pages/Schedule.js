@@ -621,12 +621,16 @@ export default class Schedule extends Component {
                                   item?.staffs.map((staff, index2) => {
                                     let color = '#ffffff'
                                     let isAvailable = -1
+                                    console.log(item?.date)
+                                    console.log(123123, staff?.workSlot)
                                     if (staff?.workSlot) {
-                                      isAvailable = staff?.workSlot.findIndex(_ => _.slotOfDayId === slot?.id && _.status !== 'not available')
+                                      isAvailable = staff?.workSlot.findIndex(_ => _.slotOfDayId === slot?.id)
                                     }
                                     if (isAvailable !== -1) {
                                       if (staff?.workSlot[isAvailable].status === 'taken') {
                                         color = '#019707'
+                                      } else if (staff?.workSlot[isAvailable].status === 'not available') {
+                                        color = '#8C8C8C'
                                       } else {
                                         color = '#62b4ff'
                                       }
