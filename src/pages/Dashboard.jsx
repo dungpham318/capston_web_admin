@@ -123,7 +123,7 @@ export default class Dashboard extends Component {
     let res = await getTotalCustomerApi()
     if (res?.data) {
       let totalCustomer = 0
-      if (localStorage.getItem('salonId') !== 'null') {
+      if (localStorage.getItem('salonId') === 'null') {
         for (const item of res?.data) {
           totalCustomer = totalCustomer + item?.customerCount
         }
